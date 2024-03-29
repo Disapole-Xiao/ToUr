@@ -1,0 +1,76 @@
+{
+	"id": 1001,            
+	"name": "北京邮电大学", 
+	"entrance": {  
+			"lat": 116.3912757,
+			"lon": 39.906217
+	},
+	
+	"attractions": [
+		{ 
+			"id": 2001,   
+			"name": "教三",
+			"coordinate": {  
+				"lat": 116.3912757,
+				"lon": 39.906217
+			},
+			"description": "北邮最豪华的教学楼",  
+			"entr_point": [
+				5041,
+				5048,
+				5050
+			]
+		}
+	],
+	
+"amenities":[
+		{
+			"id": 3001,
+			"name": "公厕",
+			"coordinate": {
+				"lat": 116.3912759,
+				"lon": 39.906218
+			},
+			"description": "",
+			"type": "厕所"
+			
+		}
+
+	],
+
+	"restaurant": [
+		{ 
+			"id": 4001,
+			"name": "麦当劳",
+			"coordinate": {
+				"lat": 116.3912759,
+				"lon": 39.906218
+			},
+			"description": "",
+			"type": "快餐",
+			"foods": ["双层吉士堡", "麦辣鸡翅"], 
+			"popularity": 906, 
+			"rating": 4.9		
+		}
+	],
+	
+
+	"nodes": [ 
+		{
+			"id": 5001,
+			"coordinate": {
+				"lat": 116.39127491,
+				"lon": 39.906243
+			},
+			"adj": [
+				{
+					"id": 5049,
+					"distance": 300, 
+					"congestion": 0.9, 
+					"bicycle": true, 
+					"motorbike": false 
+				}
+			]
+		}
+	]
+}

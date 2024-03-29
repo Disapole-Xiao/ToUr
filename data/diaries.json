@@ -1,0 +1,14 @@
+[
+	{
+		"id": 1,
+		"username": "张三", 
+		"time": "2024-03-24",
+		"popularity": 36, 
+		"rating": 4.3,
+		"loc_id": 1001,
+		"loc_name": "北京邮电大学",
+		"tags": ["高校"], 
+		"title": "...",
+		"body": "..."
+	}
+]
