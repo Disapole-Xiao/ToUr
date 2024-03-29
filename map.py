@@ -1,0 +1,19 @@
+import json
+
+class Map:
+    def __init__(self, mapid) -> None:
+        with open(f"data/maps/{mapid}.json", 'r',encoding="utf-8") as fp:
+            dic = json.load(fp)
+        self.attractions = dic["attractions"]
+        self.amenities = dic["amenities"]
+        self.restaurants = dic["restaurants"]
+        self.nodes = dic["nodes"]
+        self.adjlist = []
+        for node in self.nodes:
+            self.adjlist.append(node["adj"])
+            del node["adj"]
+
+# 测试代码        
+if __name__=="__main__":
+    map = Map(0)
+    print(map.attractions, map.amenities, map.restaurants, map.nodes, map.adjlist, sep='\n\n')
