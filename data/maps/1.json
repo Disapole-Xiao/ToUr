@@ -2346,20 +2346,6 @@
             ]
         },
         {
-            "id": "1803850904",
-            "lat": 39.9372335,
-            "lon": 116.3268076,
-            "adj": [
-                {
-                    "id": "4716502925",
-                    "distance": 33.33612375446394,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
             "id": "1803850909",
             "lat": 39.9374331,
             "lon": 116.3292371,
@@ -3417,97 +3403,13 @@
             ]
         },
         {
-            "id": "4716502925",
-            "lat": 39.9372403,
-            "lon": 116.3271985,
-            "adj": [
-                {
-                    "id": "4716502932",
-                    "distance": 10.686515380656115,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
-            "id": "4716502926",
-            "lat": 39.9372321,
-            "lon": 116.3267237,
-            "adj": [
-                {
-                    "id": "1803850904",
-                    "distance": 7.154882275921452,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
-            "id": "4716502927",
-            "lat": 39.9372362,
-            "lon": 116.3265306,
-            "adj": [
-                {
-                    "id": "4716502926",
-                    "distance": 16.469728019972337,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
-            "id": "4716502928",
-            "lat": 39.9372958,
-            "lon": 116.3264206,
-            "adj": [
-                {
-                    "id": "4716502927",
-                    "distance": 11.483683242532642,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
-            "id": "4716502929",
-            "lat": 39.9374151,
-            "lon": 116.3264635,
-            "adj": [
-                {
-                    "id": "4716502928",
-                    "distance": 13.760554434690869,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
-            "id": "4716502930",
-            "lat": 39.9374264,
-            "lon": 116.3267626,
-            "adj": [
-                {
-                    "id": "4716502929",
-                    "distance": 25.531685879688695,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
             "id": "4716502931",
             "lat": 39.93741,
             "lon": 116.3272749,
             "adj": [
                 {
-                    "id": "4716502930",
-                    "distance": 43.715865629146826,
+                    "id": "4716502932",
+                    "distance": 14.268661499782214,
                     "congestion": 1.0,
                     "bicycle": true,
                     "motorbike": true
@@ -3574,209 +3476,6 @@
                     "congestion": 1.0,
                     "bicycle": true,
                     "motorbike": true
-                }
-            ]
-        },
-        {
-            "id": "4716729786",
-            "lat": 39.9397266,
-            "lon": 116.3239302,
-            "adj": [
-                {
-                    "id": "4716729897",
-                    "distance": 16.982642096858946,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729787",
-            "lat": 39.939667,
-            "lon": 116.3239972,
-            "adj": [
-                {
-                    "id": "4716729786",
-                    "distance": 8.749186325802004,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729788",
-            "lat": 39.939595,
-            "lon": 116.324016,
-            "adj": [
-                {
-                    "id": "4716729787",
-                    "distance": 8.164898754744371,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729889",
-            "lat": 39.9394552,
-            "lon": 116.3239999,
-            "adj": [
-                {
-                    "id": "4716729788",
-                    "distance": 15.60553354373931,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729890",
-            "lat": 39.9393585,
-            "lon": 116.3239409,
-            "adj": [
-                {
-                    "id": "4716729889",
-                    "distance": 11.870936945937027,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729891",
-            "lat": 39.9393359,
-            "lon": 116.3237692,
-            "adj": [
-                {
-                    "id": "4716729890",
-                    "distance": 14.852572676178102,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729892",
-            "lat": 39.9393647,
-            "lon": 116.3236217,
-            "adj": [
-                {
-                    "id": "4716729891",
-                    "distance": 12.976599082769912,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729893",
-            "lat": 39.939447,
-            "lon": 116.3235627,
-            "adj": [
-                {
-                    "id": "4716729892",
-                    "distance": 10.442647885191437,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729894",
-            "lat": 39.9395889,
-            "lon": 116.3235466,
-            "adj": [
-                {
-                    "id": "4716729893",
-                    "distance": 15.8381511999706,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729895",
-            "lat": 39.9396876,
-            "lon": 116.3235842,
-            "adj": [
-                {
-                    "id": "4716729894",
-                    "distance": 11.43351252262733,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729896",
-            "lat": 39.939739,
-            "lon": 116.3236593,
-            "adj": [
-                {
-                    "id": "4716729895",
-                    "distance": 8.582560737015548,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729897",
-            "lat": 39.9397925,
-            "lon": 116.3237505,
-            "adj": [
-                {
-                    "id": "4716729896",
-                    "distance": 9.790038403555885,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729898",
-            "lat": 39.9398809,
-            "lon": 116.3237532,
-            "adj": [
-                {
-                    "id": "4716729897",
-                    "distance": 9.83232641790307,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4716729899",
-            "lat": 39.9400577,
-            "lon": 116.3237585,
-            "adj": [
-                {
-                    "id": "4716729898",
-                    "distance": 19.66445506846906,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": "4716729900",
-                    "distance": 7.836918213677042,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
                 }
             ]
         },
@@ -4309,48 +4008,6 @@
                     "congestion": 1.0,
                     "bicycle": false,
                     "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "4915834027",
-            "lat": 39.9395779,
-            "lon": 116.3222151,
-            "adj": [
-                {
-                    "id": "4915834032",
-                    "distance": 77.87173610307632,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
-            "id": "4915834030",
-            "lat": 39.9380221,
-            "lon": 116.3219993,
-            "adj": [
-                {
-                    "id": "4915834027",
-                    "distance": 173.97265573453177,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
-            "id": "4915834032",
-            "lat": 39.9402741,
-            "lon": 116.322314,
-            "adj": [
-                {
-                    "id": "4629985584",
-                    "distance": 28.336207377881642,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
                 }
             ]
         },
@@ -5125,20 +4782,6 @@
                 {
                     "id": "276580738",
                     "distance": 2.1197492293887,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "5145817917",
-            "lat": 39.9420939,
-            "lon": 116.324436,
-            "adj": [
-                {
-                    "id": "5145817918",
-                    "distance": 25.137306989708808,
                     "congestion": 1.0,
                     "bicycle": false,
                     "motorbike": false
@@ -6882,20 +6525,6 @@
                 {
                     "id": "4716730166",
                     "distance": 4.279620638733221,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
-                }
-            ]
-        },
-        {
-            "id": "10216736530",
-            "lat": 39.9428339,
-            "lon": 116.3270861,
-            "adj": [
-                {
-                    "id": "10216736531",
-                    "distance": 19.703193920345104,
                     "congestion": 1.0,
                     "bicycle": true,
                     "motorbike": true
@@ -8842,20 +8471,6 @@
                 {
                     "id": "276579946",
                     "distance": 40.8193694109614,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                }
-            ]
-        },
-        {
-            "id": "11169219724",
-            "lat": 39.9373693,
-            "lon": 116.3329914,
-            "adj": [
-                {
-                    "id": "11169219725",
-                    "distance": 51.224893763722164,
                     "congestion": 1.0,
                     "bicycle": false,
                     "motorbike": false
