@@ -31,8 +31,8 @@ def bm():
 def name_filter(li: list, input: str) -> list :
     pass
 
-# 每一个dest.tags是否包含tag
-def tag_filter(li: list, tag: str) -> list :
+# 每一个元素的属性attr（数组）中是否包含val
+def tag_filter(li: list, attr: str, val: str) -> list :
     pass
 
 # li中的每一项的属性attr是否与type相等。getattr函数
