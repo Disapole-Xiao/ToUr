@@ -35,7 +35,7 @@ class Destination:
 #destinations为list name——景区名称 category——分类 keywords——关键词 
 #查找算法 way——方式 1-3分别代表从name到keywords为参数进行查找
 
-def choose_destinations(destinations, name, category, keywords, way)：
+def choose_destinations(destinations, name, category, keywords, way):
     chooseed_destinations = [] #存放查找完成后的list
 
     if way == 1:
