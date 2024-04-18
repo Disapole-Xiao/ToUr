@@ -1,3 +1,4 @@
+import folium
 import json
 
 # 加载地图数据
