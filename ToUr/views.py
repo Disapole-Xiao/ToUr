@@ -1,5 +1,6 @@
+
 from django.shortcuts import render
- 
+
 def login(request):
     context = {}
     context['hello'] = 'Hello, Fuck World and ALL!'

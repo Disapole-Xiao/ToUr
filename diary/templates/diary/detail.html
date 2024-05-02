@@ -1,0 +1,55 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日记详情</title>
+    {% tailwind_css %}
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="container p-8 bg-white rounded-lg shadow-lg max-w-md mx-auto">
+        <a href="/diary/" class="absolute top-5 left-5 text-gray-500 hover:text-gray-700"> <!-- 有url硬编码 -->
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <h1 class="text-3xl font-bold mb-4 text-center">{{ diary.title }}</h1>
+        <div class="flex items-center justify-center mb-4">
+            <img src="{{ author_avatar_url }}" alt="" class="w-10 h-10 rounded-full mr-2">
+            <p class="text-gray-700">{{ diary.author.username }}</p>
+        </div>
+        <p class="mb-2 text-center">相关地点：<a href="#" class="text-blue-500">{{ diary.location.name }}</a></p>
+        <p class="mb-2 text-center">发布时间：{{ diary.pub_time }}</p>
+        <p class="mb-2 text-center">浏览量：{{ diary.popularity }}</p>
+        <p class="mb-2 text-center">评分：{{ diary.rating }}</p>
+        <div class="content mb-4 text-center">
+            <p class="text-gray-800 whitespace-pre-wrap">{{ diary.content }}</p>
+        </div>
+        <div class="rating flex items-center justify-center mb-4">
+            <p class="mr-2">请对这篇日记进行评分：</p>
+            <span class="star text-gray-300 hover:text-yellow-400 text-2xl cursor-pointer" onclick="selectStar(1)">★</span>
+            <span class="star text-gray-300 hover:text-yellow-400 text-2xl cursor-pointer" onclick="selectStar(2)">★</span>
+            <span class="star text-gray-300 hover:text-yellow-400 text-2xl cursor-pointer" onclick="selectStar(3)">★</span>
+            <span class="star text-gray-300 hover:text-yellow-400 text-2xl cursor-pointer" onclick="selectStar(4)">★</span>
+            <span class="star text-gray-300 hover:text-yellow-400 text-2xl cursor-pointer" onclick="selectStar(5)">★</span>
+        </div>
+        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" onclick="submitRating()">提交</button>
+    </div>
+    <script>
+        let selectedStars = 0;
+        function selectStar(stars) {
+            selectedStars = stars;
+            const starElements = document.querySelectorAll('.star');
+            starElements.forEach((star, index) => {
+                star.classList.toggle('text-yellow-400', index < stars);
+                star.classList.toggle('text-gray-300', index >= stars);
+            });
+        }
+        function submitRating() {
+            // 在此处添加将评分提交给后端的逻辑
+            alert("你给这篇日记的评分是：" + selectedStars);
+        }
+    </script>
+</body>
+</html>
