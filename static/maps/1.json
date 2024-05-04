@@ -1,10 +1,6 @@
 {
-    "id": 1,
     "name": "北京动物园",
-    "extrance": {
-        "lat": 116.3329914,
-        "lon": 39.9373693
-    },
+    "extrance": 3,
     "attractions": [
         {
             "id": 1,

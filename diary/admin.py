@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import User, Destination, Diary
+from .models import Diary
 
-admin.site.register([User, Destination, Diary])
+admin.site.register(Diary)

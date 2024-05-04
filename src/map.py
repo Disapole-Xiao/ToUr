@@ -2,9 +2,8 @@
 import json
 
 class Map:
-    def __init__(self, mapid) -> None:
-        with open(f"data/maps/{mapid}.json", 'r',encoding="utf-8") as fp:
-            dic = json.load(fp)
+    def __init__(self, jsonstr) -> None:
+        dic = json.loads(jsonstr)
         self.attractions = dic["attractions"]
         self.amenities = dic["amenities"]
         self.restaurants = dic["restaurants"]

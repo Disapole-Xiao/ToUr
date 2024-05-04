@@ -8,7 +8,10 @@ def dest_pic_path(instance, filename):
     # 返回存储的相对路径
     return os.path.join('destinations', filename)
 
-
+class Category(models.Model):
+    name = models.CharField(max_length=10, unique=True)
+    def __str__(self):
+        return self.name
 
 class Destination(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -18,7 +21,8 @@ class Destination(models.Model):
     image = models.ImageField(upload_to=dest_pic_path, blank=True, null=True)
     popularity = models.IntegerField(default=0, blank=True)
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0, blank=True)
-    tags = models.TextField()  ## 可能还需要修改 空格分隔的标签
+    tags = models.ManyToManyField(Category)
+    mapjson = models.TextField(default='{}', help_text="请粘贴地图的json文字") # 存储地图的json文件
 
     def __str__(self):
         return self.name

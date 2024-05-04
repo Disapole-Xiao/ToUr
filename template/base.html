@@ -1,3 +1,4 @@
+<!-- base.html -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -8,14 +9,14 @@
 </head>
 <body>
 <!-- 导航栏 -->
-  <nav class="navbar navbar-expand navbar-light bg-light fixed-top ">
+  <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="container-fluid">
       <!-- 品牌文字 -->
       <a class="navbar-brand fw-bold" href="#">ToUr</a>
       <!-- 中间导航链接 -->
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/tour/">游学</a>
+          <a class="nav-link" href="/travel/">游学</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/diary/">日记</a>
@@ -25,7 +26,8 @@
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="{{ user_avatar }}" alt="User Avatar" style="width: 30px; height: 30px; border-radius: 50%;">
+            <!-- 头像需要更改为用户头像 -->
+            <img src="https://wallpapercave.com/wp/wp7171970.jpg" alt="User Avatar" style="width: 30px; height: 30px; border-radius: 50%;">
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="#">资料</a></li>
@@ -37,8 +39,8 @@
   </nav>
 
 
-  {% block body %}
-  	预留给子模板的区域，可以设置设置默认内容
+  {% block mainbody %}
+  	<p>预留给子模板的区域，可以设置设置默认内容</p>
   {% endblock %}
 
 

@@ -3,7 +3,9 @@ from django.templatetags.static import static
 
 from .models import Diary
 def diary(request):
-    diaries = Diary.objects.order_by('-pub_time') ## 修改成自己写的排序
+    ## 修改成自己写的排序
+    diaries = Diary.objects.order_by('-pub_time') 
+    # diaries = sort(diaries, '嗯嗯综合', conti=False, reverse=False, len=10) 从大到小排
     context = {
         'diaries': diaries,
     }
@@ -11,12 +13,10 @@ def diary(request):
 
 def detail(request, diary_id):
     diary = get_object_or_404(Diary, pk=diary_id)
-    author_avatar_url = diary.author.avatar.url if \
-        diary.author.avatar else \
-        static("img/default_avatar.jpg")
+    default_avatar_url = static("img/default_avatar.jpg")
     context = {
         'diary': diary,
-        "author_avatar_url": author_avatar_url
+        'default_avatar_url': default_avatar_url,
     }
     return render(request, 'diary/detail.html', context)
 
