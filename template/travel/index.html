@@ -19,17 +19,17 @@ this is travel index
                     {% if dest.image %}
                     <img src='{{ dest.image.url }}' class="card-img-top object-fit-cover " alt="游学地图片" style="">
                     {% else %}
-                    <img src='https://moreishmarketing.com/app/uploads/2020/09/img_placeholder_1024x768.jpg' class="card-img-top object-fit-cover " alt="游学地图片" style="">
+                    <img src='https://moreishmarketing.com/app/uploads/2020/09/img_placeholder_1024x768.jpg' class="card-img-top object-fit-cover " alt="游学地默认图片" style="">
                     {% endif %}
                   </div>
                   <div class="card-body d-flex flex-column ">
                     <div class="d-flex justify-content-between mb-2">
-                      <h5 class="card-title mb-0">{{ dest.name }}</h5>
-                      <span>⭐{{ dest.rating }}</span>
+                      <h5 class="card-title mb-0 text-truncate " title="{{ dest.name }}" >{{ dest.name }}</h5>
+                      <span class="full-width">🔥{{ dest.popularity }}</span>
                     </div>
                     <p class="card-text text-muted">{{ dest.province }}  {{ dest.city }}</p>
                     <div class="d-flex justify-content-between mt-auto ">
-                      <span class="">🔥{{ dest.popularity }}</span>
+                      <span class="">⭐{{ dest.rating }}</span>
                       <span class="">
                         {% for tag in dest.tags.all %}
                         <span class="badge bg-info mx-1">#{{tag}}</span>

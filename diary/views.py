@@ -30,8 +30,8 @@ def add_diary(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content')
-        location_id = request.POST.get('location_id')
-        location = get_object_or_404(Destination, pk=location_id)
+        location_name = request.POST.get('location')
+        location = get_object_or_404(Destination, name=location_name)
         author = get_object_or_404(User, username='小明')
         new_diary = Diary(author=author, title=title, content=content, location=location)
         # new_diary = Diary(author=request.user, title=title, content=content, location=location)
