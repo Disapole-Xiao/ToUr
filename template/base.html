@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <title>{% block title %}ToUr{% endblock %}</title>
 </head>
 <body>
@@ -20,6 +21,14 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/diary/">日记</a>
+        </li>
+      </ul>
+      <!-- 添加日记按钮 -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#addDiaryModal">
+            <i class="bi bi-journal-plus"></i> 写日记
+          </a>
         </li>
       </ul>
       <!-- 用户头像下拉菜单 -->
@@ -38,6 +47,39 @@
     </div>
   </nav>
 
+  <!-- Modal -->
+<div class="modal fade" id="addDiaryModal" tabindex="-1" aria-labelledby="addDiaryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addDiaryModalLabel">写日记</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'diary:add_diary' %}">
+          {% csrf_token %}
+          <div class="mb-3 position-relative">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="location" name="location" autocomplete="off" onkeyup="searchLocation()">
+            <input type="hidden" id="location_id" name="location_id">
+            <div class="list-group" id="locationList" style="position: absolute; z-index: 1000; width: 100%; top: 100%; left: 0; opacity: 0.9; background-color: rgba(255, 255, 255, 0.8);"></div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="title" class="form-label">标题</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="content" class="form-label">正文</label>
+            <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">发布</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
   {% block mainbody %}
   	<p>预留给子模板的区域，可以设置设置默认内容</p>
@@ -47,5 +89,35 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-</body>
+    <!--Ajax 搜索游学地-->
+    <script>
+      function searchLocation() {
+        var input = document.getElementById('location').value;
+        if (input.length > 0) {
+          fetch(`{% url 'diary:search_location' %}?query=${input}`)
+            .then(response => response.json())
+            .then(data => {
+              let list = document.getElementById('locationList');
+              list.innerHTML = '';
+              data.forEach(item => {
+                let option = document.createElement('a');
+                option.classList.add('list-group-item', 'list-group-item-action');
+                option.href = '#';
+                option.textContent = item.name;
+                option.onclick = function() { 
+                  document.getElementById('location').value = item.name;
+                  document.getElementById('location_id').value = item.id;
+                  list.innerHTML = '';
+                  return false;
+                };
+                list.appendChild(option);
+              });
+            });
+        } else {
+          document.getElementById('locationList').innerHTML = '';
+        }
+      }
+      </script>
+      
+  </body>
 </html>
