@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}日记详情{% endblock %}
+{% block body %}
+    <div class="container p-4 bg-white rounded shadow-lg">
+        <a href="/diary/" class="position-absolute top-0 start-0 mt-3 ms-3 text-decoration-none text-muted">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <h1 class="text-center mb-4">{{ diary.title }}</h1>
+        <div class="d-flex align-items-center justify-content-center mb-4">
+            <img src="{{ author_avatar_url }}" alt="" class="rounded-circle me-2" width="50" height="50">
+            <p class="text-muted mb-0">{{ diary.author.username }}</p>
+        </div>
+        <p class="mb-2 text-center">相关地点：<a href="#" class="text-decoration-none text-primary">{{ diary.location.name }}</a></p>
+        <p class="mb-2 text-center">发布时间：{{ diary.pub_time }}</p>
+        <p class="mb-2 text-center">浏览量：{{ diary.popularity }}</p>
+        <p class="mb-2 text-center">评分：{{ diary.rating }}</p>
+        <div class="content mb-4 text-center">
+            <p class="text-muted">{{ diary.content }}</p>
+        </div>
+        <div class="rating d-flex align-items-center justify-content-center mb-4">
+            <p class="me-2">请对这篇日记进行评分：</p>
+            <span class="star text-muted fs-3" onclick="selectStar(1)">★</span>
+            <span class="star text-muted fs-3" onclick="selectStar(2)">★</span>
+            <span class="star text-muted fs-3" onclick="selectStar(3)">★</span>
+            <span class="star text-muted fs-3" onclick="selectStar(4)">★</span>
+            <span class="star text-muted fs-3" onclick="selectStar(5)">★</span>
+        </div>
+        <button class="btn btn-primary" onclick="submitRating()">提交</button>
+    </div>
+    <script>
+        let selectedStars = 0;
+        function selectStar(stars) {
+            selectedStars = stars;
+            const starElements = document.querySelectorAll('.star');
+            starElements.forEach((star, index) => {
+                if (index < stars) {
+                    star.classList.remove('text-muted');
+                    star.classList.add('text-warning');
+                } else {
+                    star.classList.remove('text-warning');
+                    star.classList.add('text-muted');
+                }
+            });
+        }
+        function submitRating() {
+            // 在此处添加将评分提交给后端的逻辑
+            alert("你给这篇日记的评分是：" + selectedStars);
+        }
+    </script>
+
+{% endblock %}

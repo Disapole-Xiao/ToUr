@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% if diaries %}
+<ul>
+    {% for diary in diaries %}
+    <li><a href="{% url 'diary:detail' diary.id %}">{{ diary.title }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No diaries.</p>
+{% endif %}
+
+{% endblock %}
