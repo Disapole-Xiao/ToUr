@@ -1,6 +1,6 @@
 {
     "name": "北京动物园",
-    "extrance": 3,
+    "entrance": 3,
     "attractions": [
         {
             "id": 1,
