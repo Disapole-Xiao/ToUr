@@ -1,11 +1,10 @@
-{
-	"id": 0,            
-	"name": "北京邮电大学", 
-	"entrance": {  
+{   
+	"name": "北京邮电大学（海淀校区）",        
+	"center": {  
 			"lat": 116.3912757,
 			"lon": 39.906217
 	},
-	
+	"entrance": 2,
 	"attractions": [
 		{ 
 			"id": 0,   

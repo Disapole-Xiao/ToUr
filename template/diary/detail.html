@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block title %}日记详情{% endblock %}
-{% block body %}
+{% block mainbody %}
+This is diary detail for {{ diary.title }}
     <div class="container p-4 bg-white rounded shadow-lg">
         <a href="/diary/" class="position-absolute top-0 start-0 mt-3 ms-3 text-decoration-none text-muted">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
