@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}日记详情{% endblock %}
+
 {% block mainbody %}
 This is diary detail for {{ diary.title }}
     <div class="container p-4 bg-white rounded shadow-lg">
@@ -31,6 +32,8 @@ This is diary detail for {{ diary.title }}
         </div>
         <button class="btn btn-primary" onclick="submitRating()">提交</button>
     </div>
+
+    {% block extra_js %}
     <script>
         let selectedStars = 0;
         function selectStar(stars) {
@@ -51,5 +54,5 @@ This is diary detail for {{ diary.title }}
             alert("你给这篇日记的评分是：" + selectedStars);
         }
     </script>
-
+    {% endblock %}
 {% endblock %}

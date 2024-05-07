@@ -15,6 +15,7 @@ class Category(models.Model):
 
 class Destination(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    type = models.CharField(max_length=1, choices={('s', '景区'), ('u','学校')}, default='s')
     province = models.CharField(max_length=15)
     city = models.CharField(max_length=15)
     description = models.TextField(blank=True)

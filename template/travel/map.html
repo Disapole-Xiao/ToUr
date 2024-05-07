@@ -1,30 +1,73 @@
 {% extends 'base.html' %}
+
 {% block title %}ToUr | {{dest.name}}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+{% endblock %}
+
 {% block mainbody %}
 
-<!--地图插件-->
-<div id="map"></div>
+<!--地图-->
+<div id="map"> </div>
+    
+<div id="sidebar" class="bg-light ">
+    <!-- 标签栏 -->
+    <div class="nav nav-pills mb-4 " role="tablist">
+        <a class="nav-link active" id="attractions-tab" data-bs-toggle="pill" href="#attractions" role="tab" aria-controls="attractions" aria-selected="true">景点</a>
+        <a class="nav-link" id="routing-tab" data-bs-toggle="pill" href="#routing" role="tab" aria-controls="routing" aria-selected="false">路径规划</a>
+        <a class="nav-link" id="amenities-tab" data-bs-toggle="pill" href="#amenities" role="tab" aria-controls="amenities" aria-selected="false">设施</a>
+        <a class="nav-link" id="restaurants-tab" data-bs-toggle="pill" href="#restaurants" role="tab" aria-controls="restaurants" aria-selected="false">美食</a>
+    </div>
 
-<div id="sidebar">
-    <h2>侧边栏标题</h2>
-    <p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p>
-    <p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p>
-    <p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p>
-    <p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p>
-    <p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p>
-    <p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p>
-    <p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p>
-    <p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p><p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p>
-    <p>这里是侧边栏的内容，你可以添加地图相关的信息或功能。</p>
+    <div class="tab-content">
+        <!-- 景点 -->
+        <div class="tab-pane fade show active" id="attractions" role="tabpanel" aria-labelledby="attractions-tab">
+            <ul id="attraction-list" class="list-group list-group-flush"></ul>
+        </div>
+        <!-- 路线规划 -->
+        <div class="tab-pane fade" id="routing" role="tabpanel" aria-labelledby="routing-tab">
+            <div>请选择您的目的地：</div>
+            <ul id="route-list" class="list-group list-group-flush mt-2">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    入口
+                    <button type="button" class="btn-close" onclick="removeFromRoute(this);" aria-label="Close"></button>
+                </li>
+            </ul>
+            <button class="btn btn-primary mt-3" onclick="planRoute()">规划路线</button>
+            <div id="planned-routes"></div>
+        </div>
+        <!-- 设施 -->
+        <div class="tab-pane fade" id="amenities" role="tabpanel" aria-labelledby="amenities-tab">
+            <div class="input-group mb-3">
+                <input type="text" id="amenity-search" class="form-control" placeholder="搜索设施">
+                <button class="btn btn-outline-secondary" type="button" onclick="searchFacilities()">搜索</button>
+            </div>
+            <ul id="amenity-list" class="list-group list-group-flush"></ul>
+        </div>
+        <!-- 美食 -->
+        <div class="tab-pane fade" id="restaurants" role="tabpanel" aria-labelledby="restaurants-tab">
+            <div class="input-group mb-3">
+                <select id="sort-options" class="form-select" style="max-width: fit-content">
+                    <option value="popularity">热度</option>
+                    <option value="rating">评价</option>
+                    <option value="distance">距离</option>
+                </select>
+                <input type="text" id="food-search" class="form-control" placeholder="搜索美食">
+                <button class="btn btn-outline-secondary" type="button" onclick="searchFood()">搜索</button>
+            </div>
+            <ul id="restaurant-list" class="list-group list-group-flush"></ul>
+        </div>
+    </div>
 </div>
 
-
-<script src="https://webapi.amap.com/maps?v=2.0&key=cb5a65550604c7614fdf840e00e5fce4&plugin=AMap.ToolBar,AMap.Scale,AMap.MouseTool,AMap.PolylineEditor"></script>
-<script>
-        var map = new AMap.Map('map', {
-            zoom: 12,
-            center: [116.39, 39.9]
-        });
-        add(map);
-</script>
 {% endblock%}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+{% endblock %}

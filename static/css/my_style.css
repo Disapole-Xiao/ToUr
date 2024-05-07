@@ -25,7 +25,6 @@
     bottom: 0;
     width: 100%;
     height: auto;
-    background-color: darkblue;
     /* z-index: -1; */
 }
 
@@ -36,23 +35,28 @@
     bottom: 0;
     width: 400px;
     max-width: 50%;
-    background-color: #f8f9fa;
     overflow-y: auto;
     padding: 20px;
     padding-top: 80px;
     /* z-index: -1; */
 }
+
 /* 当屏幕宽度小于等于600px时，改变侧边栏的位置和大小 */
 @media (max-width: 600px) {
     #sidebar {
         position: fixed;
-        left: 0; /* 改变为左侧固定 */
-        right: auto; /* 移除右侧固定 */
-        top: auto; /* 自动调整，以便底部对齐 */
+        left: 0;
+        /* 改变为左侧固定 */
+        right: auto;
+        /* 移除右侧固定 */
+        top: auto;
+        /* 自动调整，以便底部对齐 */
         bottom: 0;
-        width: 100%; /* 宽度变为全屏 */
+        width: 100%;
+        /* 宽度变为全屏 */
         max-width: 100%;
-        height: 40%; /* 高度变为原来的一半 */
+        height: 40%;
+        /* 高度变为原来的一半 */
         padding: 20px;
     }
 }

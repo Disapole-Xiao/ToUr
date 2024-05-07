@@ -1,6 +1,8 @@
 <!-- travel/index.html -->
 {% extends 'base.html' %}
+
 {% block title %}Tour | 游学{% endblock %}
+
 {% block mainbody %}
 this is travel index
 <!--搜索框-->
@@ -10,11 +12,12 @@ this is travel index
 {% if dests %}
     <div class="container">
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-            <!-- Destination Card Start -->
+            <!-- 一张游学地卡片 -->
             {% for dest in dests %}
             <div class="col">
               <a href="{% url 'travel:detail' dest.pk %}"style="color: inherit; text-decoration: none;">
                 <div class="card h-100 mb-0">
+                  <!-- 图片 -->
                   <div class="w-100 overflow-hidden " style="height:200px">
                     {% if dest.image %}
                     <img src='{{ dest.image.url }}' class="card-img-top object-fit-cover " alt="游学地图片" style="">
@@ -23,16 +26,19 @@ this is travel index
                     {% endif %}
                   </div>
                   <div class="card-body d-flex flex-column ">
+                    <!-- 标题 热度-->
                     <div class="d-flex justify-content-between mb-2">
                       <h5 class="card-title mb-0 text-truncate " title="{{ dest.name }}" >{{ dest.name }}</h5>
                       <span class="full-width">🔥{{ dest.popularity }}</span>
                     </div>
+                    <!-- 省市 -->
                     <p class="card-text text-muted">{{ dest.province }}  {{ dest.city }}</p>
+                    <!-- 评分 标签 -->
                     <div class="d-flex justify-content-between mt-auto ">
                       <span class="">⭐{{ dest.rating }}</span>
                       <span class="">
                         {% for tag in dest.tags.all %}
-                        <span class="badge bg-info mx-1">#{{tag}}</span>
+                        <span class="badge bg-info rounded-pill">#{{tag}}</span>
                         {% endfor %}
                       </span>
                     </div>

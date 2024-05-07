@@ -4,6 +4,8 @@ import json
 class Map:
     def __init__(self, jsonstr) -> None:
         dic = json.loads(jsonstr)
+        self.center = dic["center"]
+        self.entrance = dic["entrance"]
         self.attractions = dic["attractions"]
         self.amenities = dic["amenities"]
         self.restaurants = dic["restaurants"]
