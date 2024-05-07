@@ -20,6 +20,7 @@ m = folium.Map(location=initial_location, zoom_start=15)
 for node in map_data['nodes']:
     node_id = node['id']
     popup_html = f"""<div>Node ID: {node_id}<br>
+    lat: {node['lat']} lon: {node['lon']}<br>
     <button onclick="copyToClipboard('{node_id}')">Copy ID</button></div>"""
     popup = folium.Popup(popup_html, max_width=250)
     folium.Circle(
@@ -34,10 +35,15 @@ for node in map_data['nodes']:
     for adj in node['adj']:
         adj_node = next((item for item in map_data['nodes'] if item['id'] == adj['id']), None)
         if adj_node:
+            if adj['bicycle'] == True:
+                color = 'red'
+            else: color = 'green'
             folium.PolyLine(
                 locations=[[node['lat'], node['lon']], [adj_node['lat'], adj_node['lon']]],
-                color='green',
-                weight=1,
+                color=color,
+                weight=5,
+                popup=folium.Popup(f"<div>congestion:{adj['congestion']}<br>distance:{adj['distance']}</div>", max_width=250),
+                opacity=adj['congestion']
             ).add_to(m)
 
 # 保存地图为HTML文件
