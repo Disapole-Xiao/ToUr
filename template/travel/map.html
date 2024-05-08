@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}ToUr | {{dest.name}}{% endblock %}
 
 {% block extra_css %}
@@ -11,17 +11,18 @@
 {% block mainbody %}
 
 <!--地图-->
-<div id="map"> </div>
+<div id="map" class="bg-warning "> </div>
     
 <div id="sidebar" class="bg-light ">
     <!-- 标签栏 -->
-    <div class="nav nav-pills mb-4 " role="tablist">
-        <a class="nav-link active" id="attractions-tab" data-bs-toggle="pill" href="#attractions" role="tab" aria-controls="attractions" aria-selected="true">景点</a>
-        <a class="nav-link" id="routing-tab" data-bs-toggle="pill" href="#routing" role="tab" aria-controls="routing" aria-selected="false">路径规划</a>
-        <a class="nav-link" id="amenities-tab" data-bs-toggle="pill" href="#amenities" role="tab" aria-controls="amenities" aria-selected="false">设施</a>
-        <a class="nav-link" id="restaurants-tab" data-bs-toggle="pill" href="#restaurants" role="tab" aria-controls="restaurants" aria-selected="false">美食</a>
+    <div class="sticky-top bg-light mb-3 pb-1  " style="padding-top: 70px;">
+        <div class="nav nav-pills " role="tablist">
+            <a class="nav-link active" id="attractions-tab" data-bs-toggle="pill" href="#attractions" role="tab" aria-controls="attractions" aria-selected="true">景点</a>
+            <a class="nav-link" id="routing-tab" data-bs-toggle="pill" href="#routing" role="tab" aria-controls="routing" aria-selected="false">路径规划</a>
+            <a class="nav-link" id="amenities-tab" data-bs-toggle="pill" href="#amenities" role="tab" aria-controls="amenities" aria-selected="false">设施</a>
+            <a class="nav-link" id="restaurants-tab" data-bs-toggle="pill" href="#restaurants" role="tab" aria-controls="restaurants" aria-selected="false">美食</a>
+        </div>
     </div>
-
     <div class="tab-content">
         <!-- 景点 -->
         <div class="tab-pane fade show active" id="attractions" role="tabpanel" aria-labelledby="attractions-tab">
@@ -69,5 +70,10 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
+<script>
+    // 将 Django 变量转换为 JavaScript 对象
+    var mapData = JSON.parse('{{ dest.mapjson|escapejs }}');    
+</script>
+<script src="{% static 'js/map.js' %}"></script>
 
 {% endblock %}

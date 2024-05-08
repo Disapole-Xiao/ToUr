@@ -20,9 +20,7 @@ def detail(request, dest_id):
     return render(request, 'travel/detail.html', context)
 def map(request, dest_id):
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = Map(dest.mapjson) # 实例化一个Map对象
     context = {
-        'map': map,
         'dest': dest
     }
     return render(request, 'travel/map.html', context)

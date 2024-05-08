@@ -2,4 +2,7 @@
 {% block title %}Tour|游学{% endblock %}
 {% block mainbody %}
 this is travel detail for {{dest.name}}
+<a href="{% url 'travel:map' dest_id=dest.id %}" class="btn btn-primary">
+    开始游学
+</a>
 {% endblock %}
