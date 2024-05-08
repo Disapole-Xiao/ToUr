@@ -18,19 +18,6 @@ m = folium.Map(location=initial_location, zoom_start=15)
 
 # 为每个节点添加圆圈标记和Popup，并画出边
 for node in map_data['nodes']:
-    node_id = node['id']
-    popup_html = f"""<div>Node ID: {node_id}<br>
-    lat: {node['lat']} lon: {node['lon']}<br>
-    <button onclick="copyToClipboard('{node_id}')">Copy ID</button></div>"""
-    popup = folium.Popup(popup_html, max_width=250)
-    folium.Circle(
-        location=[node['lat'], node['lon']],
-        radius=1,
-        color='blue',
-        fill=True,
-        popup=popup
-    ).add_to(m)
-
     # 画出与当前节点相连的边
     for adj in node['adj']:
         adj_node = next((item for item in map_data['nodes'] if item['id'] == adj['id']), None)
@@ -45,6 +32,23 @@ for node in map_data['nodes']:
                 popup=folium.Popup(f"<div>congestion:{adj['congestion']}<br>distance:{adj['distance']}</div>", max_width=250),
                 opacity=adj['congestion']
             ).add_to(m)
+    
+for node in map_data['nodes']:
+     # 画出点
+    node_id = node['id']
+    popup_html = f"""<div>Node ID: {node_id}<br>
+    lat: {node['lat']}<br>
+    lon: {node['lon']}<br>
+    <button onclick="copyToClipboard('{node_id}')">Copy ID</button></div>"""
+    popup = folium.Popup(popup_html, max_width=250)
+    folium.Circle(
+        location=[node['lat'], node['lon']],
+        radius=2,
+        weight=5,
+        color='blue',
+        fill=True,
+        popup=popup,
+        ).add_to(m)
 
 # 保存地图为HTML文件
 map_html_path = f'tool/{map_id}.html'
