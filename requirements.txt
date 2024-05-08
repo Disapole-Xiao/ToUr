@@ -1,0 +1,4 @@
+Django
+django-browser-reload
+folium
+pillow
