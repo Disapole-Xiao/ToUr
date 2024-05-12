@@ -4,60 +4,38 @@
 {% block title %}Tour | 日记{% endblock %}
 
 {% block mainbody %}
-this is diary index
-<!--搜索框-->
-<!--标签筛选-->
-
+<div class="container">
+  <div class="container m-auto w-50 my-5 ">
+    <!--搜索框-->
+    <div class="input-group input-group-lg mb-2">
+      <select id="diary-search-type" class="form-select" style="max-width: fit-content">
+        <option value="日记名称">日记名称</option>
+        <option value="游学地名称">游学地名称</option>
+        <option value="全文搜索">全文搜索</option>
+      </select>
+      <input type="text" id="dest-search" class="form-control" placeholder="搜索日记">
+      <button class="btn btn-outline-secondary" type="button" onclick="">搜索</button>
+    </div>
+    <!-- 排序 -->
+    <div class="input-group">
+      <select id="dest-sort" class="form-select bg-white border-0 no-outline" style="max-width: fit-content">
+        <option value="综合">综合排序</option>
+          <option value="热度最高">热度最高</option>
+          <option value="评分最高">评分最高</option>
+      </select>
+    </div>
+  </div>
 <!--日记展示-->
-{% if diaries %}
-    <div class="container">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            <!-- 一张日记卡片 -->
-            {% for diary in diaries %}
-            <div class="col">
-              <a href="{% url 'diary:detail' diary.pk %}"style="color: inherit; text-decoration: none;">
-                <!-- 图片-->
-                <div class="card h-100 mb-0">
-                  {% if diary.image %}
-                  <div class="w-100 overflow-hidden " style="height:200px">
-                    <img src='{{ diary.image.url }}' class="card-img-top object-fit-cover " alt="日记第1张图片" style="">
-                  </div>
-                  {% endif %}
-                  <div class="card-body d-flex flex-column ">
-                    <div class="d-flex justify-content-between mb-2">
-                      <!-- 标题 评分 热度 -->
-                      <h5 class="card-title mb-0 text-truncate" title="{{ diary.title }}">{{ diary.title }}</h5>
-                      <span class="ms-auto ">⭐{{ diary.rating }}</span>
-                      <span class="full-width ms-2">🔥{{ diary.popularity }}</span>
-                    </div>
-                    <!-- 相关地点 -->
-                    <div class="mb-3">
-                      <i class="bi bi-geo-alt-fill text-muted"></i>
-                      <span class="card-text text-muted">{{ diary.location.name}}</span>
-                    </div>
-                    <!-- 截断了的日记内容 -->
-                    <span class="card-text truncate-lines mb-4 ">{{ diary.content }}</span>
-                    <!-- 说不定会用到 -->
-                    <div class="d-flex">
-                      
-                    </div>
-                    <!--作者 发布时间 -->
-                    <div class="d-flex align-items-center mt-auto ">
-                      <img src="https://wallpapercave.com/wp/wp7171970.jpg" alt="用户头像" style="width: 20px; height: 20px; border-radius: 50%;">
-                      <span class="card-text text-muted ms-1 text-truncate ">{{ diary.author.username }}</span>
-                      <span class="card-text text-muted ms-auto full-width">发布于 {{ diary.pub_time | date:"Y-m-d"}}</span>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-              
-            {% endfor %}
-            
-        </div>
-      </div>   
-{% else %}
-<p>No diarys.</p>
+  {% if diaries %}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for diary in diaries %}
+      {% include 'diary/diary_card.html' %}
+    {% endfor %}
+      
+  </div>
+  {% else %}
+  <p>No diarys.</p>
+</div>   
 
 {% endif %}
 {% endblock %}

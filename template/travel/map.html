@@ -16,7 +16,7 @@
 <div id="sidebar" class="bg-light ">
     <!-- 标签栏 -->
     <div class="sticky-top bg-light mb-3 pb-1  " style="padding-top: 70px;">
-        <div class="nav nav-pills " role="tablist">
+        <div class="nav nav-pills justify-content-between nav-fill " role="tablist">
             <a class="nav-link active" id="attractions-tab" data-bs-toggle="pill" href="#attractions" role="tab" aria-controls="attractions" aria-selected="true">景点</a>
             <a class="nav-link" id="routing-tab" data-bs-toggle="pill" href="#routing" role="tab" aria-controls="routing" aria-selected="false">路径规划</a>
             <a class="nav-link" id="amenities-tab" data-bs-toggle="pill" href="#amenities" role="tab" aria-controls="amenities" aria-selected="false">设施</a>
@@ -34,7 +34,7 @@
             <ul id="route-list" class="list-group list-group-flush mt-2">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     入口
-                    <button type="button" class="btn-close" onclick="removeFromRoute(this);" aria-label="Close"></button>
+                    {% comment %} <button type="button" class="btn-close" onclick="removeFromRoute(this);" aria-label="Close"></button> {% endcomment %}
                 </li>
             </ul>
             <button class="btn btn-primary mt-3" onclick="planRoute()">规划路线</button>
@@ -43,24 +43,39 @@
         <!-- 设施 -->
         <div class="tab-pane fade" id="amenities" role="tabpanel" aria-labelledby="amenities-tab">
             <div class="input-group mb-3">
-                <input type="text" id="amenity-search" class="form-control" placeholder="搜索设施">
+                <input type="text" id="amenity-search" class="form-control" placeholder="请输入类别">
                 <button class="btn btn-outline-secondary" type="button" onclick="searchFacilities()">搜索</button>
             </div>
             <ul id="amenity-list" class="list-group list-group-flush"></ul>
         </div>
         <!-- 美食 -->
         <div class="tab-pane fade" id="restaurants" role="tabpanel" aria-labelledby="restaurants-tab">
+            <!-- 搜索框 美食名称 餐馆名称筛选 -->
+            <div class="input-group mb-3" >
+                <select id="food-search-type" class="form-select" style="max-width: fit-content">
+                    <option value="food-name">美食名称</option>
+                    <option value="restaurant-name">餐馆名称</option>
+                </select>
+                <input type="text" id="food-search-input" class="form-control" placeholder="搜索美食">
+                <button class="btn btn-outline-secondary" type="button" onclick="searchFood()">搜索</button>
+            </div>
+            <!-- 菜系筛选、排序-->
             <div class="input-group mb-3">
-                <select id="sort-options" class="form-select" style="max-width: fit-content">
+                <select id="restaurant-sort" class="form-select bg-light border-0 no-outline" style="max-width: fit-content">
                     <option value="popularity">热度</option>
                     <option value="rating">评价</option>
                     <option value="distance">距离</option>
                 </select>
-                <input type="text" id="food-search" class="form-control" placeholder="搜索美食">
-                <button class="btn btn-outline-secondary" type="button" onclick="searchFood()">搜索</button>
+                <select id="cuisine-filter" class="form-select bg-light border-0 no-outline" style="max-width: fit-content">
+                    <option value="">所有菜系</option>
+                    {% for cuisine in cuisines %}
+                    <option value="{{ cuisine }}">{{ cuisine }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <ul id="restaurant-list" class="list-group list-group-flush"></ul>
         </div>
+        
     </div>
 </div>
 

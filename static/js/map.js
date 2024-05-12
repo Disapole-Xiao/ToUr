@@ -124,5 +124,16 @@ function removeFromRoute(id, listItem) {
     }
 }
 
+function searchFood() {
+    var searchType = document.getElementById('food-search-type').value;
+    var searchText = document.getElementById('food-search-input').value;
+    var sortOption = document.getElementById('restaurant-sort').value;
+    var cuisineOption = document.getElementById('cuisine-filter').value;
+
+    // 在这里实现调用后端 API 的 AJAX 请求，发送这些参数并更新餐馆列表
+    // 以下是示例逻辑：
+    console.log(searchType, searchText, sortOption, cuisineOption);
+    // 实际的 AJAX 请求将根据您的后端 API 调整
+}
 
 

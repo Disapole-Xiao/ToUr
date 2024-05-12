@@ -1,0 +1,33 @@
+<!-- 一张游学地卡片 -->
+<div class="col">
+    <a href="{% url 'travel:detail' dest.pk %}"style="color: inherit; text-decoration: none;">
+      <div class="card h-100 mb-0 shadow-sm ">
+        <!-- 图片 -->
+        <div class="w-100 overflow-hidden " style="height:200px">
+          {% if dest.image %}
+          <img src='{{ dest.image.url }}' class="card-img-top object-fit-cover " alt="游学地图片" style="">
+          {% else %}
+          <img src='https://moreishmarketing.com/app/uploads/2020/09/img_placeholder_1024x768.jpg' class="card-img-top object-fit-cover " alt="游学地默认图片" style="">
+          {% endif %}
+        </div>
+        <div class="card-body d-flex flex-column ">
+          <!-- 标题 热度-->
+          <div class="d-flex justify-content-between mb-2">
+            <h5 class="card-title mb-0 text-truncate " title="{{ dest.name }}" >{{ dest.name }}</h5>
+            <span class="full-width">🔥{{ dest.popularity }}</span>
+          </div>
+          <!-- 省市 -->
+          <p class="card-text text-muted">{{ dest.province }}  {{ dest.city }}</p>
+          <!-- 评分 标签 -->
+          <div class="d-flex justify-content-between mt-auto ">
+            <span class="">⭐{{ dest.rating }}</span>
+            <span class="">
+              {% for tag in dest.tags.all %}
+              <span class="badge bg-info rounded-pill">#{{tag}}</span>
+              {% endfor %}
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+</div>
