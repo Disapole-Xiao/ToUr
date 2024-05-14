@@ -1,5 +1,7 @@
 import json
 
+map_id = 2
+
 # 定义一个函数用于更新节点和连接信息的ID
 def update_ids(data, old_id, new_id):
     # 更新节点ID
@@ -32,7 +34,7 @@ def update_attractions_ids(data):
         new_id += 1
 
 # 读取JSON文件
-with open('static/maps/1.json', 'r',encoding="utf-8") as file:
+with open('static/maps/{}.json'.format(map_id), 'r',encoding="utf-8") as file:
     data = json.load(file)
 
 # 创建一个字典，用于存储旧ID和新ID之间的映射关系
@@ -57,5 +59,5 @@ update_restaurants_ids(data)
 update_attractions_ids(data)
 
 # 将更新后的数据写回JSON文件
-with open('static/maps/1.json', 'w',encoding="utf-8") as file:
+with open('static/maps/{}.json'.format(map_id), 'w',encoding="utf-8") as file:
     json.dump(data, file,ensure_ascii=False, indent=4)
