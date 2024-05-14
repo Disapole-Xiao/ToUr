@@ -13,7 +13,13 @@ class Map:
         self.adjlist = []
         for node in self.nodes:
             self.adjlist.append(node["adj"])
-            del node["adj"]
+        '''
+        adjlist = [
+            [{"id": "546", "distance": 37.5, "congestion": 0.1, "bicycle": false, "motorbike": false}, {...}]
+            [{...}, {...}, ...],
+            ...
+        ]
+        '''
         
 # 测试代码        
 if __name__=="__main__":

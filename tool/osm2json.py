@@ -9,7 +9,7 @@ import math
 import json
 
 # Load and parse the OSM file
-map_id = 3
+map_id = 1
 osm_file = f'tool/{map_id}.osm'
 tree = ET.parse(osm_file)
 root = tree.getroot()
@@ -78,6 +78,13 @@ for way in root.findall('way'):
                 'bicycle': bicycle,
                 'motorbike': motorbike
             })
+            nodes[node_id_2]['adj'].append({
+                'id': node_id_1,
+                'distance': distance,
+                'congestion': 1.0,
+                'bicycle': bicycle,
+                'motorbike': motorbike
+            })
 
 # 删除孤立点
 delete_id = [] 
@@ -92,7 +99,7 @@ print("node num:", len(nodes_list))
 
 # Since the nodes_list is potentially large, we will not print it directly to avoid overwhelming the output
 # Instead, we'll convert it to JSON and save it to a file
-json_output_path = f'static/maps/{map_id}.json'
+json_output_path = f'static/maps/tmp.json'
 with open(json_output_path, 'w') as json_file:
     json.dump({'nodes': nodes_list}, json_file, ensure_ascii=False, indent=4)
 

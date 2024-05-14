@@ -2,7 +2,7 @@ import folium
 import json
 
 # 加载地图数据
-map_id = 2
+map_id = 1
 json_file_path = f'static/maps/{map_id}.json'  # 替换为你的JSON数据文件路径
 with open(json_file_path, 'r',encoding="utf-8") as file:
     map_data = json.load(file)
@@ -20,7 +20,10 @@ m = folium.Map(location=initial_location, zoom_start=15)
 for node in map_data['nodes']:
     # 画出与当前节点相连的边
     for adj in node['adj']:
-        adj_node = next((item for item in map_data['nodes'] if item['id'] == adj['id']), None)
+        try:
+            adj_node = map_data['nodes'][adj['id']]
+        except IndexError:
+            print(f"Warning: Node {node['id']} has an invalid adjacent node ID {adj['id']}")
         if adj_node:
             if adj['bicycle'] == True:
                 color = 'red'
