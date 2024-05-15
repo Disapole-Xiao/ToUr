@@ -44,8 +44,13 @@
         <!-- 设施 -->
         <div class="tab-pane fade" id="amenities" role="tabpanel" aria-labelledby="amenities-tab">
             <div class="input-group mb-3">
-                <input type="text" id="amenity-search" class="form-control" placeholder="请输入类别">
-                <button class="btn btn-outline-secondary" type="button" onclick="searchFacilities()">搜索</button>
+                <input class="form-control" list="amenity-types" id="amenity-search" placeholder="请输入类别">
+                <datalist id="amenity-types">
+                    {% for type_name in amenity_types %}
+                    <option value={{ type_name }}>
+                    {% endfor %}
+                </datalist>
+                <button class="btn btn-outline-secondary" type="button" onclick="searchAmenity()">搜索</button>
             </div>
             <ul id="amenity-list" class="list-group list-group-flush"></ul>
         </div>
@@ -69,7 +74,7 @@
                 </select>
                 <select id="cuisine-filter" class="form-select bg-light border-0 no-outline" style="max-width: fit-content">
                     <option value="">所有菜系</option>
-                    {% for cuisine in cuisines %}
+                    {% for cuisine in cuisine_types %}
                     <option value="{{ cuisine }}">{{ cuisine }}</option>
                     {% endfor %}
                 </select>

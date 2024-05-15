@@ -49,6 +49,10 @@ document.addEventListener('DOMContentLoaded', function() {
     );
     drawRoads(); // 画道路
     routeLayer.addTo(map)
+
+    // 增加事件监听器，点击设施标签时加载设施数据
+    document.getElementById('amenities-tab').addEventListener('click', searchAmenities);
+
 });
 
 function initializeMap() {
@@ -250,10 +254,50 @@ function displayRoute(latLonSeq) {
     
     
 }
+// -------------设施页面---------------
+var amenityMarkers = [];
+
+function searchAmenity() {
+    var type = document.getElementById('amenity-search').value.toLowerCase();
+    fetch('/api/search_amenities/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ type: type, attraction_id: currentSelected.marker.getPopup().getContent() }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayAmenities(data.amenities);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function displayAmenities(amenities) {
+    var list = document.getElementById('amenity-list');
+    list.innerHTML = '';
+    amenityMarkers.forEach(marker => map.removeLayer(marker));  // 清除之前的设施标记
+    amenityMarkers = [];
+
+    amenities.forEach(amenity => {
+        var marker = L.marker([amenity.coordinate.lat, amenity.coordinate.lon], {icon: amenityIcon}).addTo(map)
+            .bindPopup(`<h6 class="m-0">${amenity.name}</h6><p>${amenity.description}</p>`);
+        amenityMarkers.push(marker);
+
+        var listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.textContent = amenity.name;
+        list.appendChild(listItem);
+    });
+}
 
 
 
-// -------------------------------------
+
+// -------------美食页面-----------------
 function searchFood() {
     var searchType = document.getElementById('food-search-type').value;
     var searchText = document.getElementById('food-search-input').value;
