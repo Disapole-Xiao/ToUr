@@ -188,7 +188,7 @@ def Heapsort(arr, attr, reverse):
                 minHeapify(h, root, i - 1, attr)
             else:
                 maxHeapify(h, root, i - 1, attr)
-    return result[1:]  # 返回排好序的元素
+    return result  # 返回排好序的元素
 
 
 
@@ -201,10 +201,10 @@ if __name__ == "__main__":
     for i in filtered_data:
         print(i)
         
-    filtered_data = tag_filter(dests, 'tags', "高校")
+    filtered_data = tag_filter(dests, 'tags', "历史人文")
     print('---- tag filter ----')
     for i in filtered_data:
-        print(i)
+        print(i, i.tags.all())
 
     sorted_data = attr_sort(dests,"popularity",len=8)
     print('----sort popularity-------')
