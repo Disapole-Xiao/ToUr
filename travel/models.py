@@ -1,3 +1,5 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 import os
 from django.db import models
 
@@ -21,7 +23,11 @@ class Destination(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to=dest_pic_path, blank=True, null=True)
     popularity = models.IntegerField(default=0, blank=True)
-    rating = models.DecimalField(max_digits=2, decimal_places=1, default=0, blank=True)
+    rating = models.DecimalField(max_digits=2, decimal_places=1, default=0, blank=True, validators=[
+            # 限制0~5
+            MinValueValidator(0, message="Rating must be at least 0"),
+            MaxValueValidator(5, message="Rating cannot be greater than 5"),
+        ])
     tags = models.ManyToManyField(Category)
     mapjson = models.TextField(default='{}', help_text="请粘贴地图的json文字") # 存储地图的json文件
 
