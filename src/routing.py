@@ -1,7 +1,7 @@
-    
 from itertools import permutations
 import json
-inf = float('inf')
+
+inf = float("inf")
 
 
 def adjlist_distance(nodes):
@@ -29,7 +29,6 @@ def adjlist_time(nodes):
             weight = distance / congestion
             adj_list[node["id"]].append((neighbor, weight))
 
-
     return adj_list
 
 
@@ -37,9 +36,9 @@ def adjlist_time(nodes):
 def route_sgl(cur_map: dict, start: int, end: int, mode: str) -> list:
     # 从 Map 中获取边存储到邻接表 adj_list 中
     if mode == "distance":
-        adj_list = adjlist_distance(cur_map['nodes'])
+        adj_list = adjlist_distance(cur_map["nodes"])
     elif mode == "time":
-        adj_list = adjlist_time(cur_map['nodes'])
+        adj_list = adjlist_time(cur_map["nodes"])
 
     # dijkstra
     M = len(adj_list)
@@ -53,10 +52,10 @@ def route_sgl(cur_map: dict, start: int, end: int, mode: str) -> list:
     while start != end:
         Min = inf
         for neighbor, weight in adj_list[start]:
-            if  dist[start] + weight < dist[neighbor]:
+            if dist[start] + weight < dist[neighbor]:
                 dist[neighbor] = dist[start] + weight
                 path[neighbor] = start
-        for i in range(0,M):
+        for i in range(0, M):
             if visit[i] and dist[i] < Min:
                 Min = dist[i]
                 Next = i
@@ -78,86 +77,96 @@ def route_sgl(cur_map: dict, start: int, end: int, mode: str) -> list:
     return shortestPath
 
 
-
-
-
-
-
 # -------------------------
-    
+
+
 def getpath(a, b, path, anspath, idx):
     if path[a][b] == -1:
         return
     else:
         k = path[a][b]
         getpath(a, k, path, anspath, idx)
-        anspath[idx[0]] = k
-        idx[0] += 1
+        # anspath[idx] = k
+        anspath.append(k)
+        # print(a,b,anspath)
+        idx += 1
         getpath(k, b, path, anspath, idx)
 
-def route_mul(cur_map: dict, nodes: list, start: int, mode) -> list:
+
+def route_mul(cur_map: dict, nodes: list, start: int, mode: str) -> list:
     # 获取所需数据：dist矩阵，存储任意两点间的距离
-    n = len(cur_map['nodes'])
-    dist = [[inf for _ in range(n)] for _ in range(n)]
-    path = [[inf for _ in range(n)] for _ in range(n)]
-    for node in nodes :
+    n = len(cur_map["nodes"])
+    dist = [[inf for _ in range(0, n)] for _ in range(0, n)]
+    path = [[-1 for _ in range(0, n)] for _ in range(0, n)]
+    compute_nodes = cur_map["nodes"]
+    for node in compute_nodes:
         adjacencies = node["adj"]
-        now = nodes["id"]
+        now = node["id"]
         for adj in adjacencies:
             neighbor = adj["id"]
-            if mode == 0:
+            if mode == "distance":
                 weight = adj["distance"]
-            else :
-                distance=adj["distance"]
-                congestion=adj["congestion"]
-                weight = distance/congestion
+            elif mode == "time":
+                distance = adj["distance"]
+                congestion = adj["congestion"]
+                weight = distance / congestion
             dist[now][neighbor] = weight
             dist[neighbor][now] = weight
 
     # floyd
-    for k in range(1, n):
-        for i in range(1, n):
-            for j in range(1, n):
+    for k in range(0, n):
+        for i in range(0, n):
+            for j in range(0, n):
                 if dist[i][j] > dist[i][k] + dist[k][j]:
                     dist[i][j] = dist[i][k] + dist[k][j]
                     path[i][j] = k
-
     # 求中间必经点的全排列
     k = len(nodes)
     nodes.sort()
     mindis = inf
+    anspath = []
     for per in permutations(nodes):
         # 计算每一种排列对应的最短路径
-        distance = dist[start][nodes[0]]
-        if dist[start][nodes[0]] == inf:
-            return inf + 1
+        distance = dist[start][per[0]]
+        if dist[start][per[0]] == inf:
+            continue
         for i in range(0, k - 2):
-            if dist[nodes[i]][nodes[i + 1] == inf]:
-                return inf + 1
-            distance += dist[nodes[i]][nodes[i + 1]]
-        if dist[nodes[k - 1]][1] == inf:
-            return inf + 1
-        distance += dist[nodes[k - 1]][start]
-
+            if dist[per[i]][per[i + 1] == inf]:
+                continue
+            distance += dist[per[i]][per[i + 1]]
+        if dist[per[k - 1]][start] == inf:
+            continue
+        distance += dist[per[k - 1]][start]
+        
         if mindis > distance:
             mindis = distance
             anspath = []
+            idx = 0
             # 存储最短路径
             anspath.append(start)
-            getpath(start, nodes[0])
-            for i in range(0, k - 2):
-                anspath.append(nodes[i])
-                getpath(nodes[i], nodes[i + 1])
-            anspath.append(nodes[k - 1])
-            getpath(nodes[k - 1], start)
+            # anspath[idx] = start
+            idx += 1
+            getpath(start, per[0], path, anspath, idx)
+            for i in range(0, k - 1):
+                anspath.append(per[i])
+                # anspath[idx] = nodes[i]
+                idx += 1
+                getpath(per[i], per[i + 1], path, anspath, idx)
+            anspath.append(per[k - 1])
+            # anspath[idx] = nodes[k - 1]
+            idx += 1
+            getpath(per[k - 1], start, path, anspath, idx)
             anspath.append(start)
+            idx += 1
 
     return anspath
+
 
 # 测试代码
 if __name__ == "__main__":
     with open("static/maps/1.json", "r", encoding="utf-8") as f:
         jsonstr = f.read()
     map = json.loads(jsonstr)
-    print(route_sgl(map, 538, 359, "distance"))
-    print(route_sgl(map, 538, 359, "time"))
+    # print(route_sgl(map, 538, 359, "distance"))
+    # print(route_sgl(map, 538, 359, "time"))
+    print(route_mul(map, [326,334,376,62], 342, "time"))
