@@ -22,7 +22,7 @@ class Diary(models.Model):
     def __str__(self):
         return f'title: {self.title} author: {self.author.username}'
     
-class Rating(models.Model):
+class UserRating(models.Model):
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[
