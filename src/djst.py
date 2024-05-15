@@ -1,6 +1,5 @@
-import json
 from map import Map
-
+import json
 inf = float("inf")
 
 
@@ -23,24 +22,23 @@ def adjlist_time(nodes):
     for node in nodes:
         adjacencies = node["adj"]
         for adj in adjacencies:
-            neighbor = adj["node"]
+            neighbor = adj["id"]
             distance = adj["distance"]
             congestion = adj["congestion"]
             weight = distance / congestion
             adj_list[node["id"]].append((neighbor, weight))
 
-        del node["adj"]
 
     return adj_list
 
 
 # 返回值是id序列
-def route_sgl(cur_map: Map, start: int, end: int, mode: str) -> list:
+def route_sgl(cur_map: dict, start: int, end: int, mode: str) -> list:
     # 从 Map 中获取边存储到邻接表 adj_list 中
     if mode == "distance":
-        adj_list = adjlist_distance(cur_map.nodes)
+        adj_list = adjlist_distance(cur_map['nodes'])
     elif mode == "time":
-        adj_list = adjlist_time(cur_map.nodes)
+        adj_list = adjlist_time(cur_map['nodes'])
 
     # dijkstra
     M = len(adj_list)
@@ -82,5 +80,5 @@ def route_sgl(cur_map: Map, start: int, end: int, mode: str) -> list:
 if __name__ == "__main__":
     with open("static/maps/1.json", "r", encoding="utf-8") as f:
         jsonstr = f.read()
-    map = Map(jsonstr)
-    print(route_sgl(map,162, 316,"distance"))
+    map = json.loads(jsonstr)
+    print(route_sgl(map, 538, 359, "time"))
