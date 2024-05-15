@@ -27,3 +27,9 @@ class Destination(models.Model):
 
     def __str__(self):
         return self.name
+    
+    # 给定用户的兴趣标签，返回游学地与用户的兴趣匹配度
+    def compute_interest_match(self, interest: list) -> float:
+        match_count = sum(tag in self.tags for tag in interest)
+        interest_match = match_count / len(interest)
+        return interest_match

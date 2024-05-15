@@ -1,11 +1,55 @@
-document.addEventListener('DOMContentLoaded', function() {
-    initializeMap();
-    loadAttractions();
-});
-
 var map;  // Global map variable
 var mapMarkers = {};  // To store markers for easy access and manipulation
 var currentSelected = null;  // To track the currently selected list item
+var routeLayer = L.layerGroup();
+
+// 自定义Icon
+var entranceIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+var attractionIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+var amenityIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+var restaurantIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+// 当网页加载完成时启动
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMap();
+    loadAttractions();
+    // 标记出入口点
+    entrance_node_id = mapData.entrance;
+    entrance = mapData.nodes[entrance_node_id];
+    L.marker([entrance.lat, entrance.lon], {icon: entranceIcon}).addTo(map).bindPopup(
+        `<h6 class="m-0">入口</h6>`
+    );
+    drawRoads(); // 画道路
+    routeLayer.addTo(map)
+});
 
 function initializeMap() {
     map = L.map('map').setView([mapData.center.lat, mapData.center.lon], 16);
@@ -24,16 +68,26 @@ function updateURL() {
         window.location.hash = `lat=${center.lat.toFixed(6)}&lng=${center.lng.toFixed(6)}&zoom=${zoom}`;
     }
 }
+function setActiveTab(tabId) {
+    var tab = document.getElementById(tabId + '-tab');
+    var pill = new bootstrap.Tab(tab);
+    pill.show();  // Bootstrap 5 tab show method
+}
 
+//--------- 景点页面相关函数 ------------
 function loadAttractions() {
     mapData.attractions.forEach(function(attraction) {
         var marker = L.marker([attraction.coordinate.lat, attraction.coordinate.lon]);
-        marker.addTo(map).bindPopup(
-            `<h6 class="m-0">${attraction.name}</h6>
-            <p>${attraction.description}</p>
-            <button class="btn btn-sm btn-primary" onclick="toggleRoute('${attraction.id}', '${attraction.name}', this)">加入路线</button>`
+        marker.addTo(map).bindPopup(function() {
+            // Determine button text based on current route list status
+            var routeList = document.getElementById('route-list');
+            var exists = routeList.querySelector(`li[data-id="${attraction.id}"]`);
+            var buttonText = exists ? '移出路线' : '加入路线';
             
-            );
+            return `<h6 class="m-0">${attraction.name}</h6>
+                    <p>${attraction.description}</p>
+                    <button class="btn btn-sm btn-primary" onclick="toggleRoute('${attraction.id}', '${attraction.name}', this)">${buttonText}</button>`;
+        });
 
         // Store marker reference in mapMarkers dictionary
         mapMarkers[attraction.id] = marker;
@@ -48,7 +102,7 @@ function loadAttractions() {
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
         listItem.textContent = attraction.name;
-        listItem.setAttribute('data-id', attraction.id);
+        listItem.setAttribute('data-id', attraction.id); // 列表的data_id就是景点的id
         listItem.onclick = function() {
             selectAttraction(attraction.id);
         };
@@ -56,6 +110,27 @@ function loadAttractions() {
     });
 }
 
+
+function drawRoads() {
+    mapData.nodes.forEach(function(node) {
+        node.adj.forEach(function(adj) {
+            var adjNode_id = adj.id; 
+            var adjNode = mapData.nodes[adjNode_id];
+            if (adjNode) {
+                var color = adj.bicycle ? 'green' : 'gray';
+                var polyline = L.polyline(
+                    [[node.lat, node.lon], [adjNode.lat, adjNode.lon]], 
+                    {
+                        color: color,
+                        weight: 5,
+                        // opacity: adj.congestion
+                    }
+                ).addTo(map);
+                polyline.bindPopup("<div>congestion:" + adj.congestion + "<br>distance:" + adj.distance + "</div>");
+            }
+        });
+    });
+}
 function selectAttraction(id) {
     if (currentSelected) {
         if (currentSelected.marker) {
@@ -83,7 +158,7 @@ function selectAttraction(id) {
     currentSelected = { marker: marker, listItem: listItem };
 }
 
-
+//------------ 路径规划页面相关函数 -----------
 function toggleRoute(id, name, btn) {
     var routeList = document.getElementById('route-list');
     var exists = routeList.querySelector(`li[data-id="${id}"]`);
@@ -108,13 +183,6 @@ function toggleRoute(id, name, btn) {
         btn.textContent = '加入路线';
     }
 }
-
-function setActiveTab(tabId) {
-    var tab = document.getElementById(tabId + '-tab');
-    var pill = new bootstrap.Tab(tab);
-    pill.show();  // Bootstrap 5 tab show method
-}
-
 function removeFromRoute(id, listItem) {
     listItem.remove();
     // 更新按钮文本（如果需要可以找到对应的按钮并更新其文本）
@@ -124,6 +192,68 @@ function removeFromRoute(id, listItem) {
     }
 }
 
+// 当点击“规划路径”按钮时触发的函数
+function planRoute(mode) {
+    // 1. 获取当前加入路线的景点列表
+    var routeList = document.getElementById('route-list');
+    var selected_attractions = [];
+    routeList.querySelectorAll('li').forEach(li => {
+        selected_attractions.push(li.getAttribute('data-id'));
+    });
+    console.log(selected_attractions);
+    // 2. 调用后端函数发送请求，并处理返回的 JSON 数据
+    fetch('plan_route/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,  // 将 CSRF 令牌包含在请求头中
+        },
+        body: JSON.stringify({ selected_attractions: selected_attractions, mode: mode }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        // 3. 在地图上绘制路径
+        var latLonSeq = data.latLonSeq;
+        console.log(latLonSeq);
+        displayRoute(latLonSeq);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// 在页面上展示路径信息的函数
+// function displayRouteInfo(data) {
+//     var routeInfoDiv = document.getElementById('planned-routes');
+//     routeInfoDiv.innerHTML = ''; // 清空原有内容
+
+//     // 创建并添加新的路线信息
+//     data.routes.forEach(route => {
+//         var routeItem = document.createElement('div');
+//         routeItem.textContent = route;
+//         routeInfoDiv.appendChild(routeItem);
+//     });
+// }
+
+
+// 在地图上绘制路径的函数
+function displayRoute(latLonSeq) {
+    console.log(latLonSeq);
+    routeLayer.clearLayers(); // 清除之前的路径图层
+    routeLayer.addLayer(
+        L.polyline(latLonSeq, {
+        color: 'red',
+        weight: 6,
+        dashArray: '5, 10',
+    }))
+    console.log('finish');
+    
+    
+}
+
+
+
+// -------------------------------------
 function searchFood() {
     var searchType = document.getElementById('food-search-type').value;
     var searchText = document.getElementById('food-search-input').value;

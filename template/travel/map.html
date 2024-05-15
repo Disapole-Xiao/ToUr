@@ -11,7 +11,7 @@
 {% block mainbody %}
 
 <!--地图-->
-<div id="map" class="bg-warning "> </div>
+<div id="map"> </div>
     
 <div id="sidebar" class="bg-light ">
     <!-- 标签栏 -->
@@ -37,8 +37,9 @@
                     {% comment %} <button type="button" class="btn-close" onclick="removeFromRoute(this);" aria-label="Close"></button> {% endcomment %}
                 </li>
             </ul>
-            <button class="btn btn-primary mt-3" onclick="planRoute()">规划路线</button>
-            <div id="planned-routes"></div>
+            <button class="btn btn-primary mt-3" onclick="planRoute('distance')">距离最短</button>
+            <button class="btn btn-primary mt-3" onclick="planRoute('time')">时间最短</button>
+            <!-- <div id="planned-routes"></div> -->
         </div>
         <!-- 设施 -->
         <div class="tab-pane fade" id="amenities" role="tabpanel" aria-labelledby="amenities-tab">
@@ -87,7 +88,8 @@
      crossorigin=""></script>
 <script>
     // 将 Django 变量转换为 JavaScript 对象
-    var mapData = JSON.parse('{{ dest.mapjson|escapejs }}');    
+    var mapData = JSON.parse('{{ dest.mapjson|escapejs }}'); 
+    const csrfToken = '{{ csrf_token }}';
 </script>
 <script src="{% static 'js/map.js' %}"></script>
 
