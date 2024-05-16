@@ -87,11 +87,12 @@ def generageSuffixArray(p: str):
 
 # 模式串：input
 # 目标串：所有dest.name 
-# 通过字符串匹配筛选，符合条件将整个景点加入返回列表
-def str_filter(li: list, attr: str, input: str) -> list :
+# 通过字符串匹配筛选，符合条件将整个景点加入返回列表 f应该返回一个字符串
+def str_filter(li: list, f: function, input: str) -> list :
     str_filtered = []
     for item in li:
-        if bm(getattr(item, attr), input) != -1:
+        attr = f(item)
+        if bm( attr, input) != -1:
             str_filtered.append(item)
     
     return str_filtered
@@ -215,3 +216,7 @@ if __name__ == "__main__":
     print('----sort rating-------')
     for i in sorted_data:
         print(i, i.rating)
+
+
+    # 计算综合排序的权值
+     
