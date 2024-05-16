@@ -5,31 +5,28 @@
 
 {% block mainbody %}
 
-<div class="container">
-  <div class="container m-auto w-50 my-5 ">
+<div class="container mb-5">
+  <div class="container m-auto w-50 my-5">
     <!--搜索框-->
     <div class="input-group input-group-lg mb-2">
-      {% comment %} <select id="dest-search-type" class="form-select" style="max-width: fit-content">
-        <option value="">名称</option>
-        <option value="">类别</option>
-      </select> {% endcomment %}
-      <input type="text" id="dest-search" class="form-control" placeholder="搜索游学地">
-      <button class="btn btn-outline-secondary" type="button" onclick="">搜索</button>
+      <input type="text" id="dest-search" class="form-control" placeholder="搜索游学地" value={{ search }}>
+      <button class="btn btn-outline-secondary" type="button" onclick="searchDest()">搜索</button>
     </div>
     <!-- 排序 按类别筛选-->
-    <div class="input-group">
-      <select id="dest-sort" class="form-select bg-white border-0 no-outline" style="max-width: fit-content">
-        <option value="综合">综合排序</option>
-          <option value="热度最高">热度最高</option>
-          <option value="评分最高">评分最高</option>
-      </select>
-      <select id="catagory-filter" class="form-select bg-white border-0 no-outline" style="max-width: fit-content">
-          <option value="所有类别">所有类别</option>
-          {% for catagory in catagories %}
-          <option value="{{ catagory }}">{{ catagory }}</option>
-          {% endfor %}
-      </select>
-    </div>
+<div class="input-group">
+  <select id="dest-sort" class="form-select bg-white border-0 no-outline" style="max-width: fit-content" onchange="searchDest()">
+    <option value="综合排序" {% if sort == '综合排序' %}selected{% endif %}>综合排序</option>
+    <option value="热度最高" {% if sort == '热度最高' %}selected{% endif %}>热度最高</option>
+    <option value="评分最高" {% if sort == '评分最高' %}selected{% endif %}>评分最高</option>
+  </select>
+  <select id="category-filter" class="form-select bg-white border-0 no-outline" style="max-width: fit-content" onchange="searchDest()">
+    <option value="所有类别" {% if category == '所有类别'%}selected{% endif %}>所有类别</option>
+    {% for tag in tags %}
+    <option value="{{ tag }}" {% if category == tag %}selected{% endif %}>{{ tag }}</option>
+    {% endfor %}
+  </select>
+</div>
+
   </div>
   <!--游学地展示-->
   {% if dests %}
@@ -37,11 +34,23 @@
     {% for dest in dests %}
       {% include 'travel/dest_card.html' %}
     {% endfor %}
-      
   </div>
+  
   {% else %}
   <p>No dests.</p>
+  {% endif %}
 </div>   
+{% endblock %}
+{% block extra_js %}
+<script>
+  // 搜索游学地
+  function searchDest() {
+    let search = document.getElementById('dest-search').value;
+    let sort = document.getElementById('dest-sort').value;
+    let category = document.getElementById('category-filter').value;
+    console.log(search)
+    window.location.href = `{% url 'travel:index' %}?search=${search}&sort=${sort}&category=${category}`;
+  }
+</script>
 
-{% endif %}
 {% endblock %}

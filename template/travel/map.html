@@ -47,7 +47,7 @@
                 <input class="form-control" list="amenity-types" id="amenity-search" placeholder="请输入类别">
                 <datalist id="amenity-types">
                     {% for type_name in amenity_types %}
-                    <option value={{ type_name }}>
+                    <option value="{{ type_name }}">
                     {% endfor %}
                 </datalist>
                 <button class="btn btn-outline-secondary" type="button" onclick="searchAmenity()">搜索</button>

@@ -247,8 +247,7 @@ function displayRoute(latLonSeq) {
     routeLayer.addLayer(
         L.polyline(latLonSeq, {
         color: 'red',
-        weight: 6,
-        dashArray: '5, 10',
+        weight: 5,
     }))
     console.log('finish');
     

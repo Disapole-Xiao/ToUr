@@ -6,16 +6,40 @@ from diary.models import Diary
 import json
 from src.map import Map
 from src.routing import route_sgl, route_mul
-from src.recommend import sort, name_filter, tag_filter, type_filter
-# Create your views here.
+from src.recommend import attr_sort, str_filter, tag_filter, type_filter
+
 def index(request):
     # 获取默认展示的游学地列表 ### 需要修改成综合排序
-    dests = Destination.objects.all()
-    # dests = sort(dest, '嗯嗯综合', conti=False, reverse=False, len=10) 从大到小排
-    catagories = Category.objects.all()
+    dests = list(Destination.objects.all())
+    search = request.GET.get('search', '')
+    sort = request.GET.get('sort', '热度最高')
+    category = request.GET.get('category', '所有类别')
+    # 搜索框不为空，按名字筛选
+    if search != '':
+        dests = str_filter(dests, 'name', search)
+    print('search:', *dests, sep='\n')
+    # 类别筛选
+    if category != '所有类别':
+        dests = tag_filter(dests, 'tags', category)
+    print('tag:', *dests, sep='\n')
+    # 排序
+    attr = 'popularity'
+    if sort == '热度最高':
+        attr = 'popularity'
+    elif sort == '评分最高':
+        attr = 'rating' 
+    dests = attr_sort(dests, attr, len=8)
+    print('sort:', *dests, sep='\n')
+
+    tags = Category.objects.all()
+    tags = [tag.name for tag in tags]
+    print(tags)
     context = {
         'dests': dests,
-        'catagories': catagories,
+        'category': category,
+        'search': search,
+        'sort': sort,
+        'tags': tags,
     }
     
     return render(request, 'travel/index.html', context)
@@ -71,3 +95,6 @@ def plan_route(request, dest_id):
         lat_lon_seq = [[map['nodes'][id]['lat'], map['nodes'][id]['lon']] for id in planned_node_ids]
         # 返回 JSON 响应，包含路径信息等
         return JsonResponse({'latLonSeq': lat_lon_seq})
+    
+def search_amenity(request, dest_id):
+    pass

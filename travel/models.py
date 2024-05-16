@@ -14,6 +14,8 @@ class Category(models.Model):
     name = models.CharField(max_length=10, unique=True)
     def __str__(self):
         return self.name
+    def __hash__(self) -> int:
+        return hash(self.name)
 
 class Destination(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -33,6 +35,8 @@ class Destination(models.Model):
 
     def __str__(self):
         return self.name
+    def __hash__(self) -> int:
+        return hash(self.name)
     
     # 给定用户的兴趣标签，返回游学地与用户的兴趣匹配度
     def compute_interest_match(self, interest: list) -> float:

@@ -7,12 +7,39 @@ from django.http import JsonResponse
 from travel.models import Destination
 from account.models import User
 from .models import Diary
-def diary(request):
-    ## 修改成自己写的排序
-    diaries = Diary.objects.order_by('-pub_time') 
-    # diaries = sort(diaries, '嗯嗯综合', conti=False, reverse=False, len=10) 从大到小排
+from src.recommend import attr_sort, str_filter, tag_filter, type_filter
+
+def index(request):
+    diaries = list(Diary.objects.all())
+    search_type = request.GET.get('search_type', '日记名称')
+    search = request.GET.get('search', '')
+    sort = request.GET.get('sort', '时间最新')
+    print(request.GET)
+    # 搜索框不为空，按search_type筛选
+    if search != '':
+        if search_type == '日记名称':
+            diaries = str_filter(diaries, 'title', search)
+        elif search_type == '游学地名称':
+            pass
+        elif search_type == '全文搜索':
+            diaries = str_filter(diaries, 'content', search)
+    print('search:', *diaries, sep='\n')
+    # 排序
+    attr = 'pub_time'
+    if sort == '时间最新':
+        attr = 'pub_time'
+    elif sort == '热度最高':
+        attr = 'popularity'
+    elif sort == '评分最高':
+        attr = 'rating' 
+    diaries = attr_sort(diaries, attr, len = 9)
+    print('sort:', *diaries, sep='\n')
+
     context = {
         'diaries': diaries,
+        'search_type': search_type,
+        'search': search,
+        'sort': sort,
     }
     return render(request, 'diary/index.html', context)
 

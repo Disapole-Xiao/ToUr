@@ -8,20 +8,20 @@
   <div class="container m-auto w-50 my-5 ">
     <!--搜索框-->
     <div class="input-group input-group-lg mb-2">
-      <select id="diary-search-type" class="form-select" style="max-width: fit-content">
-        <option value="日记名称">日记名称</option>
-        <option value="游学地名称">游学地名称</option>
-        <option value="全文搜索">全文搜索</option>
+      <select id="diary-search-type" class="form-select" style="max-width: fit-content" onchange=searchDiary()>
+        <option value="日记名称" {% if search_type == '日记名称' %}selected{% endif %}>日记名称</option>
+        <option value="游学地名称" {% if search_type == '游学地名称' %}selected{% endif %}>游学地名称</option>
+        <option value="全文搜索" {% if search_type == '全文搜索' %}selected{% endif %}>全文搜索</option>
       </select>
-      <input type="text" id="dest-search" class="form-control" placeholder="搜索日记">
-      <button class="btn btn-outline-secondary" type="button" onclick="">搜索</button>
+      <input type="text" id="diary-search" class="form-control" placeholder="搜索日记" value={{ search }}>
+      <button class="btn btn-outline-secondary" type="button" onclick="searchDiary()">搜索</button>
     </div>
     <!-- 排序 -->
     <div class="input-group">
-      <select id="dest-sort" class="form-select bg-white border-0 no-outline" style="max-width: fit-content">
-        <option value="综合">综合排序</option>
-          <option value="热度最高">热度最高</option>
-          <option value="评分最高">评分最高</option>
+      <select id="diary-sort" class="form-select bg-white border-0 no-outline" style="max-width: fit-content" onchange="searchDiary()">
+        <option value="时间最新" {% if sort == '时间最新' %}selected{% endif %}>时间最新</option>
+        <option value="热度最高" {% if sort == '热度最高' %}selected{% endif %}>热度最高</option>
+        <option value="评分最高" {% if sort == '评分最高' %}selected{% endif %}>评分最高</option>
       </select>
     </div>
   </div>
@@ -35,7 +35,18 @@
   </div>
   {% else %}
   <p>No diarys.</p>
+  {% endif %}
 </div>   
 
-{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function searchDiary() {
+    let search_type = document.getElementById('diary-search-type').value;
+    let search = document.getElementById('diary-search').value;
+    let sort = document.getElementById('diary-sort').value;
+    window.location.href = `{% url 'diary:index' %}?search_type=${search_type}&search=${search}&sort=${sort}`;
+  }
+</script>
 {% endblock %}
