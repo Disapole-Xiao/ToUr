@@ -16,11 +16,11 @@ def index(request):
     category = request.GET.get('category', '所有类别')
     # 搜索框不为空，按名字筛选
     if search != '':
-        dests = str_filter(dests, 'name', search)
+        dests = str_filter(dests, lambda x: x.name, search)
     print('search:', *dests, sep='\n')
     # 类别筛选
     if category != '所有类别':
-        dests = tag_filter(dests, 'tags', category)
+        dests = tag_filter(dests, lambda x: x.tags.all(), Category.objects.get(name=category))
     print('tag:', *dests, sep='\n')
     # 排序
     attr = 'popularity'
@@ -28,7 +28,7 @@ def index(request):
         attr = 'popularity'
     elif sort == '评分最高':
         attr = 'rating' 
-    dests = attr_sort(dests, attr, len=8)
+    dests = attr_sort(dests, lambda x: getattr(x, attr), len=8)
     print('sort:', *dests, sep='\n')
 
     tags = Category.objects.all()

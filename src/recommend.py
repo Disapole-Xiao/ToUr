@@ -15,7 +15,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'ToUr.settings'
 import django
 django.setup()
 # 现在可以导入 travel 应用的模型
-from travel.models import Destination
+from travel.models import Category, Destination
 
 ## ------- 筛选接口定义---------
 # BM 匹配算法
@@ -88,40 +88,32 @@ def generageSuffixArray(p: str):
 # 模式串：input
 # 目标串：所有dest.name 
 # 通过字符串匹配筛选，符合条件将整个景点加入返回列表 f应该返回一个字符串
-def str_filter(li: list, f: function, input: str) -> list :
+def str_filter(li: list, f, str: str) -> list :
     str_filtered = []
     for item in li:
         attr = f(item)
-        if bm( attr, input) != -1:
+        if bm(attr, str) != -1:
             str_filtered.append(item)
     
     return str_filtered
 
 
-# 每一个元素的属性attr（数组）中是否包含val 类：Destination
-def tag_filter(li: list, attr: str, val: str) -> list :
+# f返回attr，每一个元素的属性attr（数组）中是否包含tag。Destination
+def tag_filter(li: list, f, tag: str) -> list :
     tag_filtered = []
-    for dest in li:
-        tags = getattr(dest, attr).all()
-        tag_names = [tag.name for tag in tags]
-        if val in tag_names:
-            tag_filtered.append(dest)
+    for item in li:
+        tags = f(item)
+        if tag in tags:
+            tag_filtered.append(item)
     return tag_filtered
 
-# li中的每一项的属性attr是否与type相等。getattr函数
-# 例如type_filter(amenities, "type", "厕所")，返回amenities数组中符合属性type的值为"厕所"的项
-# list中的元素有可能是一个字典（amenities，restaurants），也有可能是类（Destination 的 景点还是学校？这部分还没加但保留接口），分类讨论处理
-def type_filter(li: list, attr: str, val: str) -> list :
+# f返回item的类型，是否与type相等。
+# 例如type_filter(amenities, lambda x:x["type"], "厕所")，返回amenities数组中符合属性type的值为"厕所"的项
+def type_filter(li: list, f, type: str) -> list :
     type_filtered = []
     for item in li:
-        # 如果是字典
-        if isinstance(item, dict):
-            if(val == item[attr]):
-                type_filtered.append(item)
-        # 如果是类
-        else:
-            if(val == getattr(item, attr)):
-                type_filtered.append(item)
+        if(f(item) == type):
+            type_filtered.append(item)
     return type_filtered
 
 
@@ -129,25 +121,25 @@ def type_filter(li: list, attr: str, val: str) -> list :
 # 全局变量存堆
 h = []
 
-# # 根据li中每一项的属性attr排序，默认降序
-def attr_sort(li: list, attr: str, reverse=False, len=10, conti=False) -> list :
+# # f返回attr，根据li中每一项的属性attr排序，默认降序
+def attr_sort(li: list, f, reverse=False, len=10, conti=False) -> list :
     # 重新建堆
     if conti == False:
-        sorted1_data = Heapsort(li, attr, reverse)
+        sorted1_data = Heapsort(li, f, reverse)
         sorted2_data = sorted1_data[-len:]
         global sorted3_data 
         sorted3_data = sorted2_data[::-1]
         return sorted3_data
 
 # 根据attr构建一个最大堆
-def maxHeapify(h, start, end, attr):
+def maxHeapify(h, start, end, f):
     son = start * 2  # 左节点
     while son <= end:  # 如果左子树存在
         # 取左子树根和右子树根 两者中大者的下标
-        if son + 1 <= end and getattr(h[son + 1], attr) > getattr(h[son], attr):
+        if son + 1 <= end and f(h[son + 1]) > f(h[son]):
             son += 1
         # 如果子节点的值大于根节点，则将根节点和子节点交换。即下沉操作
-        if getattr(h[son], attr) > getattr(h[start], attr):
+        if f(h[son]) > f(h[start]):
             h[start], h[son] = h[son], h[start]
             # 对子节点迭代执行相同的操作
             start, son = son, son * 2
@@ -155,21 +147,21 @@ def maxHeapify(h, start, end, attr):
             break
 
 # 根据attr构建一个最小堆
-def minHeapify(h, start, end, attr):
+def minHeapify(h, start, end, f):
     son = start * 2  # 左节点
     while son <= end:  # 如果左子树存在
         # 取左子树根和右子树根 两者中小者的下标
-        if son + 1 <= end and getattr(h[son + 1], attr) < getattr(h[son], attr):
+        if son + 1 <= end and f(h[son + 1]) < f(h[son]):
             son += 1
         # 如果子节点的值小于根节点，则将根节点和子节点交换。即下沉操作
-        if getattr(h[son], attr) < getattr(h[start], attr):
+        if f(h[son]) < f(h[start]):
             h[start], h[son] = h[son], h[start]
             # 对子节点迭代执行相同的操作
             start, son = son, son * 2
         else:  # 如果子节点的值大于等于根节点,说明堆已经构造好了，退出循环
             break
 
-def Heapsort(arr, attr, reverse):
+def Heapsort(arr, f, reverse):
     h = [None] + arr  # 这里是因为列表从0开始计数，而我们找的子节点父节点的关系是2倍或2倍+1
     result = []
     root = 1  # 堆顶下标
@@ -177,18 +169,18 @@ def Heapsort(arr, attr, reverse):
     for i in range(count // 2, root - 1, -1):  # 逆序枚举列表的元素
         # 自底向上地构造堆
         if reverse == False:
-            minHeapify(h, i, count - 1, attr)
+            minHeapify(h, i, count - 1, f)
         else:
-            maxHeapify(h, i, count - 1, attr)
+            maxHeapify(h, i, count - 1, f)
     
     for i in range(count-1, 0, -1): 
             result.append(h[root])
             h[i], h[root] = [None], h[i]  # 保持除最后一个元素以外整个堆的合法性
             # 保持除最后第二个元素以外整个堆的合法性
             if reverse == False:
-                minHeapify(h, root, i - 1, attr)
+                minHeapify(h, root, i - 1, f)
             else:
-                maxHeapify(h, root, i - 1, attr)
+                maxHeapify(h, root, i - 1, f)
     return result  # 返回排好序的元素
 
 
@@ -197,22 +189,22 @@ def Heapsort(arr, attr, reverse):
 if __name__ == "__main__":
     dests =list(Destination.objects.all()) 
     
-    filtered_data = str_filter(dests, 'name', "北京")
+    filtered_data = str_filter(dests, lambda x:x.name, "北京")
     print('---- name filter ----')
     for i in filtered_data:
         print(i)
-        
-    filtered_data = tag_filter(dests, 'tags', "历史人文")
+    
+    filtered_data = tag_filter(dests, lambda x:x.tags.all(), Category.objects.get(name="学院高校"))
     print('---- tag filter ----')
     for i in filtered_data:
         print(i, i.tags.all())
 
-    sorted_data = attr_sort(dests,"popularity",len=8)
+    sorted_data = attr_sort(dests, lambda x:x.popularity, len=8)
     print('----sort popularity-------')
     for i in sorted_data:
         print(i, i.popularity)
     
-    sorted_data = attr_sort(dests,"rating",len=10, reverse=True)
+    sorted_data = attr_sort(dests, lambda x:x.rating, len=10, reverse=True)
     print('----sort rating-------')
     for i in sorted_data:
         print(i, i.rating)
