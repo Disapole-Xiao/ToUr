@@ -1,10 +1,10 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from .models import Destination, Category
-from diary.models import Diary
+import json, bisect
 
-import json
-from src.map import Map
+from .models import Destination, Category
+from .funcs import *
+from diary.models import Diary
 from src.routing import route_sgl, route_mul
 from src.recommend import attr_sort, str_filter, tag_filter, type_filter
 
@@ -97,4 +97,26 @@ def plan_route(request, dest_id):
         return JsonResponse({'latLonSeq': lat_lon_seq})
     
 def search_amenity(request, dest_id):
-    pass
+    dest = get_object_or_404(Destination, pk=dest_id)
+    map = json.loads(dest.mapjson)
+    attr_id = int(request.GET.get('id'))
+    attr_type = request.GET.get('type', '')
+    selected_attractions = map['attractions'][attr_id]
+    amenities = map['amenities']
+    # 类别筛选
+    if attr_type != '':
+        amenities = type_filter(amenities, lambda x: x['type'], attr_type)
+    # 计算距离，得到元组列表(distance, amenity)
+    tuples = [(distance(
+            x['coordinate']['lat'],
+            x['coordinate']['lon'],
+            selected_attractions['coordinate']['lat'],
+            selected_attractions['coordinate']['lon']
+            ), x) for x in amenities]
+    # 排序
+    amenities = attr_sort(tuples, lambda x: x[0], reverse=True)
+    # 取距离<300m的
+    distances, amenities = zip(*amenities)
+    r = bisect.bisect_right(distances, 300)
+
+    return JsonResponse({'amenities': amenities[:r], 'distances': distances[:r]})

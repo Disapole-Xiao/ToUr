@@ -1,9 +1,9 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
-
-import os
 from django.db import models
+import os, math
 
 def dest_pic_path(instance, filename):
+    ''' 游学地图片存储路径 '''
     # 生成一个新的文件名，保留原始文件的扩展名
     ext = filename.split('.')[-1]
     filename = f'{instance.name}.{ext}'
@@ -38,8 +38,3 @@ class Destination(models.Model):
     def __hash__(self) -> int:
         return hash(self.name)
     
-    # 给定用户的兴趣标签，返回游学地与用户的兴趣匹配度
-    def compute_interest_match(self, interest: list) -> float:
-        match_count = sum(tag in self.tags for tag in interest)
-        interest_match = match_count / len(interest)
-        return interest_match

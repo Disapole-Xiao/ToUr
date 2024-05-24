@@ -144,6 +144,11 @@ function selectAttraction(id) {
     // 更新当前选中对象
     currentSelected = { marker: marker, listItem: listItem };
 
+    // 如果设施界面active
+    if (document.getElementById('amenities-tab').classList.contains('active')) {
+        searchAmenity();
+    }
+
     console.log('当前选中的景点：', marker.options.attractionId, marker.options.attractionName);
 }
 
@@ -268,10 +273,10 @@ function searchAmenity() {
     // 检查是否有景点被选中
     if (currentSelected && currentSelected.marker) {
         var selectedAttractionId = currentSelected.marker.options.attractionId;
-        var searchText = document.getElementById('search-box').value; // 获取搜索框中的内容
+        var searchText = document.getElementById('amenity-search').value; // 获取搜索框中的内容
 
         // 发起请求，包含当前选中的景点ID和搜索框中的内容
-        fetch(`/search_amenities/?id=${selectedAttractionId}&type=${searchText}`, {
+        fetch(`search_amenity/?id=${selectedAttractionId}&type=${searchText}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -279,7 +284,7 @@ function searchAmenity() {
         })
         .then(response => response.json())
         .then(data => {
-            displayAmenities(data.amenities);
+            displayAmenities(data.amenities, data.distances);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -293,25 +298,28 @@ function searchAmenity() {
 
 
 // 在地图上显示设施的函数
-function displayAmenities(amenities) {
+function displayAmenities(amenities, distances) {
     // 清空现有设施列表
     var amenitiesList = document.getElementById('amenity-list');
     amenitiesList.innerHTML = '';
 
-    amenities.forEach(amenity => {
-        var marker = L.marker([amenity.lat, amenity.lon], {icon: amenityIcon});
+    amenities.forEach((amenity, index) => {
+        var marker = L.marker([amenity.coordinate.lat, amenity.coordinate.lon], {icon: amenityIcon});
         marker.addTo(map).bindPopup(
             `<h6 class="m-0">${amenity.name}</h6>
              <p>${amenity.description}</p>`
         );
         
-        // Optionally, if you want to add amenities to a list like attractions
+        // 展示列表
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
-        listItem.textContent = amenity.name;
+        listItem.innerHTML = `<h5>${amenity.name } ${amenity.id}</h5>
+            <span>类型：${amenity.type}</span><span class="float-end">${distances[index]}m</span>`;
         listItem.onclick = function() {
-            map.setView([amenity.lat, amenity.lon], 18);
+            // map.setView([amenity.coordinate.lat, amenity.coordinate.lon], 18);
             marker.openPopup();
+            // listItem.classList.add('active'); // 高亮新的列表项
+            listItem.scrollIntoView({behavior: 'smooth', block: 'center'}); // 确保列表项在侧边栏可视区域内
         };
         amenitiesList.appendChild(listItem);
     });
