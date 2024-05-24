@@ -18,11 +18,11 @@ def index(request):
     # 搜索框不为空，按search_type筛选
     if search != '':
         if search_type == '日记名称':
-            diaries = str_filter(diaries, 'title', search)
+            diaries = str_filter(diaries, lambda x: x.title, search)
         elif search_type == '游学地名称':
-            pass
+            diaries = str_filter(diaries, lambda x: x.location.name, search)
         elif search_type == '全文搜索':
-            diaries = str_filter(diaries, 'content', search)
+            diaries = str_filter(diaries, lambda x: x.content, search)
     print('search:', *diaries, sep='\n')
     # 排序
     attr = 'pub_time'
@@ -32,7 +32,7 @@ def index(request):
         attr = 'popularity'
     elif sort == '评分最高':
         attr = 'rating' 
-    diaries = attr_sort(diaries, attr, len = 9)
+    diaries = attr_sort(diaries, lambda x: getattr(x, attr), len = 9)
     print('sort:', *diaries, sep='\n')
 
     context = {
