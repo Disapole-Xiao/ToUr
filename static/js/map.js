@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     routeLayer.addTo(map)
 
     // 增加事件监听器，点击设施标签时加载设施数据
-    document.getElementById('amenities-tab').addEventListener('click', searchAmenities);
+    document.getElementById('amenities-tab').addEventListener('click', searchAmenity);
 
 });
 
@@ -81,9 +81,15 @@ function setActiveTab(tabId) {
 //--------- 景点页面相关函数 ------------
 function loadAttractions() {
     mapData.attractions.forEach(function(attraction) {
-        var marker = L.marker([attraction.coordinate.lat, attraction.coordinate.lon]);
+        var marker = L.marker([attraction.coordinate.lat, attraction.coordinate.lon], {
+            icon: attractionIcon
+        });
+
+        // 存储自定义数据
+        marker.options.attractionId = attraction.id;  // 添加景点ID作为标记的自定义选项
+        marker.options.attractionName = attraction.name;
+
         marker.addTo(map).bindPopup(function() {
-            // Determine button text based on current route list status
             var routeList = document.getElementById('route-list');
             var exists = routeList.querySelector(`li[data-id="${attraction.id}"]`);
             var buttonText = exists ? '移出路线' : '加入路线';
@@ -93,26 +99,54 @@ function loadAttractions() {
                     <button class="btn btn-sm btn-primary" onclick="toggleRoute('${attraction.id}', '${attraction.name}', this)">${buttonText}</button>`;
         });
 
-        // Store marker reference in mapMarkers dictionary
+        // 存入字典
         mapMarkers[attraction.id] = marker;
 
-        // Add event listener to marker
+        // 添加点击事件监听
         marker.on('click', function() {
             selectAttraction(attraction.id);
         });
 
-        // Add attractions to list
+        // 添加列表项
         var list = document.getElementById('attraction-list');
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
         listItem.textContent = attraction.name;
-        listItem.setAttribute('data-id', attraction.id); // 列表的data_id就是景点的id
+        listItem.setAttribute('data-id', attraction.id); // 设置自定义属性data_id，即景点的id
         listItem.onclick = function() {
             selectAttraction(attraction.id);
         };
         list.appendChild(listItem);
     });
 }
+
+function selectAttraction(id) {
+    // 如果之前有选中的景点，关闭popup，移除高亮
+    if (currentSelected) {
+        if (currentSelected.marker) {
+            currentSelected.marker.closePopup();
+        }
+        if (currentSelected.listItem) {
+            currentSelected.listItem.classList.remove('active');
+        }
+    }
+    // 检索地图标记和列表项
+    var marker = mapMarkers[id];
+    var listItem = document.querySelector(`li[data-id="${id}"]`);
+
+    if (listItem) {
+        listItem.classList.add('active'); // 高亮新的列表项
+        listItem.scrollIntoView({behavior: 'smooth', block: 'center'}); // 确保列表项在侧边栏可视区域内
+    }
+    if (marker) {
+        marker.openPopup(); // 打开popup
+    }
+    // 更新当前选中对象
+    currentSelected = { marker: marker, listItem: listItem };
+
+    console.log('当前选中的景点：', marker.options.attractionId, marker.options.attractionName);
+}
+
 
 
 function drawRoads() {
@@ -134,32 +168,6 @@ function drawRoads() {
             }
         });
     });
-}
-function selectAttraction(id) {
-    if (currentSelected) {
-        if (currentSelected.marker) {
-            currentSelected.marker.closePopup(); // 关闭当前打开的弹窗
-        }
-        if (currentSelected.listItem) {
-            currentSelected.listItem.classList.remove('active'); // 移除当前高亮的列表项
-        }
-    }
-
-    // 检索地图标记和列表项
-    var marker = mapMarkers[id];
-    var listItem = document.querySelector(`li[data-id="${id}"]`);
-
-    if (listItem) {
-        listItem.classList.add('active'); // 高亮新的列表项
-        // 确保列表项在侧边栏可视区域内
-        listItem.scrollIntoView({behavior: 'smooth', block: 'center'});
-    }
-    if (marker) {
-        marker.openPopup(); // 为地图标记打开弹窗
-    }
-
-    // 更新当前选中对象
-    currentSelected = { marker: marker, listItem: listItem };
 }
 
 //------------ 路径规划页面相关函数 -----------
@@ -254,46 +262,60 @@ function displayRoute(latLonSeq) {
     
 }
 // -------------设施页面---------------
-var amenityMarkers = [];
-
+// 通过点击设施标签加载和显示设施
+// 通过点击设施标签加载和显示设施
 function searchAmenity() {
-    var type = document.getElementById('amenity-search').value.toLowerCase();
-    fetch('/api/search_amenities/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken,
-        },
-        body: JSON.stringify({ type: type, attraction_id: currentSelected.marker.getPopup().getContent() }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        displayAmenities(data.amenities);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+    // 检查是否有景点被选中
+    if (currentSelected && currentSelected.marker) {
+        var selectedAttractionId = currentSelected.marker.options.attractionId;
+        var searchText = document.getElementById('search-box').value; // 获取搜索框中的内容
+
+        // 发起请求，包含当前选中的景点ID和搜索框中的内容
+        fetch(`/search_amenities/?id=${selectedAttractionId}&type=${searchText}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            displayAmenities(data.amenities);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    } else {
+        // 如果没有景点被选中，则显示提示信息
+        var amenitiesList = document.getElementById('amenity-list');
+        amenitiesList.innerHTML = '<li class="list-group-item">请选择一个景点</li>';
+    }
 }
 
+
+// 在地图上显示设施的函数
 function displayAmenities(amenities) {
-    var list = document.getElementById('amenity-list');
-    list.innerHTML = '';
-    amenityMarkers.forEach(marker => map.removeLayer(marker));  // 清除之前的设施标记
-    amenityMarkers = [];
+    // 清空现有设施列表
+    var amenitiesList = document.getElementById('amenity-list');
+    amenitiesList.innerHTML = '';
 
     amenities.forEach(amenity => {
-        var marker = L.marker([amenity.coordinate.lat, amenity.coordinate.lon], {icon: amenityIcon}).addTo(map)
-            .bindPopup(`<h6 class="m-0">${amenity.name}</h6><p>${amenity.description}</p>`);
-        amenityMarkers.push(marker);
-
+        var marker = L.marker([amenity.lat, amenity.lon], {icon: amenityIcon});
+        marker.addTo(map).bindPopup(
+            `<h6 class="m-0">${amenity.name}</h6>
+             <p>${amenity.description}</p>`
+        );
+        
+        // Optionally, if you want to add amenities to a list like attractions
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
         listItem.textContent = amenity.name;
-        list.appendChild(listItem);
+        listItem.onclick = function() {
+            map.setView([amenity.lat, amenity.lon], 18);
+            marker.openPopup();
+        };
+        amenitiesList.appendChild(listItem);
     });
 }
-
-
 
 
 // -------------美食页面-----------------

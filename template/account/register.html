@@ -1,6 +1,112 @@
-<!-- register.html -->
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .register-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .register-form {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+        }
+        .register-form h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+        .register-form .form-control {
+            border-radius: 20px;
+        }
+        .form-error {
+            color: #dc3545;
+            font-size: 0.875em;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="register-container">
+        <div class="register-form">
+            <h2>注册</h2>
+            <form method="post" action="{% url 'account:register' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">用户名</label>
+                    <input type="text" class="form-control form-control-lg" id="username" name="username" placeholder="请输入用户名" value="">
+                    {% if form.username.errors %}
+                        <div class="form-error">
+                            {{ form.username.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="password1" class="form-label">密码</label>
+                    <input type="password" class="form-control form-control-lg" id="password1" name="password1" placeholder="请输入密码">
+                    {% if form.password1.errors %}
+                        <div class="form-error">
+                            {{ form.password1.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="password2" class="form-label">确认密码</label>
+                    <input type="password" class="form-control form-control-lg" id="password2" name="password2" placeholder="请再次输入密码">
+                    {% if form.password2.errors %}
+                        <div class="form-error">
+                            {{ form.password2.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="avatar" class="form-label">上传头像</label>
+                    <input type="file" class="form-control form-control-lg" id="avatar" name="avatar">
+                    {% if form.avatar.errors %}
+                        <div class="form-error">
+                            {{ form.avatar.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="interests" class="form-label">选择兴趣</label>
+                    <div class="btn-toggle-group">
+                        {% for category in categories %}
+                            <input type="checkbox" class="btn-check" id="category{{ category.id }}" name="interests" value="{{ category.id }}" autocomplete="off">
+                            <label class="btn btn-outline-secondary  rounded-pill mb-2" for="category{{ category.id }}">{{ category.name }}</label>
+                        {% endfor %}
+                    </div>
+                    {% if form.interests.errors %}
+                        <div class="form-error">
+                            {{ form.interests.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary rounded-pill btn-lg w-100">注册</button>
+            </form>
+            {% if form.non_field_errors %}
+                <div class="form-error mt-3">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+<!-- Bootstrap JS (optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

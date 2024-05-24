@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -42,18 +43,19 @@
 <div class="login-container">
     <div class="login-form">
         <h2>登录</h2>
-        <form>
+        <form method="post" action="{% url 'account:login' %}">
+            {% csrf_token %}
             <div class="mb-3">
                 <label for="username" class="form-label">用户名</label>
-                <input type="text" class="form-control form-control-lg " id="username" placeholder="请输入用户名">
+                <input type="text" class="form-control form-control-lg" id="username" name="username" placeholder="请输入用户名">
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">密码</label>
-                <input type="password" class="form-control form-control-lg " id="password" placeholder="请输入密码">
+                <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="请输入密码">
             </div>
             <div class="d-flex justify-content-between align-items-center">
                 <button type="submit" class="btn btn-primary rounded-pill  btn-lg">登录</button>
-                <a href="#" class="btn btn-link btn-lg">注册</a>
+                <a href="{% url 'account:register' %}" class="btn btn-link btn-lg">注册</a>
             </div>
         </form>
     </div>

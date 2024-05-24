@@ -3,12 +3,13 @@ from django.templatetags.static import static
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from django.contrib.auth import get_user_model
 
 from travel.models import Destination
-from account.models import CustomUser
 from .models import Diary
 from src.recommend import attr_sort, str_filter, tag_filter, type_filter
 
+User = get_user_model
 def index(request):
     diaries = list(Diary.objects.all())
     search_type = request.GET.get('search_type', '日记名称')
@@ -59,7 +60,7 @@ def add_diary(request):
         content = request.POST.get('content')
         location_name = request.POST.get('location')
         location = get_object_or_404(Destination, name=location_name)
-        author = get_object_or_404(CustomUser, username='小明')
+        author = get_object_or_404(User, username='小明')
         new_diary = Diary(author=author, title=title, content=content, location=location)
         # new_diary = Diary(author=request.user, title=title, content=content, location=location)
         new_diary.save()
