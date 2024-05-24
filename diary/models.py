@@ -3,11 +3,11 @@ from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
-from account.models import User
+from account.models import CustomUser
 from travel.models import Destination
 
 class Diary(models.Model):
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     pub_time = models.DateTimeField(default=timezone.now, blank=True)
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -23,7 +23,7 @@ class Diary(models.Model):
         return f'title: {self.title} author: {self.author.username}'
     
 class UserRating(models.Model):
-    author = models.ForeignKey(User, on_delete=models.PROTECT)
+    author = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
     diary = models.ForeignKey(Diary, on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[
             # 限制0~5

@@ -145,3 +145,6 @@ INTERNAL_IPS = [
 NPM_BIN_PATH = 'npm.cmd'
 
 DEFAULT_CHARSET = 'utf-8'
+
+
+AUTH_USER_MODEL = 'account.CustomUser'

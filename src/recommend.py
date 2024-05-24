@@ -84,11 +84,11 @@ def generageSuffixArray(p: str):
     return suffix
 
 
-
+from typing import Callable
 # 模式串：input
 # 目标串：所有dest.name 
 # 通过字符串匹配筛选，符合条件将整个景点加入返回列表 f应该返回一个字符串
-def str_filter(li: list, f: function, input: str) -> list :
+def str_filter(li: list, f: callable, input: str) -> list :
     str_filtered = []
     for item in li:
         attr = f(item)
