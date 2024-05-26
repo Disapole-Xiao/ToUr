@@ -29,7 +29,7 @@ def index(request):
         attr = 'popularity'
     elif sort == '评分最高':
         attr = 'rating' 
-    dests = attr_sort(dests, lambda x: getattr(x, attr), len=8)
+    dests = attr_sort(dests, lambda x: getattr(x, attr), l=8)
     print('sort:', *dests, sep='\n')
 
     tags = Category.objects.all()
@@ -89,7 +89,8 @@ def plan_route(request, dest_id):
             planned_node_ids = route_sgl(map, node_ids[0], node_ids[1], mode)
         elif len(node_ids) > 2:
             planned_node_ids = route_mul(map, node_ids[1:], node_ids[0], mode)
-
+        else:
+            planned_node_ids = []
         # 由node_id获得经纬度序列 [[lat2,lon1], [lat2,lon2], ...]
         lat_lon_seq = [[map['nodes'][id]['lat'], map['nodes'][id]['lon']] for id in planned_node_ids]
         
@@ -101,25 +102,77 @@ def search_amenity(request, dest_id):
     map = json.loads(dest.mapjson)
     
     attr_id = int(request.GET.get('id'))
-    attr_type = request.GET.get('type', '')
+    amenity_type = request.GET.get('type', '')
 
-    selected_attractions = map['attractions'][attr_id] # 在map找到对应景点
+    # 在map找到对应景点
+    selected_attraction = \
+        map['nodes'][map['entrance']] if id == -1 \
+        else map['attractions'][attr_id]
+    
     amenities = map['amenities'] # 所有设施
 
     # 类别筛选
-    if attr_type != '':
-        amenities = type_filter(amenities, lambda x: x['type'], attr_type)
+    if amenity_type != '':
+        amenities = type_filter(amenities, lambda x: x['type'], amenity_type)
     # 计算距离，得到元组列表(distance, amenity)
     tuples = [(distance(
-            x['coordinate']['lat'],
-            x['coordinate']['lon'],
-            selected_attractions['coordinate']['lat'],
-            selected_attractions['coordinate']['lon']
+            x['lat'],
+            x['lon'],
+            selected_attraction['lat'],
+            selected_attraction['lon']
             ), x) for x in amenities]
     # 排序
-    amenities = attr_sort(tuples, lambda x: x[0], reverse=True)
+    tuples = attr_sort(tuples, lambda x: x[0], reverse=True)
     # 取距离 < AMENITY_SEARCH_RADIUS 的
-    distances, amenities = zip(*amenities)
+    distances, amenities = zip(*tuples)
     r = bisect.bisect_right(distances, settings.AMENITY_SEARCH_RADIUS)
 
     return JsonResponse({'amenities': amenities[:r], 'distances': distances[:r]})
+
+def search_restaurant(request, dest_id):
+    ''' 返回选中景点附近的美食 '''
+    dest = get_object_or_404(Destination, pk=dest_id)
+    map = json.loads(dest.mapjson)
+    
+    attr_id = int(request.GET.get('id'))
+    search_type = request.GET.get('search_type')
+    search = request.GET.get('search', '')
+    sort = request.GET.get('sort')
+    filter = request.GET.get('filter')
+
+    # 在map找到对应景点
+    selected_attraction = \
+        map['nodes'][map['entrance']] if id == -1 \
+        else map['attractions'][attr_id]
+    
+    restaurants = map['restaurants'] # 所有餐馆
+
+    # 搜索框筛选
+    if search != '':
+        if search_type == '美食名称':
+            restaurants = str_filter(restaurants, lambda x: ' '.join(x['foods']), search)
+        elif search_type == '餐馆名称':
+            restaurants = str_filter(restaurants, lambda x: x['name'], search)
+    print('search:', *restaurants, sep='\n')
+    # 按菜系筛选
+    if filter != '所有菜系':
+        restaurants = type_filter(restaurants, lambda x: x['type'], filter)
+    print('filter:', *restaurants, sep='\n')
+    # 排序
+    tuples = [(distance(
+        x['lat'],
+        x['lon'],
+        selected_attraction['lat'],
+        selected_attraction['lon']
+        ), x) for x in restaurants]
+    print('len = ', len(tuples))
+    if sort == '热度最高':
+        tuples = attr_sort(tuples, lambda t: t[1]['popularity'], l=10)
+    elif sort == '评分最高':
+        tuples = attr_sort(tuples, lambda t: t[1]['rating'], l=10)
+    elif sort == '距离最近':
+        tuples = attr_sort(tuples, lambda t: t[0], l=10, reverse=True)
+    print('len = ', len(tuples))
+    distances, restaurants = zip(*tuples) if len(tuples) else [tuple(),tuple()]
+
+    return JsonResponse({'restaurants': restaurants, 'distances': distances})

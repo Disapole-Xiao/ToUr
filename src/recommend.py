@@ -122,12 +122,13 @@ def type_filter(li: list, f, type: str) -> list :
 h = []
 
 # f返回attr，根据li中每一项的属性attr排序，默认降序
-def attr_sort(li: list, f, reverse=False, len=10, conti=False) -> list :
+def attr_sort(li: list, f, reverse=False, l=None, conti=False) -> list :
+    if l == None:
+        l = len(li)
     # 重新建堆
     if conti == False:
         sorted1_data = Heapsort(li, f, reverse)
-        sorted2_data = sorted1_data[-len:]
-        global sorted3_data 
+        sorted2_data = sorted1_data[-l:]
         sorted3_data = sorted2_data[::-1]
         return sorted3_data
 
@@ -199,12 +200,12 @@ if __name__ == "__main__":
     for i in filtered_data:
         print(i, i.tags.all())
 
-    sorted_data = attr_sort(dests, lambda x:x.popularity, len=8)
+    sorted_data = attr_sort(dests, lambda x:x.popularity, l=8)
     print('----sort popularity-------')
     for i in sorted_data:
         print(i, i.popularity)
     
-    sorted_data = attr_sort(dests, lambda x:x.rating, len=10, reverse=True)
+    sorted_data = attr_sort(dests, lambda x:x.rating, l=10, reverse=True)
     print('----sort rating-------')
     for i in sorted_data:
         print(i, i.rating)

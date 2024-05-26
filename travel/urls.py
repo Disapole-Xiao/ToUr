@@ -9,5 +9,5 @@ urlpatterns = [
     path("map/<int:dest_id>/", views.map, name="map"),
     path("map/<int:dest_id>/plan_route/", views.plan_route, name="plan_route"),
     path('map/<int:dest_id>/search_amenity/', views.search_amenity, name='search_amenity'),
-
+    path('map/<int:dest_id>/search_restaurant/', views.search_restaurant, name='search_restaurant'),
 ]

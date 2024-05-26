@@ -33,7 +33,7 @@ def index(request):
         attr = 'popularity'
     elif sort == '评分最高':
         attr = 'rating' 
-    diaries = attr_sort(diaries, lambda x: getattr(x, attr), len = 9)
+    diaries = attr_sort(diaries, lambda x: getattr(x, attr), l = 9)
     print('sort:', *diaries, sep='\n')
 
     context = {

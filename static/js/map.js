@@ -1,8 +1,10 @@
 var map;  // Global map variable
-var mapMarkers = {};  // To store markers for easy access and manipulation
+var attractionMarkers = {};  // To store markers for easy access and manipulation
 var currentSelected = null;  // To track the currently selected list item
 var routeLayer = L.layerGroup();
 var amenityLayer = L.layerGroup();
+var restaurantLayer = L.layerGroup();
+var entranceMarker = null
 
 // 自定义Icon
 var entranceIcon = new L.Icon({
@@ -42,19 +44,17 @@ var restaurantIcon = new L.Icon({
 document.addEventListener('DOMContentLoaded', function() {
     initializeMap();
     loadAttractions();
-    // 标记出入口点
-    entrance_node_id = mapData.entrance;
-    entrance = mapData.nodes[entrance_node_id];
-    L.marker([entrance.lat, entrance.lon], {icon: entranceIcon}).addTo(map).bindPopup(
-        `<h6 class="m-0">入口</h6>`
-    );
-    drawRoads(); // 画道路
+    // 入口点
+    loadEntrance();
+    // 画道路
+    drawRoads(); 
+    // 加图层
     routeLayer.addTo(map)
     amenityLayer.addTo(map)
-
+    restaurantLayer.addTo(map)
     // 增加事件监听器，点击设施标签时加载设施数据
     document.getElementById('amenities-tab').addEventListener('click', searchAmenity);
-
+    document.getElementById('restaurants-tab').addEventListener('click', searchRestaurant);
 });
 
 function initializeMap() {
@@ -80,10 +80,29 @@ function setActiveTab(tabId) {
     pill.show();  // Bootstrap 5 tab show method
 }
 
+function loadEntrance() {
+    entrance_node_id = mapData.entrance;
+    entrance = mapData.nodes[entrance_node_id];
+    entranceMarker = L.marker([entrance.lat, entrance.lon], {icon: entranceIcon}).addTo(map);
+    entranceMarker.bindPopup(function() {
+        var routeList = document.getElementById('route-list');
+        var exists = routeList.querySelector(`li[attraction-id="-1"]`);
+        var buttonText = exists ? '移出路线' : '加入路线';
+        
+        return `<h6 class="m-0">入口</h6>
+                <p></p>
+                <button class="btn btn-sm btn-primary" onclick="toggleRoute('-1', '入口', this)">${buttonText}</button>`;
+    });
+    entranceMarker.options.attractionId = -1; // 把入口当特殊景点处理
+    entranceMarker.options.attractionName = "入口";
+    entranceMarker.on('click', function() {
+        selectAttraction(-1);
+    });
+}
 //--------- 景点页面相关函数 ------------
 function loadAttractions() {
     mapData.attractions.forEach(function(attraction) {
-        var marker = L.marker([attraction.coordinate.lat, attraction.coordinate.lon], {
+        var marker = L.marker([attraction.lat, attraction.lon], {
             icon: attractionIcon
         });
 
@@ -93,7 +112,7 @@ function loadAttractions() {
 
         marker.addTo(map).bindPopup(function() {
             var routeList = document.getElementById('route-list');
-            var exists = routeList.querySelector(`li[data-id="${attraction.id}"]`);
+            var exists = routeList.querySelector(`li[attraction-id="${attraction.id}"]`);
             var buttonText = exists ? '移出路线' : '加入路线';
             
             return `<h6 class="m-0">${attraction.name}</h6>
@@ -102,7 +121,7 @@ function loadAttractions() {
         });
 
         // 存入字典
-        mapMarkers[attraction.id] = marker;
+        attractionMarkers[attraction.id] = marker;
 
         // 添加点击事件监听
         marker.on('click', function() {
@@ -114,7 +133,7 @@ function loadAttractions() {
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
         listItem.textContent = attraction.name;
-        listItem.setAttribute('data-id', attraction.id); // 设置自定义属性data_id，即景点的id
+        listItem.setAttribute('attraction-id', attraction.id); // 设置自定义属性data_id，即景点的id
         listItem.onclick = function() {
             selectAttraction(attraction.id);
         };
@@ -132,23 +151,28 @@ function selectAttraction(id) {
             currentSelected.listItem.classList.remove('active');
         }
     }
-    // 检索地图标记和列表项
-    var marker = mapMarkers[id];
-    var listItem = document.querySelector(`li[data-id="${id}"]`);
-
-    if (listItem) {
+    var marker, listItem;
+    // 选择了入口
+    if (id == -1) {
+        marker = entranceMarker;
+        listItem = null;
+    } else {
+        marker = attractionMarkers[id];
+        listItem = document.querySelector(`li[attraction-id="${id}"]`);
         listItem.classList.add('active'); // 高亮新的列表项
         listItem.scrollIntoView({behavior: 'smooth', block: 'center'}); // 确保列表项在侧边栏可视区域内
     }
-    if (marker) {
-        marker.openPopup(); // 打开popup
-    }
+    marker.openPopup();
     // 更新当前选中对象
     currentSelected = { marker: marker, listItem: listItem };
 
     // 如果设施界面active
     if (document.getElementById('amenities-tab').classList.contains('active')) {
         searchAmenity();
+    }
+    // 如果餐厅界面active
+    if (document.getElementById('restaurants-tab').classList.contains('active')) {
+        searchRestaurant();
     }
 
     console.log('当前选中的景点：', marker.options.attractionId, marker.options.attractionName);
@@ -180,12 +204,12 @@ function drawRoads() {
 //------------ 路径规划页面相关函数 -----------
 function toggleRoute(id, name, btn) {
     var routeList = document.getElementById('route-list');
-    var exists = routeList.querySelector(`li[data-id="${id}"]`);
+    var exists = routeList.querySelector(`li[attraction-id="${id}"]`);
     if (!exists) {
         // 检查是否已经存在于路线中，如果不在则添加
         var listItem = document.createElement('li');
         listItem.textContent = name;
-        listItem.setAttribute('data-id', id);
+        listItem.setAttribute('attraction-id', id);
         listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
 
         var closeButton = document.createElement('button');
@@ -204,7 +228,7 @@ function toggleRoute(id, name, btn) {
 }
 function removeFromRoute(id, listItem) {
     listItem.remove();
-    // 更新按钮文本（如果需要可以找到对应的按钮并更新其文本）
+    // 更新按钮文本
     var button = document.querySelector(`button[onclick*="toggleRoute('${id}'"]`);
     if (button) {
         button.textContent = '加入路线';
@@ -217,7 +241,7 @@ function planRoute(mode) {
     var routeList = document.getElementById('route-list');
     var selected_attractions = [];
     routeList.querySelectorAll('li').forEach(li => {
-        selected_attractions.push(li.getAttribute('data-id'));
+        selected_attractions.push(li.getAttribute('attraction-id'));
     });
     console.log(selected_attractions);
     // 2. 调用后端函数发送请求，并处理返回的 JSON 数据
@@ -269,8 +293,7 @@ function displayRoute(latLonSeq) {
     
 }
 // -------------设施页面---------------
-// 通过点击设施标签加载和显示设施
-// 通过点击设施标签加载和显示设施
+// 搜索设施并显示
 function searchAmenity() {
     // 检查是否有景点被选中
     if (currentSelected && currentSelected.marker) {
@@ -293,54 +316,129 @@ function searchAmenity() {
         });
     } else {
         // 如果没有景点被选中，则显示提示信息
-        var amenitiesList = document.getElementById('amenity-list');
-        amenitiesList.innerHTML = '<li class="list-group-item bg-light">请选择一个景点</li>';
+        var amenityList = document.getElementById('amenity-list');
+        amenityList.innerHTML = '<li class="list-group-item bg-light text-muted">请选择一个景点</li>';
     }
 }
 
 
-// 在地图上显示设施的函数
+// 显示设施列表和marker标记
 function displayAmenities(amenities, distances) {
     // 清空现有设施列表和 marker
-    var amenitiesList = document.getElementById('amenity-list');
-    amenitiesList.innerHTML = '';
+    var amenityList = document.getElementById('amenity-list');
+    amenityList.innerHTML = '';
     amenityLayer.clearLayers();
 
     amenities.forEach((amenity, index) => {
         // marker 添加
-        var marker = L.marker([amenity.coordinate.lat, amenity.coordinate.lon], {icon: amenityIcon});
+        var marker = L.marker([amenity.lat, amenity.lon], {icon: amenityIcon});
         marker.addTo(amenityLayer).bindPopup(
-            `<h6 class="m-0">${amenity.name}</h6>
+            `<h6 class="m-0">${amenity.name} ${amenity.id}</h6>
              <p>${amenity.description}</p>`
+        );
+        // 展示列表
+        var listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.innerHTML = `<h5>${amenity.name} ${amenity.id}</h5>
+        <span>类型：${amenity.type}</span><span class="float-end">${distances[index]}m</span>`;
+        listItem.onclick = function() {
+            highlightListItem(listItem, marker);
+        }
+        amenityList.appendChild(listItem);
+        marker.on('click', function () {
+            highlightListItem(listItem, marker);
+        });
+    });
+}
+
+function highlightListItem(listItem, marker) {
+    // map.setView([amenity.lat, amenity.lon], 18);
+    marker.openPopup();
+    console.log(listItem.getAttribute('amenity-id'));
+    // 清除其他列表项的active
+    var activeItem = document.querySelector('.list-group-item.active');
+    if (activeItem) {
+        activeItem.classList.remove('active');
+    }
+    
+    listItem.classList.add('active'); // 高亮新的列表项
+    listItem.scrollIntoView({behavior: 'smooth', block: 'center'}); // 确保列表项在侧边栏可视区域内
+}
+
+// -------------美食页面-----------------
+// 搜索餐馆并显示
+function searchRestaurant() {
+    var restaurantList = document.getElementById('restaurant-list');
+    // 检查是否有景点被选中
+    var selectedAttractionId;
+    if (currentSelected && currentSelected.marker) {
+        selectedAttractionId = currentSelected.marker.options.attractionId;
+        // 移除提示元素
+        if (document.getElementById('prompt') != null)
+            restaurantList.parentNode.removeChild(document.getElementById('prompt'));
+    } else { // 如果没有景点被选中，则显示提示信息，默认距离入口
+        selectedAttractionId = 1;
+        // 将提示元素插入到restaurantList之前
+        if (document.getElementById('prompt') == null){
+            // 创建提示元素
+            var prompt = document.createElement('p');
+            prompt.id = "prompt";
+            prompt.className = 'bg-light text-muted ms-2';
+            prompt.textContent = '未选择景点，距离默认使用入口计算';
+            restaurantList.parentNode.insertBefore(prompt, restaurantList);
+    
+        }
+    }
+    var searchType = document.getElementById('food-search-type').value;
+    var searchText = document.getElementById('food-search-input').value;
+    var sortOption = document.getElementById('restaurant-sort').value;
+    var filterOption = document.getElementById('restaurant-filter').value;
+    // 发起请求，包含当前选中的景点ID和搜索选项
+    fetch(`search_restaurant/?id=${selectedAttractionId}&search_type=${searchType}&search=${searchText}&sort=${sortOption}&filter=${filterOption}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayRestaurants(data.restaurants, data.distances);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+
+// 显示设施列表和marker标记
+function displayRestaurants(restaurants, distances) {
+    // 清空现有设施列表和 marker
+    var restaurantList = document.getElementById('restaurant-list');
+    restaurantList.innerHTML = '';
+    restaurantLayer.clearLayers();
+
+    restaurants.forEach((restaurant, index) => {
+        // marker 添加
+        var marker = L.marker([restaurant.lat, restaurant.lon], {icon: restaurantIcon});
+        marker.addTo(restaurantLayer).bindPopup(
+            `<h6 class="m-0">${restaurant.name}</h6>
+             <p>${restaurant.description}</p>`
         );
         
         // 展示列表
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
-        listItem.innerHTML = `<h5>${amenity.name } ${amenity.id}</h5>
-            <span>类型：${amenity.type}</span><span class="float-end">${distances[index]}m</span>`;
+        listItem.innerHTML = `<h5>${restaurant.name } ${restaurant.id}</h5>
+            <div>菜系：${restaurant.type}</div>
+            <div>评分：${restaurant.rating}</div>
+            <div>热度：${restaurant.popularity}</div>
+            <span class="float-end">${distances[index]}m</span>`;
         listItem.onclick = function() {
-            // map.setView([amenity.coordinate.lat, amenity.coordinate.lon], 18);
-            marker.openPopup();
-            // listItem.classList.add('active'); // 高亮新的列表项
-            listItem.scrollIntoView({behavior: 'smooth', block: 'center'}); // 确保列表项在侧边栏可视区域内
-        };
-        amenitiesList.appendChild(listItem);
+            highlightListItem(listItem, marker);
+        }
+        restaurantList.appendChild(listItem);
+        marker.on('click', function () {
+            highlightListItem(listItem, marker);
+        });
     });
 }
-
-
-// -------------美食页面-----------------
-function searchFood() {
-    var searchType = document.getElementById('food-search-type').value;
-    var searchText = document.getElementById('food-search-input').value;
-    var sortOption = document.getElementById('restaurant-sort').value;
-    var restaurantOption = document.getElementById('restaurant-filter').value;
-
-    // 在这里实现调用后端 API 的 AJAX 请求，发送这些参数并更新餐馆列表
-    // 以下是示例逻辑：
-    console.log(searchType, searchText, sortOption, restaurantOption);
-    // 实际的 AJAX 请求将根据您的后端 API 调整
-}
-
-

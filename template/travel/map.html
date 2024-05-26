@@ -32,9 +32,9 @@
         <div class="tab-pane fade" id="routing" role="tabpanel" aria-labelledby="routing-tab">
             <div>请选择您的目的地：</div>
             <ul id="route-list" class="list-group list-group-flush mt-2">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center" attraction-id="-1">
                     入口
-                    {% comment %} <button type="button" class="btn-close" onclick="removeFromRoute(this);" aria-label="Close"></button> {% endcomment %}
+                    <button type="button" class="btn-close" onclick="removeFromRoute('-1', this.parentElement)" aria-label="Close"></button>
                 </li>
             </ul>
             <button class="btn btn-primary mt-3" onclick="planRoute('distance')">距离最短</button>
@@ -58,24 +58,24 @@
         <div class="tab-pane fade" id="restaurants" role="tabpanel" aria-labelledby="restaurants-tab">
             <!-- 搜索框 美食名称 餐馆名称筛选 -->
             <div class="input-group mb-3" >
-                <select id="food-search-type" class="form-select" style="max-width: fit-content">
-                    <option value="food-name">美食名称</option>
-                    <option value="restaurant-name">餐馆名称</option>
+                <select id="food-search-type" class="form-select" style="max-width: fit-content" onchange=searchRestaurant()>
+                    <option value="美食名称">美食名称</option>
+                    <option value="餐馆名称">餐馆名称</option>
                 </select>
                 <input type="text" id="food-search-input" class="form-control" placeholder="搜索美食">
-                <button class="btn btn-outline-secondary" type="button" onclick="searchFood()">搜索</button>
+                <button class="btn btn-outline-secondary" type="button" onclick=searchRestaurant()>搜索</button>
             </div>
             <!-- 菜系筛选、排序-->
             <div class="input-group mb-3">
-                <select id="restaurant-sort" class="form-select bg-light border-0 no-outline" style="max-width: fit-content">
-                    <option value="popularity">热度</option>
-                    <option value="rating">评价</option>
-                    <option value="distance">距离</option>
+                <select id="restaurant-sort" class="form-select bg-light border-0 no-outline" style="max-width: fit-content" onchange=searchRestaurant()>
+                    <option value="距离最近">距离最近</option>
+                    <option value="热度最高">热度最高</option>
+                    <option value="评分最高">评分最高</option>
                 </select>
-                <select id="restaurant-filter" class="form-select bg-light border-0 no-outline" style="max-width: fit-content">
-                    <option value="">所有菜系</option>
-                    {% for restaurant in restaurant_types %}
-                    <option value="{{ restaurant }}">{{ restaurant }}</option>
+                <select id="restaurant-filter" class="form-select bg-light border-0 no-outline" style="max-width: fit-content" onchange=searchRestaurant()>
+                    <option value="所有菜系">所有菜系</option>
+                    {% for type in restaurant_types %}
+                    <option value="{{ type }}">{{ type }}</option>
                     {% endfor %}
                 </select>
             </div>
