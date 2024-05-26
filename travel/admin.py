@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Destination, Category
+from .models import *
 
 class DestinationAdmin(admin.ModelAdmin):
     model = Destination
@@ -13,3 +13,5 @@ class DestinationAdmin(admin.ModelAdmin):
 
 admin.site.register(Destination, DestinationAdmin)
 admin.site.register(Category)
+admin.site.register(AmenityType)
+admin.site.register(RestaurantType)

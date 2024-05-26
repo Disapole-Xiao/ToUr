@@ -2,6 +2,7 @@ var map;  // Global map variable
 var mapMarkers = {};  // To store markers for easy access and manipulation
 var currentSelected = null;  // To track the currently selected list item
 var routeLayer = L.layerGroup();
+var amenityLayer = L.layerGroup();
 
 // 自定义Icon
 var entranceIcon = new L.Icon({
@@ -49,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     );
     drawRoads(); // 画道路
     routeLayer.addTo(map)
+    amenityLayer.addTo(map)
 
     // 增加事件监听器，点击设施标签时加载设施数据
     document.getElementById('amenities-tab').addEventListener('click', searchAmenity);
@@ -255,14 +257,14 @@ function planRoute(mode) {
 
 // 在地图上绘制路径的函数
 function displayRoute(latLonSeq) {
-    console.log(latLonSeq);
+    console.log("displayRoute:" + latLonSeq);
     routeLayer.clearLayers(); // 清除之前的路径图层
     routeLayer.addLayer(
         L.polyline(latLonSeq, {
         color: 'red',
         weight: 5,
     }))
-    console.log('finish');
+    console.log("displayRoute finish");
     
     
 }
@@ -292,20 +294,22 @@ function searchAmenity() {
     } else {
         // 如果没有景点被选中，则显示提示信息
         var amenitiesList = document.getElementById('amenity-list');
-        amenitiesList.innerHTML = '<li class="list-group-item">请选择一个景点</li>';
+        amenitiesList.innerHTML = '<li class="list-group-item bg-light">请选择一个景点</li>';
     }
 }
 
 
 // 在地图上显示设施的函数
 function displayAmenities(amenities, distances) {
-    // 清空现有设施列表
+    // 清空现有设施列表和 marker
     var amenitiesList = document.getElementById('amenity-list');
     amenitiesList.innerHTML = '';
+    amenityLayer.clearLayers();
 
     amenities.forEach((amenity, index) => {
+        // marker 添加
         var marker = L.marker([amenity.coordinate.lat, amenity.coordinate.lon], {icon: amenityIcon});
-        marker.addTo(map).bindPopup(
+        marker.addTo(amenityLayer).bindPopup(
             `<h6 class="m-0">${amenity.name}</h6>
              <p>${amenity.description}</p>`
         );
@@ -331,11 +335,11 @@ function searchFood() {
     var searchType = document.getElementById('food-search-type').value;
     var searchText = document.getElementById('food-search-input').value;
     var sortOption = document.getElementById('restaurant-sort').value;
-    var cuisineOption = document.getElementById('cuisine-filter').value;
+    var restaurantOption = document.getElementById('restaurant-filter').value;
 
     // 在这里实现调用后端 API 的 AJAX 请求，发送这些参数并更新餐馆列表
     // 以下是示例逻辑：
-    console.log(searchType, searchText, sortOption, cuisineOption);
+    console.log(searchType, searchText, sortOption, restaurantOption);
     // 实际的 AJAX 请求将根据您的后端 API 调整
 }
 

@@ -15,7 +15,7 @@
     
 <div id="sidebar" class="bg-light ">
     <!-- 标签栏 -->
-    <div class="sticky-top bg-light mb-3 pb-1  " style="padding-top: 70px;">
+    <div class="sticky-top bg-light mb-3 pb-1  " id="sidebar-nav">
         <div class="nav nav-pills justify-content-between nav-fill " role="tablist">
             <a class="nav-link active" id="attractions-tab" data-bs-toggle="pill" href="#attractions" role="tab" aria-controls="attractions" aria-selected="true">景点</a>
             <a class="nav-link" id="routing-tab" data-bs-toggle="pill" href="#routing" role="tab" aria-controls="routing" aria-selected="false">路径规划</a>
@@ -72,10 +72,10 @@
                     <option value="rating">评价</option>
                     <option value="distance">距离</option>
                 </select>
-                <select id="cuisine-filter" class="form-select bg-light border-0 no-outline" style="max-width: fit-content">
+                <select id="restaurant-filter" class="form-select bg-light border-0 no-outline" style="max-width: fit-content">
                     <option value="">所有菜系</option>
-                    {% for cuisine in cuisine_types %}
-                    <option value="{{ cuisine }}">{{ cuisine }}</option>
+                    {% for restaurant in restaurant_types %}
+                    <option value="{{ restaurant }}">{{ restaurant }}</option>
                     {% endfor %}
                 </select>
             </div>

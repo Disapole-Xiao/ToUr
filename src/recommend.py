@@ -1,12 +1,11 @@
-## 游学地推荐排序模块 ##
-
-# 游学地模型定义已经更改至 travel/models.py
+''' 游学地推荐排序模块 '''
 import os
 import sys
 
 # 设置 Django 项目根目录的路径
-project_path = 'D:/MESS/Codes/ToUr'
-sys.path.append(project_path)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = os.path.dirname(current_dir)
+sys.path.append(project_dir)
 
 # 设置 Django 项目的设置模块
 os.environ['DJANGO_SETTINGS_MODULE'] = 'ToUr.settings'
@@ -14,7 +13,8 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'ToUr.settings'
 # 初始化 Django
 import django
 django.setup()
-# 现在可以导入 travel 应用的模型
+
+# 导入你的模型
 from travel.models import Category, Destination
 
 ## ------- 筛选接口定义---------
@@ -121,7 +121,7 @@ def type_filter(li: list, f, type: str) -> list :
 # 全局变量存堆
 h = []
 
-# # f返回attr，根据li中每一项的属性attr排序，默认降序
+# f返回attr，根据li中每一项的属性attr排序，默认降序
 def attr_sort(li: list, f, reverse=False, len=10, conti=False) -> list :
     # 重新建堆
     if conti == False:

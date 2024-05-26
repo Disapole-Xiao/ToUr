@@ -1,6 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-import os, math
+import os
 
 def dest_pic_path(instance, filename):
     ''' 游学地图片存储路径 '''
@@ -38,3 +38,16 @@ class Destination(models.Model):
     def __hash__(self) -> int:
         return hash(self.name)
     
+class AmenityType(models.Model):
+    name = models.CharField(max_length=10, unique=True)
+    def __str__(self):
+        return self.name
+    def __hash__(self) -> int:
+        return hash(self.name)
+    
+class RestaurantType(models.Model):
+    name = models.CharField(max_length=10, unique=True)
+    def __str__(self):
+        return self.name
+    def __hash__(self) -> int:
+        return hash(self.name)

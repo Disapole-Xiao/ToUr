@@ -146,5 +146,8 @@ NPM_BIN_PATH = 'npm.cmd'
 
 DEFAULT_CHARSET = 'utf-8'
 
-
 AUTH_USER_MODEL = 'account.CustomUser'
+
+
+# 以下是自定义的全局常量
+AMENITY_SEARCH_RADIUS = 300  # 在景点附近300m设施能够展示

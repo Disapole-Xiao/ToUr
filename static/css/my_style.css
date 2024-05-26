@@ -41,8 +41,12 @@
     /* z-index: -1; */
 }
 
-/* 当屏幕宽度小于等于600px时，改变侧边栏的位置和大小 */
-@media (max-width: 600px) {
+#sidebar-nav {
+    padding-top: 70px;
+}
+
+/* 当屏幕宽度小于等于800px时，改变侧边栏的位置和大小 */
+@media (max-width: 800px) {
     #sidebar {
         position: fixed;
         left: 0;
@@ -58,6 +62,9 @@
         height: 40%;
         /* 高度变为原来的一半 */
         padding: 20px;
+    }
+    #sidebar-nav {
+        padding-top: 0px;
     }
 }
 
