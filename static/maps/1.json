@@ -9,528 +9,430 @@
         {
             "id": 0,
             "name": "奥运熊猫馆",
-            "coordinate": {
-                "lon": 116.332711,
-                "lat": 39.938288
-            },
             "description": "有可爱大熊猫",
             "entr_point": [
                 143
-            ]
+            ],
+            "lon": 116.332711,
+            "lat": 39.938288
         },
         {
             "id": 1,
             "name": "鹦鹉馆",
-            "coordinate": {
-                "lon": 116.329501,
-                "lat": 39.94025
-            },
             "description": "",
             "entr_point": [
                 476,
                 482
-            ]
+            ],
+            "lon": 116.329501,
+            "lat": 39.94025
         },
         {
             "id": 2,
             "name": "大象馆",
-            "coordinate": {
-                "lon": 116.332708,
-                "lat": 39.942667
-            },
             "description": "",
             "entr_point": [
                 303
-            ]
+            ],
+            "lon": 116.332708,
+            "lat": 39.942667
         },
         {
             "id": 3,
             "name": "河马与犀牛馆",
-            "coordinate": {
-                "lon": 116.330917,
-                "lat": 39.942854
-            },
             "description": "",
             "entr_point": [
                 172
-            ]
+            ],
+            "lon": 116.330917,
+            "lat": 39.942854
         },
         {
             "id": 4,
             "name": "老鹰馆",
-            "coordinate": {
-                "lon": 116.329765,
-                "lat": 39.942453
-            },
             "description": "",
             "entr_point": [
                 79
-            ]
+            ],
+            "lon": 116.329765,
+            "lat": 39.942453
         },
         {
             "id": 5,
             "name": "非洲动物区",
-            "coordinate": {
-                "lon": 116.329064,
-                "lat": 39.941586
-            },
             "description": "",
             "entr_point": [
                 543,
                 544
-            ]
+            ],
+            "lon": 116.329064,
+            "lat": 39.941586
         },
         {
             "id": 6,
             "name": "金丝猴馆",
-            "coordinate": {
-                "lon": 116.327863,
-                "lat": 39.940126
-            },
             "description": "",
             "entr_point": [
                 370
-            ]
+            ],
+            "lon": 116.327863,
+            "lat": 39.940126
         },
         {
             "id": 7,
             "name": "鹿馆",
-            "coordinate": {
-                "lon": 116.32407,
-                "lat": 39.941457
-            },
             "description": "",
             "entr_point": [
                 215
-            ]
+            ],
+            "lon": 116.32407,
+            "lat": 39.941457
         },
         {
             "id": 8,
             "name": "企鹅与蝙蝠区",
-            "coordinate": {
-                "lon": 116.326113,
-                "lat": 39.938953
-            },
             "description": "",
             "entr_point": [
                 222
-            ]
+            ],
+            "lon": 116.326113,
+            "lat": 39.938953
         },
         {
             "id": 9,
             "name": "百木园",
-            "coordinate": {
-                "lon": 116.335139,
-                "lat": 39.941163
-            },
             "description": "",
             "entr_point": [
                 46,
                 272
-            ]
+            ],
+            "lon": 116.335139,
+            "lat": 39.941163
         },
         {
             "id": 10,
             "name": "北京海洋馆",
-            "coordinate": {
-                "lon": 116.334847,
-                "lat": 39.943316
-            },
             "description": "",
             "entr_point": [
                 62
-            ]
+            ],
+            "lon": 116.334847,
+            "lat": 39.943316
         },
         {
             "id": 11,
             "name": "天鹅湖",
-            "coordinate": {
-                "lon": 116.334816,
-                "lat": 39.9399
-            },
             "description": "",
             "entr_point": [
                 322,
                 248
-            ]
+            ],
+            "lon": 116.334816,
+            "lat": 39.9399
         },
         {
             "id": 12,
             "name": "爬行动物馆",
-            "coordinate": {
-                "lon": 116.327219,
-                "lat": 39.938846
-            },
             "description": "",
             "entr_point": [
                 520
-            ]
+            ],
+            "lon": 116.327219,
+            "lat": 39.938846
         },
         {
             "id": 13,
             "name": "猿猴馆",
-            "coordinate": {
-                "lon": 116.32593,
-                "lat": 39.940451
-            },
             "description": "",
             "entr_point": [
                 503
-            ]
+            ],
+            "lon": 116.32593,
+            "lat": 39.940451
         },
         {
             "id": 14,
             "name": "长颈鹿馆",
-            "coordinate": {
-                "lon": 116.327822,
-                "lat": 39.941418
-            },
             "description": "",
             "entr_point": [
                 85
-            ]
+            ],
+            "lon": 116.327822,
+            "lat": 39.941418
         },
         {
             "id": 15,
             "name": "火烈鸟馆",
-            "coordinate": {
-                "lon": 116.329119,
-                "lat": 39.939463
-            },
             "description": "",
             "entr_point": [
                 536
-            ]
+            ],
+            "lon": 116.329119,
+            "lat": 39.939463
         },
         {
             "id": 16,
             "name": "貘科动物馆",
-            "coordinate": {
-                "lon": 116.330529,
-                "lat": 39.940169
-            },
             "description": "",
             "entr_point": [
                 395
-            ]
+            ],
+            "lon": 116.330529,
+            "lat": 39.940169
         },
         {
             "id": 17,
             "name": "畅观楼",
-            "coordinate": {
-                "lon": 116.323732,
-                "lat": 39.940576
-            },
             "description": "",
             "entr_point": [
                 152
-            ]
+            ],
+            "lon": 116.323732,
+            "lat": 39.940576
         },
         {
             "id": 18,
             "name": "马来貘馆",
-            "coordinate": {
-                "lon": 116.331176,
-                "lat": 39.940241
-            },
             "description": "",
             "entr_point": [
                 399
-            ]
+            ],
+            "lon": 116.331176,
+            "lat": 39.940241
         },
         {
             "id": 19,
             "name": "亚运熊猫馆",
-            "coordinate": {
-                "lon": 116.333436,
-                "lat": 39.938655
-            },
             "description": "",
             "entr_point": [
                 3
-            ]
+            ],
+            "lon": 116.333436,
+            "lat": 39.938655
         }
     ],
     "amenities": [
         {
             "id": 0,
             "name": "卫生间",
-            "coordinate": {
-                "lon": 116.329465,
-                "lat": 39.941089
-            },
             "description": "",
-            "type": "卫生间"
+            "type": "卫生间",
+            "lon": 116.329465,
+            "lat": 39.941089
         },
         {
             "id": 1,
             "name": "卫生间",
-            "coordinate": {
-                "lon": 116.325289,
-                "lat": 39.938186
-            },
             "description": "",
-            "type": "卫生间"
+            "type": "卫生间",
+            "lon": 116.325289,
+            "lat": 39.938186
         },
         {
             "id": 2,
             "name": "卫生间",
-            "coordinate": {
-                "lon": 116.331766,
-                "lat": 39.938316
-            },
             "description": "",
-            "type": "卫生间"
+            "type": "卫生间",
+            "lon": 116.331766,
+            "lat": 39.938316
         },
         {
             "id": 3,
             "name": "卫生间",
-            "coordinate": {
-                "lon": 116.334922,
-                "lat": 39.937937
-            },
             "description": "",
-            "type": "卫生间"
+            "type": "卫生间",
+            "lon": 116.334922,
+            "lat": 39.937937
         },
         {
             "id": 4,
             "name": "卫生间",
-            "coordinate": {
-                "lon": 116.332855,
-                "lat": 39.941139
-            },
             "description": "",
-            "type": "卫生间"
+            "type": "卫生间",
+            "lon": 116.332855,
+            "lat": 39.941139
         },
         {
             "id": 5,
             "name": "卫生间",
-            "coordinate": {
-                "lon": 116.336103,
-                "lat": 39.942478
-            },
             "description": "",
-            "type": "卫生间"
+            "type": "卫生间",
+            "lon": 116.336103,
+            "lat": 39.942478
         },
         {
             "id": 6,
             "name": "卫生间",
-            "coordinate": {
-                "lon": 116.336103,
-                "lat": 39.942478
-            },
             "description": "",
-            "type": "卫生间"
+            "type": "卫生间",
+            "lon": 116.336103,
+            "lat": 39.942478
         },
         {
             "id": 7,
             "name": "喷泉",
-            "coordinate": {
-                "lon": 116.334224,
-                "lat": 39.944458
-            },
             "description": "",
-            "type": "喷泉"
+            "type": "喷泉",
+            "lon": 116.334224,
+            "lat": 39.944458
         },
         {
             "id": 8,
             "name": "公共电话亭",
-            "coordinate": {
-                "lon": 116.324949,
-                "lat": 39.940958
-            },
             "description": "",
-            "type": "公共电话亭"
+            "type": "公共电话亭",
+            "lon": 116.324949,
+            "lat": 39.940958
         },
         {
             "id": 9,
             "name": "公共电话亭",
-            "coordinate": {
-                "lon": 116.32372,
-                "lat": 39.938825
-            },
             "description": "",
-            "type": "公共电话亭"
+            "type": "公共电话亭",
+            "lon": 116.32372,
+            "lat": 39.938825
         },
         {
             "id": 10,
             "name": "公共电话亭",
-            "coordinate": {
-                "lon": 116.33087,
-                "lat": 39.938271
-            },
             "description": "",
-            "type": "公共电话亭"
+            "type": "公共电话亭",
+            "lon": 116.33087,
+            "lat": 39.938271
         },
         {
             "id": 11,
             "name": "美团外卖柜",
-            "coordinate": {
-                "lon": 116.332482,
-                "lat": 39.938052
-            },
             "description": "",
-            "type": "美团外卖柜"
+            "type": "美团外卖柜",
+            "lon": 116.332482,
+            "lat": 39.938052
         },
         {
             "id": 12,
             "name": "美团外卖柜",
-            "coordinate": {
-                "lon": 116.323309,
-                "lat": 39.940873
-            },
             "description": "",
-            "type": "美团外卖柜"
+            "type": "美团外卖柜",
+            "lon": 116.323309,
+            "lat": 39.940873
         },
         {
             "id": 13,
             "name": "美团外卖柜",
-            "coordinate": {
-                "lon": 116.329236,
-                "lat": 39.942365
-            },
             "description": "",
-            "type": "美团外卖柜"
+            "type": "美团外卖柜",
+            "lon": 116.329236,
+            "lat": 39.942365
         },
         {
             "id": 14,
             "name": "中国邮政",
-            "coordinate": {
-                "lon": 116.328762,
-                "lat": 39.938353
-            },
             "description": "",
-            "type": "快递站"
+            "type": "快递站",
+            "lon": 116.328762,
+            "lat": 39.938353
         },
         {
             "id": 15,
             "name": "中国邮政",
-            "coordinate": {
-                "lon": 116.335399,
-                "lat": 39.94186
-            },
             "description": "",
-            "type": "快递站"
+            "type": "快递站",
+            "lon": 116.335399,
+            "lat": 39.94186
         },
         {
             "id": 16,
             "name": "中国邮政",
-            "coordinate": {
-                "lon": 116.326378,
-                "lat": 39.942131
-            },
             "description": "",
-            "type": "快递站"
+            "type": "快递站",
+            "lon": 116.326378,
+            "lat": 39.942131
         },
         {
             "id": 17,
             "name": "物美",
-            "coordinate": {
-                "lon": 116.331758,
-                "lat": 39.939847
-            },
             "description": "",
-            "type": "商店"
+            "type": "商店",
+            "lon": 116.331758,
+            "lat": 39.939847
         },
         {
             "id": 18,
             "name": "商店",
-            "coordinate": {
-                "lon": 116.333401,
-                "lat": 39.941652
-            },
             "description": "",
-            "type": "商店"
+            "type": "商店",
+            "lon": 116.333401,
+            "lat": 39.941652
         },
         {
             "id": 19,
             "name": "商店",
-            "coordinate": {
-                "lon": 116.325136,
-                "lat": 39.941515
-            },
             "description": "",
-            "type": "商店"
+            "type": "商店",
+            "lon": 116.325136,
+            "lat": 39.941515
         },
         {
             "id": 20,
             "name": "商店",
-            "coordinate": {
-                "lon": 116.325064,
-                "lat": 39.9394
-            },
             "description": "",
-            "type": "商店"
+            "type": "商店",
+            "lon": 116.325064,
+            "lat": 39.9394
         },
         {
             "id": 21,
             "name": "商店",
-            "coordinate": {
-                "lon": 116.328472,
-                "lat": 39.940884
-            },
             "description": "",
-            "type": "商店"
+            "type": "商店",
+            "lon": 116.328472,
+            "lat": 39.940884
         },
         {
             "id": 22,
             "name": "医务室",
-            "coordinate": {
-                "lon": 116.332074,
-                "lat": 39.94178
-            },
             "description": "",
-            "type": "医务室"
+            "type": "医务室",
+            "lon": 116.332074,
+            "lat": 39.94178
         },
         {
             "id": 23,
             "name": "医务室",
-            "coordinate": {
-                "lon": 116.329983,
-                "lat": 39.938308
-            },
             "description": "",
-            "type": "医务室"
+            "type": "医务室",
+            "lon": 116.329983,
+            "lat": 39.938308
         },
         {
             "id": 24,
             "name": "医务室",
-            "coordinate": {
-                "lon": 116.323574,
-                "lat": 39.940184
-            },
             "description": "",
-            "type": "医务室"
+            "type": "医务室",
+            "lon": 116.323574,
+            "lat": 39.940184
         },
         {
             "id": 25,
             "name": "观景台",
-            "coordinate": {
-                "lon": 116.332821,
-                "lat": 39.939758
-            },
             "description": "",
-            "type": "观景台"
+            "type": "观景台",
+            "lon": 116.332821,
+            "lat": 39.939758
         },
         {
             "id": 26,
             "name": "观景台",
-            "coordinate": {
-                "lon": 116.335722,
-                "lat": 39.940522
-            },
             "description": "",
-            "type": "观景台"
+            "type": "观景台",
+            "lon": 116.335722,
+            "lat": 39.940522
         }
     ],
     "restaurants": [
         {
             "id": 0,
             "name": "麦当劳",
-            "coordinate": {
-                "lon": 116.329779,
-                "lat": 39.941102
-            },
             "description": "",
             "type": "快餐",
             "foods": [
@@ -538,15 +440,13 @@
                 "麦辣鸡翅"
             ],
             "popularity": 876,
-            "rating": 4.4
+            "rating": 4.4,
+            "lon": 116.329779,
+            "lat": 39.941102
         },
         {
             "id": 1,
             "name": "汉拿山",
-            "coordinate": {
-                "lon": 116.325409,
-                "lat": 39.937547
-            },
             "description": "",
             "type": "韩式餐厅",
             "foods": [
@@ -554,15 +454,13 @@
                 "部队火锅"
             ],
             "popularity": 749,
-            "rating": 3.7
+            "rating": 3.7,
+            "lon": 116.325409,
+            "lat": 39.937547
         },
         {
             "id": 2,
             "name": "湘味小炒",
-            "coordinate": {
-                "lon": 116.334533,
-                "lat": 39.942153
-            },
             "description": "",
             "type": "汉餐",
             "foods": [
@@ -570,15 +468,13 @@
                 "糖醋里脊"
             ],
             "popularity": 675,
-            "rating": 4.9
+            "rating": 4.9,
+            "lon": 116.334533,
+            "lat": 39.942153
         },
         {
             "id": 3,
             "name": "星巴克",
-            "coordinate": {
-                "lon": 116.334895,
-                "lat": 39.942121
-            },
             "description": "",
             "type": "咖啡厅",
             "foods": [
@@ -586,15 +482,13 @@
                 "卡布奇诺"
             ],
             "popularity": 682,
-            "rating": 3.1
+            "rating": 3.1,
+            "lon": 116.334895,
+            "lat": 39.942121
         },
         {
             "id": 4,
             "name": "莫斯科餐厅",
-            "coordinate": {
-                "lon": 116.332506,
-                "lat": 39.941074
-            },
             "description": "",
             "type": "俄式餐厅",
             "foods": [
@@ -602,15 +496,13 @@
                 "列巴"
             ],
             "popularity": 990,
-            "rating": 4.0
+            "rating": 4.0,
+            "lon": 116.332506,
+            "lat": 39.941074
         },
         {
             "id": 5,
             "name": "肯德基",
-            "coordinate": {
-                "lon": 116.325308,
-                "lat": 39.938359
-            },
             "description": "v我50谢谢",
             "type": "快餐",
             "foods": [
@@ -618,15 +510,13 @@
                 "可乐"
             ],
             "popularity": 532,
-            "rating": 3.6
+            "rating": 3.6,
+            "lon": 116.325308,
+            "lat": 39.938359
         },
         {
             "id": 6,
             "name": "延吉风情",
-            "coordinate": {
-                "lon": 116.32511,
-                "lat": 39.940071
-            },
             "description": "",
             "type": "韩式餐厅",
             "foods": [
@@ -634,15 +524,13 @@
                 "部队火锅"
             ],
             "popularity": 818,
-            "rating": 3.8
+            "rating": 3.8,
+            "lon": 116.32511,
+            "lat": 39.940071
         },
         {
             "id": 7,
             "name": "好吃爱吃",
-            "coordinate": {
-                "lon": 116.332603,
-                "lat": 39.942213
-            },
             "description": "",
             "type": "汉餐",
             "foods": [
@@ -650,15 +538,13 @@
                 "糖醋里脊"
             ],
             "popularity": 657,
-            "rating": 4.6
+            "rating": 4.6,
+            "lon": 116.332603,
+            "lat": 39.942213
         },
         {
             "id": 8,
             "name": "瑞幸咖啡",
-            "coordinate": {
-                "lon": 116.333241,
-                "lat": 39.943576
-            },
             "description": "",
             "type": "咖啡厅",
             "foods": [
@@ -666,15 +552,13 @@
                 "卡布奇诺"
             ],
             "popularity": 746,
-            "rating": 4.7
+            "rating": 4.7,
+            "lon": 116.333241,
+            "lat": 39.943576
         },
         {
             "id": 9,
             "name": "极光餐厅",
-            "coordinate": {
-                "lon": 116.330125,
-                "lat": 39.941207
-            },
             "description": "",
             "type": "俄式餐厅",
             "foods": [
@@ -682,15 +566,13 @@
                 "列巴"
             ],
             "popularity": 922,
-            "rating": 4.3
+            "rating": 4.3,
+            "lon": 116.330125,
+            "lat": 39.941207
         },
         {
             "id": 10,
             "name": "蜜雪冰城",
-            "coordinate": {
-                "lon": 116.333163,
-                "lat": 39.940172
-            },
             "description": "",
             "type": "饮料店",
             "foods": [
@@ -698,15 +580,13 @@
                 "杨枝甘露"
             ],
             "popularity": 726,
-            "rating": 3.7
+            "rating": 3.7,
+            "lon": 116.333163,
+            "lat": 39.940172
         },
         {
             "id": 11,
             "name": "一点点",
-            "coordinate": {
-                "lon": 116.32375,
-                "lat": 39.939714
-            },
             "description": "",
             "type": "饮料店",
             "foods": [
@@ -714,15 +594,13 @@
                 "杨枝甘露"
             ],
             "popularity": 842,
-            "rating": 4.6
+            "rating": 4.6,
+            "lon": 116.32375,
+            "lat": 39.939714
         },
         {
             "id": 12,
             "name": "茶百道",
-            "coordinate": {
-                "lon": 116.327256,
-                "lat": 39.940948
-            },
             "description": "",
             "type": "饮料店",
             "foods": [
@@ -730,15 +608,13 @@
                 "杨枝甘露"
             ],
             "popularity": 721,
-            "rating": 4.3
+            "rating": 4.3,
+            "lon": 116.327256,
+            "lat": 39.940948
         },
         {
             "id": 13,
             "name": "书亦烧仙草",
-            "coordinate": {
-                "lon": 116.333851,
-                "lat": 39.939366
-            },
             "description": "",
             "type": "饮料店",
             "foods": [
@@ -746,15 +622,13 @@
                 "杨枝甘露"
             ],
             "popularity": 889,
-            "rating": 4.8
+            "rating": 4.8,
+            "lon": 116.333851,
+            "lat": 39.939366
         },
         {
             "id": 14,
             "name": "吾饮良品",
-            "coordinate": {
-                "lon": 116.330077,
-                "lat": 39.939341
-            },
             "description": "",
             "type": "饮料店",
             "foods": [
@@ -762,15 +636,13 @@
                 "杨枝甘露"
             ],
             "popularity": 786,
-            "rating": 3.6
+            "rating": 3.6,
+            "lon": 116.330077,
+            "lat": 39.939341
         },
         {
             "id": 15,
             "name": "汉餐",
-            "coordinate": {
-                "lon": 116.333583,
-                "lat": 39.941192
-            },
             "description": "",
             "type": "汉餐",
             "foods": [
@@ -778,15 +650,13 @@
                 "糖醋里脊"
             ],
             "popularity": 628,
-            "rating": 4.1
+            "rating": 4.1,
+            "lon": 116.333583,
+            "lat": 39.941192
         },
         {
             "id": 16,
             "name": "楼上楼",
-            "coordinate": {
-                "lon": 116.332603,
-                "lat": 39.942213
-            },
             "description": "",
             "type": "汉餐",
             "foods": [
@@ -794,15 +664,13 @@
                 "糖醋里脊"
             ],
             "popularity": 542,
-            "rating": 4.3
+            "rating": 4.3,
+            "lon": 116.332603,
+            "lat": 39.942213
         },
         {
             "id": 17,
             "name": "西餐",
-            "coordinate": {
-                "lon": 116.326439,
-                "lat": 39.941598
-            },
             "description": "",
             "type": "西餐",
             "foods": [
@@ -810,15 +678,13 @@
                 "红酒"
             ],
             "popularity": 884,
-            "rating": 4.9
+            "rating": 4.9,
+            "lon": 116.326439,
+            "lat": 39.941598
         },
         {
             "id": 18,
             "name": "西餐",
-            "coordinate": {
-                "lon": 116.333996,
-                "lat": 39.944335
-            },
             "description": "",
             "type": "西餐",
             "foods": [
@@ -826,15 +692,13 @@
                 "红酒"
             ],
             "popularity": 679,
-            "rating": 3.5
+            "rating": 3.5,
+            "lon": 116.333996,
+            "lat": 39.944335
         },
         {
             "id": 19,
             "name": "西餐",
-            "coordinate": {
-                "lon": 116.327851,
-                "lat": 39.938136
-            },
             "description": "",
             "type": "西餐",
             "foods": [
@@ -842,15 +706,13 @@
                 "红酒"
             ],
             "popularity": 788,
-            "rating": 4.7
+            "rating": 4.7,
+            "lon": 116.327851,
+            "lat": 39.938136
         },
         {
             "id": 20,
             "name": "西餐",
-            "coordinate": {
-                "lon": 116.328022,
-                "lat": 39.942407
-            },
             "description": "",
             "type": "西餐",
             "foods": [
@@ -858,15 +720,13 @@
                 "红酒"
             ],
             "popularity": 612,
-            "rating": 3.4
+            "rating": 3.4,
+            "lon": 116.328022,
+            "lat": 39.942407
         },
         {
             "id": 21,
             "name": "咖啡厅",
-            "coordinate": {
-                "lon": 116.331456,
-                "lat": 39.939604
-            },
             "description": "",
             "type": "咖啡厅",
             "foods": [
@@ -874,15 +734,13 @@
                 "卡布奇诺"
             ],
             "popularity": 869,
-            "rating": 4.5
+            "rating": 4.5,
+            "lon": 116.331456,
+            "lat": 39.939604
         },
         {
             "id": 22,
             "name": "瑞幸咖啡",
-            "coordinate": {
-                "lon": 116.328071,
-                "lat": 39.93776
-            },
             "description": "",
             "type": "咖啡厅",
             "foods": [
@@ -890,7 +748,9 @@
                 "卡布奇诺"
             ],
             "popularity": 710,
-            "rating": 3.2
+            "rating": 3.2,
+            "lon": 116.328071,
+            "lat": 39.93776
         }
     ],
     "nodes": [

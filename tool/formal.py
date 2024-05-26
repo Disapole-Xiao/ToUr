@@ -26,18 +26,18 @@ for node in data["nodes"]:
 
 for attraction in data["attractions"]:
     # 保留经纬度到小数点后六位
-    attraction["coordinate"]["lat"] = round(attraction["coordinate"]["lat"], 6)
-    attraction["coordinate"]["lon"] = round(attraction["coordinate"]["lon"], 6)
+    attraction["lat"] = round(attraction["lat"], 6)
+    attraction["lon"] = round(attraction["lon"], 6)
 
 for amenitie in data["amenities"]:
     # 保留经纬度到小数点后六位
-    amenitie["coordinate"]["lat"] = round(amenitie["coordinate"]["lat"], 6)
-    amenitie["coordinate"]["lon"] = round(amenitie["coordinate"]["lon"], 6)
+    amenitie["lat"] = round(amenitie["lat"], 6)
+    amenitie["lon"] = round(amenitie["lon"], 6)
 
 for restaurant in data["restaurants"]:
     # 保留经纬度到小数点后六位
-    restaurant["coordinate"]["lat"] = round(restaurant["coordinate"]["lat"], 6)
-    restaurant["coordinate"]["lon"] = round(restaurant["coordinate"]["lon"], 6)
+    restaurant["lat"] = round(restaurant["lat"], 6)
+    restaurant["lon"] = round(restaurant["lon"], 6)
 
 # 写入新的 JSON 文件
 with open(json_file_path, "w", encoding="utf-8") as f:

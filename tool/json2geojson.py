@@ -38,7 +38,7 @@ def convert_json_to_geojson(input_path, output_path):
                 "type": "Feature",
                 "geometry": {
                     "type": "Point",
-                    "coordinates": switch_coordinates(item["coordinate"]["lat"], item["coordinate"]["lon"])
+                    "coordinates": switch_coordinates(item["lat"], item["lon"])
                 },
                 "properties": {
                     "name": item["name"],
