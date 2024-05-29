@@ -102,6 +102,7 @@ def search_amenity(request, dest_id):
     
     attr_id = int(request.GET.get('id'))
     amenity_type = request.GET.get('type', '')
+    edit = request.GET.get('edit') == '1'
 
     # 在map找到对应景点
     selected_attraction = \
@@ -124,7 +125,7 @@ def search_amenity(request, dest_id):
     tuples = attr_sort(tuples, lambda x: x[0], reverse=True)
     # 取距离 < AMENITY_SEARCH_RADIUS 的
     distances, amenities = zip(*tuples)
-    r = bisect.bisect_right(distances, settings.AMENITY_SEARCH_RADIUS)
+    r = bisect.bisect_right(distances, settings.AMENITY_SEARCH_RADIUS if not edit else 10000)
 
     return JsonResponse({'amenities': amenities[:r], 'distances': distances[:r]})
 
@@ -138,6 +139,8 @@ def search_restaurant(request, dest_id):
     search = request.GET.get('search', '')
     sort = request.GET.get('sort')
     filter = request.GET.get('filter')
+    edit = request.GET.get('edit') == '1'
+    arr_len = 0 if edit else 10
 
     # 在map找到对应景点
     selected_attraction = \
@@ -166,11 +169,11 @@ def search_restaurant(request, dest_id):
         ), x) for x in restaurants]
     print('len = ', len(tuples))
     if sort == '热度最高':
-        tuples = attr_sort(tuples, lambda t: t[1]['popularity'], l=10)
+        tuples = attr_sort(tuples, lambda t: t[1]['popularity'], l=arr_len)
     elif sort == '评分最高':
-        tuples = attr_sort(tuples, lambda t: t[1]['rating'], l=10)
+        tuples = attr_sort(tuples, lambda t: t[1]['rating'], l=arr_len)
     elif sort == '距离最近':
-        tuples = attr_sort(tuples, lambda t: t[0], l=10, reverse=True)
+        tuples = attr_sort(tuples, lambda t: t[0], l=arr_len, reverse=True)
     print('len = ', len(tuples))
     distances, restaurants = zip(*tuples) if len(tuples) else [tuple(),tuple()]
 

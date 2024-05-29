@@ -10,8 +10,12 @@
 
 {% block mainbody %}
 <!-- 管理员编辑地图按钮 -->
-{% if user.is_superuser and not edit %}
+{% if user.is_superuser %}
+{% if not edit %}
 <a href="{% url 'travel:map_edit' dest.id %}" class="btn btn-primary position-fixed bottom-0 start-0 m-2">编辑地图</a>
+{% else %}
+<a href="{% url 'travel:map' dest.id %}" class="btn btn-primary position-fixed bottom-0 start-0 m-2">退出编辑</a>
+{% endif %}
 {% endif %}
 </div>
 <!-- 地图 -->

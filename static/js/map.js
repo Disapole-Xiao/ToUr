@@ -371,7 +371,9 @@ function searchAmenity() {
         var searchText = document.getElementById('amenity-search').value; // 获取搜索框中的内容
 
         // 发起请求，包含当前选中的景点ID和搜索框中的内容
-        fetch(`search_amenity/?id=${selectedAttractionId}&type=${searchText}`, {
+        str = `search_amenity/?id=${selectedAttractionId}&type=${searchText}`
+        if (edit) str += '&edit=1';
+        fetch(str, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -458,8 +460,11 @@ function searchRestaurant() {
     var searchText = document.getElementById('food-search-input').value;
     var sortOption = document.getElementById('restaurant-sort').value;
     var filterOption = document.getElementById('restaurant-filter').value;
+
+    str = `search_restaurant/?id=${selectedAttractionId}&search_type=${searchType}&search=${searchText}&sort=${sortOption}&filter=${filterOption}`
+    if (edit) str += '&edit=1';
     // 发起请求，包含当前选中的景点ID和搜索选项
-    fetch(`search_restaurant/?id=${selectedAttractionId}&search_type=${searchType}&search=${searchText}&sort=${sortOption}&filter=${filterOption}`, {
+    fetch(str, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
