@@ -9,10 +9,14 @@
 {% endblock %}
 
 {% block mainbody %}
-
-<!--地图-->
+<!-- 管理员编辑地图按钮 -->
+{% if user.is_superuser and not edit %}
+<a href="{% url 'travel:map_edit' dest.id %}" class="btn btn-primary position-fixed bottom-0 start-0 m-2">编辑地图</a>
+{% endif %}
+</div>
+<!-- 地图 -->
 <div id="map"> </div>
-    
+<!-- 侧边栏 -->
 <div id="sidebar" class="bg-light ">
     <!-- 标签栏 -->
     <div class="sticky-top bg-light mb-3 pb-1  " id="sidebar-nav">
@@ -93,7 +97,8 @@
      crossorigin=""></script>
 <script>
     // 将 Django 变量转换为 JavaScript 对象
-    var mapData = JSON.parse('{{ dest.mapjson|escapejs }}'); 
+    var mapData = JSON.parse('{{ dest.mapjson|escapejs }}');
+    var edit = JSON.parse('{{ edit|yesno:"true,false"|escapejs }}')
     const csrfToken = '{{ csrf_token }}';
 </script>
 <script src="{% static 'js/map.js' %}"></script>

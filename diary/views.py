@@ -4,6 +4,7 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 
 from travel.models import Destination
 from .models import Diary
@@ -54,15 +55,15 @@ def detail(request, diary_id):
     return render(request, 'diary/detail.html', context)
 
 @require_http_methods(["POST"])
+@login_required
 def add_diary(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content')
         location_name = request.POST.get('location')
         location = get_object_or_404(Destination, name=location_name)
-        author = get_object_or_404(User, username='小明')
+        author = request.user
         new_diary = Diary(author=author, title=title, content=content, location=location)
-        # new_diary = Diary(author=request.user, title=title, content=content, location=location)
         new_diary.save()
         return redirect('/diary/')  # Redirect to a new URL after saving
 

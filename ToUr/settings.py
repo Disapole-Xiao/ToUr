@@ -123,13 +123,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 # 添加额外的静态文件目录，如果有的话
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-MEDIA_URL = 'uploads/'
+MEDIA_URL = '/uploads/'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 
 # Default primary key field type
@@ -147,6 +147,8 @@ NPM_BIN_PATH = 'npm.cmd'
 DEFAULT_CHARSET = 'utf-8'
 
 AUTH_USER_MODEL = 'account.CustomUser'
+LOGIN_URL = '/account/login/'
+LOGOUT_REDIRECT_URL = '/travel/'
 
 
 # 以下是自定义的全局常量

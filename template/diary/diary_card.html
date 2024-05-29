@@ -1,6 +1,6 @@
 <!-- 一张日记卡片 -->
 <div class="col">
-  <a href="{% url 'diary:detail' diary.pk %}"style="color: inherit; text-decoration: none;">
+  <a href="{% url 'diary:detail' diary.pk %}" style="color: inherit; text-decoration: none;">
     <!-- 图片-->
     <div class="card h-100 mb-0 shadow-sm ">
       {% if diary.image %}
@@ -28,7 +28,7 @@
         </div>
         <!--作者 发布时间 -->
         <div class="d-flex align-items-center mt-auto ">
-          <img src="https://wallpapercave.com/wp/wp7171970.jpg" alt="用户头像" style="width: 20px; height: 20px; border-radius: 50%;">
+          {% include 'user_avatar.html' with size=20 user=diary.author %}
           <span class="card-text text-muted ms-1 text-truncate ">{{ diary.author.username }}</span>
           <span class="card-text text-muted ms-auto full-width">发布于 {{ diary.pub_time | date:"Y-m-d"}}</span>
         </div>

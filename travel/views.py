@@ -55,7 +55,7 @@ def detail(request, dest_id):
         'related_diaries': related_diaries,
     }
     return render(request, 'travel/detail.html', context)
-def map(request, dest_id):
+def map(request, dest_id, edit=False):
     dest = get_object_or_404(Destination, pk=dest_id)
 
     restaurant_types = [x.name for x in RestaurantType.objects.all()]
@@ -65,36 +65,35 @@ def map(request, dest_id):
         'dest': dest,
         'restaurant_types': restaurant_types,
         'amenity_types': amenity_types,
+        'edit': edit,
     }
     return render(request, 'travel/map.html', context)
-
 def plan_route(request, dest_id):
     dest = get_object_or_404(Destination, pk=dest_id)
     map = json.loads(dest.mapjson)
-    if request.method == 'POST':
-        # 从请求体中获取 JSON 数据
-        data = json.loads(request.body)
-        selected_attractions = data.get('selected_attractions')
-        selected_attractions = [int(attr_id) if attr_id != None else None for attr_id in selected_attractions]
-        mode = data.get('mode')
-        
-        node_ids = []
-        # 将 attractions 映射到 node
-        if selected_attractions[0] == None:
-            node_ids.append(map['entrance']) # 添加入口
-        node_ids += [map['attractions'][attr_id]['entr_point'][0] for attr_id in selected_attractions if attr_id != None]
-        print('node_ids = ',node_ids)
-        # 调用路径规划算法
-        if len(node_ids) == 2:
-            planned_node_ids = route_sgl(map, node_ids[0], node_ids[1], mode)
-        elif len(node_ids) > 2:
-            planned_node_ids = route_mul(map, node_ids[1:], node_ids[0], mode)
-        else:
-            planned_node_ids = []
-        # 由node_id获得经纬度序列 [[lat2,lon1], [lat2,lon2], ...]
-        lat_lon_seq = [[map['nodes'][id]['lat'], map['nodes'][id]['lon']] for id in planned_node_ids]
-        
-        return JsonResponse({'latLonSeq': lat_lon_seq})
+    # 从请求体中获取 JSON 数据
+    data = json.loads(request.body)
+    selected_attractions = data.get('selected_attractions')
+    selected_attractions = [int(attr_id) if attr_id != None else None for attr_id in selected_attractions]
+    mode = data.get('mode')
+    
+    node_ids = []
+    # 将 attractions 映射到 node
+    if selected_attractions[0] == None:
+        node_ids.append(map['entrance']) # 添加入口
+    node_ids += [map['attractions'][attr_id]['entr_point'][0] for attr_id in selected_attractions if attr_id != None]
+    print('node_ids = ',node_ids)
+    # 调用路径规划算法
+    if len(node_ids) == 2:
+        planned_node_ids = route_sgl(map, node_ids[0], node_ids[1], mode)
+    elif len(node_ids) > 2:
+        planned_node_ids = route_mul(map, node_ids[1:], node_ids[0], mode)
+    else:
+        planned_node_ids = []
+    # 由node_id获得经纬度序列 [[lat2,lon1], [lat2,lon2], ...]
+    lat_lon_seq = [[map['nodes'][id]['lat'], map['nodes'][id]['lon']] for id in planned_node_ids]
+    
+    return JsonResponse({'latLonSeq': lat_lon_seq})
     
 def search_amenity(request, dest_id):
     ''' 返回选中景点附近的设施 '''
@@ -176,3 +175,31 @@ def search_restaurant(request, dest_id):
     distances, restaurants = zip(*tuples) if len(tuples) else [tuple(),tuple()]
 
     return JsonResponse({'restaurants': restaurants, 'distances': distances})
+
+
+def update_coord(request, dest_id):
+    print('update_coord')
+    dest = get_object_or_404(Destination, pk=dest_id)
+    map = json.loads(dest.mapjson)
+    # 从请求体中获取 JSON 数据
+    data = json.loads(request.body)
+    arr_name = data.get('arr_name')
+    id = int(data.get('id'))
+    lat = data.get('lat')
+    lon = data.get('lon')
+    print(data)
+    target = map[arr_name][id]
+    target['lat'] = round(lat, 6)
+    target['lon'] = round(lon, 6)
+    dest.mapjson = json.dumps(map, ensure_ascii=False, indent=4)
+    print('before: ', target)
+    dest.save()
+    print('after: ', target)
+
+    # 同步更新到文件
+    if map['name'] == '北京动物园':
+        map_id = 1
+    with open(f'static/maps/{map_id}.json', 'w', encoding='utf-8') as f:
+        json.dump(map, f, ensure_ascii=False, indent=4)
+
+    return JsonResponse({'success': True})

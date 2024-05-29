@@ -10,8 +10,7 @@
             <h2>{{ diary.title }}</h2>
             <!--作者 发布时间 -->
             <div class="d-flex align-items-center mb-4 mt-3">
-                <!--需要修改为用户头像-->
-                <img src="https://wallpapercave.com/wp/wp7171970.jpg" alt="作者头像" style="width: 30px; height: 30px; border-radius: 50%;">
+                {% include 'user_avatar.html' with size=30 user=diary.author%}
                 <span class="card-text text-muted ms-1">{{ diary.author.username }}</span>
                 <span class="card-text text-muted ms-auto">发布于 {{ diary.pub_time }}</span>
             </div>

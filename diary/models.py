@@ -21,7 +21,10 @@ class Diary(models.Model):
     location = models.ForeignKey(Destination, on_delete=models.PROTECT)
 
     def __str__(self):
-        return f'title: {self.title} author: {self.author.username}'
+        if self.author:
+            return f'title: {self.title} author: {self.author.username}'
+        else:
+            return f'title: {self.title} author: None'  
     
 class UserRating(models.Model):
     author = models.ForeignKey(User, on_delete=models.PROTECT)

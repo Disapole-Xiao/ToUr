@@ -1,0 +1,8 @@
+{% load static %}
+<img src="
+        {% if user.avatar%}
+        {{ user.avatar.url }}
+        {% else %}
+        {% static 'img/default_avatar.jpg' %}
+        {% endif %}
+        " alt="用户头像" style="width: {{ size }}px; height: {{ size }}; border-radius: 50%; ">

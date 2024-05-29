@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 
 from .forms import CustomUserCreationForm
@@ -34,3 +34,7 @@ def user_login(request):
     else:
         form = AuthenticationForm()
     return render(request, 'account/login.html', {'form': form})
+
+def user_logout(request):
+    logout(request)
+    return redirect('/')  # 重定向到登录页面或其他合适的页面
