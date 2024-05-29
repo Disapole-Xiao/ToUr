@@ -1,7 +1,7 @@
 import json
 import random
 
-map_id = 2
+map_id = 10
 json_file_path = f"static/maps/{map_id}.json"
 
 # 读取 JSON 文件
@@ -24,20 +24,20 @@ for node in data["nodes"]:
             tem = round(random.random(), 1)
         adj_node["congestion"] = tem
 
-for attraction in data["attractions"]:
-    # 保留经纬度到小数点后六位
-    attraction["lat"] = round(attraction["lat"], 6)
-    attraction["lon"] = round(attraction["lon"], 6)
+# for attraction in data["attractions"]:
+#     # 保留经纬度到小数点后六位
+#     attraction["lat"] = round(attraction["lat"], 6)
+#     attraction["lon"] = round(attraction["lon"], 6)
 
-for amenitie in data["amenities"]:
-    # 保留经纬度到小数点后六位
-    amenitie["lat"] = round(amenitie["lat"], 6)
-    amenitie["lon"] = round(amenitie["lon"], 6)
+# for amenitie in data["amenities"]:
+#     # 保留经纬度到小数点后六位
+#     amenitie["lat"] = round(amenitie["lat"], 6)
+#     amenitie["lon"] = round(amenitie["lon"], 6)
 
-for restaurant in data["restaurants"]:
-    # 保留经纬度到小数点后六位
-    restaurant["lat"] = round(restaurant["lat"], 6)
-    restaurant["lon"] = round(restaurant["lon"], 6)
+# for restaurant in data["restaurants"]:
+#     # 保留经纬度到小数点后六位
+#     restaurant["lat"] = round(restaurant["lat"], 6)
+#     restaurant["lon"] = round(restaurant["lon"], 6)
 
 # 写入新的 JSON 文件
 with open(json_file_path, "w", encoding="utf-8") as f:

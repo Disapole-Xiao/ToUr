@@ -1,6 +1,6 @@
 import json
 
-map_id = 2
+map_id = 10
 
 # 定义一个函数用于更新节点和连接信息的ID
 def update_ids(data, old_id, new_id):
