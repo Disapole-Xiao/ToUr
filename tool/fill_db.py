@@ -23,11 +23,16 @@ from travel.models import *
 
 def fill_amenity_type():
     ''' 设施类型 '''
-    i = 1
-    while i <= 10:
-        AmenityType.objects.create(name=f"amenity_type_{i}")
-        i += 1
+    li = ["卫生间","喷泉","公共电话亭","外卖柜","快递站","商店","医务室","观景台"]
+    for i in li:
+        AmenityType.objects.create(name=i)
     print("amenity_type filled")
 
+def fill_restaurant_type():
+    li = ['火锅', '烧烤', '甜品', '海鲜', '外国菜', '汤/粥/炖菜', '家常菜', '小吃快餐']
+    for i in li:
+        RestaurantType.objects.create(name=i)
+    print("restaurant_type filled")  
+
 if __name__ == "__main__":
-    fill_amenity_type()
+    fill_restaurant_type()

@@ -210,6 +210,4 @@ if __name__ == "__main__":
     for i in sorted_data:
         print(i, i.rating)
 
-
-    # 计算综合排序的权值
      

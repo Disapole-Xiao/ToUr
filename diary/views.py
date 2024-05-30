@@ -16,7 +16,6 @@ def index(request):
     search_type = request.GET.get('search_type', '日记名称')
     search = request.GET.get('search', '')
     sort = request.GET.get('sort', '时间最新')
-    print(request.GET)
     # 搜索框不为空，按search_type筛选
     if search != '':
         if search_type == '日记名称':
@@ -25,7 +24,7 @@ def index(request):
             diaries = str_filter(diaries, lambda x: x.location.name, search)
         elif search_type == '全文搜索':
             diaries = str_filter(diaries, lambda x: x.content, search)
-    print('search:', *diaries, sep='\n')
+    # print('----- search:', *diaries, sep='\n')
     # 排序
     attr = 'pub_time'
     if sort == '时间最新':
@@ -35,7 +34,7 @@ def index(request):
     elif sort == '评分最高':
         attr = 'rating' 
     diaries = attr_sort(diaries, lambda x: getattr(x, attr), l = 9)
-    print('sort:', *diaries, sep='\n')
+    # print('----- sort:', *diaries, sep='\n')
 
     context = {
         'diaries': diaries,
