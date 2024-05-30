@@ -18,11 +18,11 @@ def index(request):
     # 搜索框不为空，按名字筛选
     if search != '':
         dests = str_filter(dests, lambda x: x.name, search)
-    print('search:', *dests, sep='\n')
+    # print('----- str filter:', *dests, sep='\n')
     # 类别筛选
     if category != '所有类别':
         dests = tag_filter(dests, lambda x: x.tags.all(), Category.objects.get(name=category))
-    print('tag:', *dests, sep='\n')
+    # print('----- tag fliter:', *dests, sep='\n')
     # 排序
     attr = 'popularity'
     if sort == '热度最高':
@@ -30,11 +30,10 @@ def index(request):
     elif sort == '评分最高':
         attr = 'rating' 
     dests = attr_sort(dests, lambda x: getattr(x, attr), l=8)
-    print('sort:', *dests, sep='\n')
+    # print('----- sort:', *dests, sep='\n')
 
     tags = Category.objects.all()
     tags = [tag.name for tag in tags]
-    print(tags)
 
     context = {
         'dests': dests,
@@ -82,7 +81,7 @@ def plan_route(request, dest_id):
     if selected_attractions[0] == None:
         node_ids.append(map['entrance']) # 添加入口
     node_ids += [map['attractions'][attr_id]['entr_point'][0] for attr_id in selected_attractions if attr_id != None]
-    print('node_ids = ',node_ids)
+    print('----- node_ids = ', node_ids)
     # 调用路径规划算法
     if len(node_ids) == 2:
         planned_node_ids = route_sgl(map, node_ids[0], node_ids[1], mode)
@@ -155,11 +154,11 @@ def search_restaurant(request, dest_id):
             restaurants = str_filter(restaurants, lambda x: ' '.join(x['foods']), search)
         elif search_type == '餐馆名称':
             restaurants = str_filter(restaurants, lambda x: x['name'], search)
-    print('search:', *restaurants, sep='\n')
+    # print('----- str filter:', *restaurants, sep='\n')
     # 按菜系筛选
     if filter != '所有菜系':
         restaurants = type_filter(restaurants, lambda x: x['type'], filter)
-    print('filter:', *restaurants, sep='\n')
+    # print('----- type filter:', *restaurants, sep='\n')
     # 排序
     tuples = [(distance(
         x['lat'],
@@ -167,21 +166,18 @@ def search_restaurant(request, dest_id):
         selected_attraction['lat'],
         selected_attraction['lon']
         ), x) for x in restaurants]
-    print('len = ', len(tuples))
     if sort == '热度最高':
         tuples = attr_sort(tuples, lambda t: t[1]['popularity'], l=arr_len)
     elif sort == '评分最高':
         tuples = attr_sort(tuples, lambda t: t[1]['rating'], l=arr_len)
     elif sort == '距离最近':
         tuples = attr_sort(tuples, lambda t: t[0], l=arr_len, reverse=True)
-    print('len = ', len(tuples))
     distances, restaurants = zip(*tuples) if len(tuples) else [tuple(),tuple()]
 
     return JsonResponse({'restaurants': restaurants, 'distances': distances})
 
 
 def update_coord(request, dest_id):
-    print('update_coord')
     dest = get_object_or_404(Destination, pk=dest_id)
     map = json.loads(dest.mapjson)
     # 从请求体中获取 JSON 数据
@@ -190,7 +186,7 @@ def update_coord(request, dest_id):
     id = int(data.get('id'))
     lat = data.get('lat')
     lon = data.get('lon')
-    print(data)
+
     target = map[arr_name][id]
     target['lat'] = round(lat, 6)
     target['lon'] = round(lon, 6)

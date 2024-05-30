@@ -48,7 +48,6 @@
     let search = document.getElementById('dest-search').value;
     let sort = document.getElementById('dest-sort').value;
     let category = document.getElementById('category-filter').value;
-    console.log(search)
     window.location.href = `{% url 'travel:index' %}?search=${search}&sort=${sort}&category=${category}`;
   }
 </script>

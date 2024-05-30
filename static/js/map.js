@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeMap() {
     map = L.map('map', {
         center: [mapData.center.lat, mapData.center.lon],
-        zoom: 16.5,
+        zoom: 16,
         zoomControl: false,
         zoomSnap: 0.5,
         zoomDelta: 0.5
@@ -96,16 +96,15 @@ function updateURL() {
         window.location.hash = `lat=${center.lat.toFixed(6)}&lng=${center.lng.toFixed(6)}&zoom=${zoom}`;
     }
 }
-function setActiveTab(tabId) {
-    var tab = document.getElementById(tabId + '-tab');
-    var pill = new bootstrap.Tab(tab);
-    pill.show();  // Bootstrap 5 tab show method
-}
+// function setActiveTab(tabId) {
+//     var tab = document.getElementById(tabId + '-tab');
+//     var pill = new bootstrap.Tab(tab);
+//     pill.show();  // Bootstrap 5 tab show method
+// }
 
 function highlightListItem(listItem, marker) {
     // map.setView([amenity.lat, amenity.lon], 18);
     marker.openPopup();
-    console.log(listItem.getAttribute('data-id'));
     // 清除其他列表项的active
     var activeItem = document.querySelector('.list-group-item.active');
     if (activeItem) {
@@ -118,7 +117,6 @@ function highlightListItem(listItem, marker) {
 function updateCoord(arrName, id, marker) {
     lat = marker.getLatLng().lat;
     lon = marker.getLatLng().lng;
-    console.log(lat, lon);
     fetch('update_coord/', {
         method: 'POST',
         headers: {
@@ -130,7 +128,7 @@ function updateCoord(arrName, id, marker) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('更新成功');
+            console.log('坐标更新成功！');
         }
     })
     .catch(error => {
@@ -289,7 +287,7 @@ function toggleRoute(id, name, btn) {
 
         routeList.appendChild(listItem);
         btn.textContent = '移出路线';
-        setActiveTab('routing'); // 切换到路径规划标签
+        // setActiveTab('routing'); // 切换到路径规划标签
     } else {
         // 如果已在路线中，则移除
         exists.remove();
@@ -313,7 +311,7 @@ function planRoute(mode) {
     routeList.querySelectorAll('li').forEach(li => {
         selected_attractions.push(li.getAttribute('data-id'));
     });
-    console.log(selected_attractions);
+    console.log('已选中的景点id序列：', selected_attractions);
     // 2. 调用后端函数发送请求，并处理返回的 JSON 数据
     fetch('plan_route/', {
         method: 'POST',
@@ -327,7 +325,7 @@ function planRoute(mode) {
     .then(data => {
         // 3. 在地图上绘制路径
         var latLonSeq = data.latLonSeq;
-        console.log(latLonSeq);
+        console.log('路径规划完成：', latLonSeq);
         displayRoute(latLonSeq);
     })
     .catch(error => {
@@ -351,14 +349,13 @@ function planRoute(mode) {
 
 // 在地图上绘制路径的函数
 function displayRoute(latLonSeq) {
-    console.log("displayRoute:" + latLonSeq);
     routeLayer.clearLayers(); // 清除之前的路径图层
     routeLayer.addLayer(
         L.polyline(latLonSeq, {
         color: 'red',
         weight: 5,
     }))
-    console.log("displayRoute finish");
+    console.log("路径绘制完成！");
     
     
 }
