@@ -1,5 +1,7 @@
 from itertools import permutations
 import json
+import time
+import csv
 
 inf = float("inf")
 
@@ -95,31 +97,43 @@ def getpath(a, b, path, anspath, idx):
 
 def route_mul(cur_map: dict, nodes: list, start: int, mode: str) -> list:
     # 获取所需数据：dist矩阵，存储任意两点间的距离
-    n = len(cur_map["nodes"])
-    dist = [[inf for _ in range(0, n)] for _ in range(0, n)]
-    path = [[-1 for _ in range(0, n)] for _ in range(0, n)]
-    compute_nodes = cur_map["nodes"]
-    for node in compute_nodes:
-        adjacencies = node["adj"]
-        now = node["id"]
-        for adj in adjacencies:
-            neighbor = adj["id"]
-            if mode == "distance":
-                weight = adj["distance"]
-            elif mode == "time":
-                distance = adj["distance"]
-                congestion = adj["congestion"]
-                weight = distance / congestion
-            dist[now][neighbor] = weight
-            dist[neighbor][now] = weight
+    # n = len(cur_map["nodes"])
+    # dist = [[inf for _ in range(0, n)] for _ in range(0, n)]
+    # path = [[-1 for _ in range(0, n)] for _ in range(0, n)]
+    # compute_nodes = cur_map["nodes"]
+    # for node in compute_nodes:
+    #     adjacencies = node["adj"]
+    #     now = node["id"]
+    #     for adj in adjacencies:
+    #         neighbor = adj["id"]
+    #         if mode == "distance":
+    #             weight = adj["distance"]
+    #         elif mode == "time":
+    #             distance = adj["distance"]
+    #             congestion = adj["congestion"]
+    #             weight = distance / congestion
+    #         dist[now][neighbor] = weight
+    #         dist[neighbor][now] = weight
 
+    start_time = time.time()
+    
     # floyd
-    for k in range(0, n):
-        for i in range(0, n):
-            for j in range(0, n):
-                if dist[i][j] > dist[i][k] + dist[k][j]:
-                    dist[i][j] = dist[i][k] + dist[k][j]
-                    path[i][j] = k
+    # for k in range(0, n):
+    #     for i in range(0, n):
+    #         for j in range(0, n):
+    #             if dist[i][j] > dist[i][k] + dist[k][j]:
+    #                 dist[i][j] = dist[i][k] + dist[k][j]
+    #                 path[i][j] = k
+    # write_dist_to_file(dist, "src/dist1.csv")
+    # write_path_to_file(path, "src/path1.csv")
+    id=cur_map["id"]
+    dictfilename="src/map/dist"+str(id)+"_"+mode+".csv"
+    pathfilename="src/map/path"+str(id)+"_"+mode+".csv"
+    dist = read_dist_from_file(dictfilename)
+    path = read_path_from_file(pathfilename)
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(execution_time)
     # 求中间必经点的全排列
     k = len(nodes)
     nodes.sort()
@@ -161,12 +175,49 @@ def route_mul(cur_map: dict, nodes: list, start: int, mode: str) -> list:
 
     return anspath
 
+def write_dist_to_file(dist, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        for row in dist:
+            writer.writerow(row)
+
+def write_path_to_file(path, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        for row in path:
+            writer.writerow(row)
+
+def read_dist_from_file(filename):
+    dist = []
+    with open(filename, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            dist.append([float(cell) for cell in row])
+    return dist
+
+def read_path_from_file(filename):
+    path = []
+    with open(filename, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            path.append([int(cell) for cell in row])
+    return path
 
 # 测试代码
 if __name__ == "__main__":
-    with open("static/maps/1.json", "r", encoding="utf-8") as f:
+    with open("static/maps/2.json", "r", encoding="utf-8") as f:
         jsonstr = f.read()
     map = json.loads(jsonstr)
     # print(route_sgl(map, 538, 359, "distance"))
     # print(route_sgl(map, 538, 359, "time"))
-    print(route_mul(map, [326,334,376,62], 342, "time"))
+    start_time = time.time()
+    print(route_mul(map, [326,334,376,62], 342, "distance"))
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(execution_time)
+
+    # start_time = time.time()
+    # print(simulated_annealing(map, [326,334,376,62], 342, "time",1000,0.95,0.1,1000))
+    # end_time = time.time()
+    # execution_time = end_time - start_time
+    # print(execution_time)
