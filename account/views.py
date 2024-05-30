@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm, CustomPasswordChangeForm
 from travel.models import Category
+from diary.models import Diary
 
 User = get_user_model()
 
@@ -38,3 +40,28 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('/')  # 重定向到登录页面或其他合适的页面
+
+@login_required
+def profile_view(request):
+    user = request.user
+    if request.method == 'POST':
+        profile_form = CustomUserChangeForm(request.POST, request.FILES, instance=user)
+        password_form = CustomPasswordChangeForm(user, request.POST)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('account:profile')
+        elif password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)
+            return redirect('account:profile')
+    else:
+        profile_form = CustomUserChangeForm(instance=user)
+        password_form = CustomPasswordChangeForm(user)
+
+    user_diaries = Diary.objects.filter(author=user)
+    context = {
+        'profile_form': profile_form,
+        'password_form': password_form,
+        'user_diaries': user_diaries,
+    }
+    return render(request, 'account/profile.html', context)

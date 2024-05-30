@@ -51,11 +51,11 @@
                     <p class="card-title ">请为这篇日记评分：</p>
                     <div id="rating" class="m-3 ">
                         <!-- 星星图标，调整大小和鼠标指针 -->
-                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;"></i>
-                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;"></i>
-                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;"></i>
-                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;"></i>
-                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;"></i>
+                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;" onclick=setRating(1)></i>
+                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;" onclick=setRating(2)></i>
+                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;" onclick=setRating(3)></i>
+                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;" onclick=setRating(4)></i>
+                        <i class="bi bi-star-fill star" style="color: lightgray; cursor: pointer; font-size: 24px;" onclick=setRating(5)></i>
                     </div>
                     <div class="d-flex"><button class="btn btn-primary ms-auto" onclick="submitRating()">提交评分</button></div>
                 </div>
@@ -68,23 +68,49 @@
 
 {% block extra_js %}
 <script>
-    document.querySelectorAll('#rating .star').forEach((star, idx) => {
-        star.onclick = () => {
-            let stars = document.querySelectorAll('#rating .star');
-            stars.forEach((s, i) => {
-                s.style.color = i <= idx ? 'gold' : 'lightgray'; // 调整星星颜色
-            });
-        };
-    });
+    function setRating(rating) {
+        document.querySelectorAll('#rating .star').forEach((star, idx) => {
+            if (idx < rating) {
+                star.style.color = 'gold';
+            } else {
+                star.style.color = 'lightgray';
+            }
+        });
+    }
 
     function submitRating() {
-        let score = 0;
+        var rating = 0;
         document.querySelectorAll('#rating .star').forEach(star => {
-            if (star.style.color === 'gold') score += 1; // 依据星星颜色判断评分
+            if (star.style.color === 'gold') rating += 1; // 依据星星颜色判断评分
         });
-
-        alert('评分成功！得分：' + score); // 显示得分
+        console.log(rating);
+        // 给后台发送post请求
+        fetch('{% url 'diary:rate' diary.pk %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                'rating': rating,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('评分成功！');
+                window.location.reload();
+            } else {
+                alert('评分失败！');
+            }
+        },
+        ).catch(error => {
+            console.error('Error:', error);
+        });
     }
+
+    // 页面加载完毕设置分数为user_rating
+    setRating({{ user_rating }});
 </script>
 
 

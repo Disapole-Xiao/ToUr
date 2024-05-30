@@ -6,6 +6,10 @@ def compute_interest_match(dest, user) -> int:
     match_count = sum(category in tags for category in interests)
     return match_count
 
+def comprehensive_tuple(dest, user):
+    ''' 返回游学地的综合权重 '''
+    interest_match = compute_interest_match(dest, user)
+    return (interest_match, dest.rating, dest.popularity)
 
 def distance(lat1, lon1, lat2, lon2):
     EARTH_RADIUS = 6371  # 地球平均半径，单位为公里

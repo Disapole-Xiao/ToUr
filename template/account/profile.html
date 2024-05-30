@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}个人资料{% endblock %}
+{% block extra_css %}
+<style>
+    .avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+    }
+    
+    .edit-toggle {
+        cursor: pointer;
+        color: #007bff;
+        text-decoration: underline;
+    }
+</style>
+
+{% endblock %}
+
+{% block mainbody %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Display Mode -->
+        <div id="display-mode" class="col-md-4 text-center">
+            <img src="{{ user.avatar.url }}" alt="用户头像" class="avatar img-fluid">
+            <h2>{{ user.username }}</h2>
+            <p>{{ user.email }}</p>
+            <div class="btn-toggle-group">
+                {% for interest in user.interests.all %}
+                    <span class="badge bg-primary rounded-pill">{{ interest.name }}</span>
+                {% endfor %}
+            </div>
+            <button class="btn btn-block btn-primary mt-3" onclick="toggleEdit()">编辑个人资料</button>
+        </div>
+        
+        <!-- Edit Mode -->
+        <div id="edit-mode" class="d-none col-md-4 text-cente">
+            <img src="{{ user.avatar.url }}" alt="用户头像" class="avatar img-fluid">
+            <h2>{{ user.username }}</h2>
+            <form id="profile-form" method="post" action="{% url 'account:profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">用户名</label>
+                    {{ profile_form.username }}
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">电子邮件</label>
+                    {{ profile_form.email }}
+                </div>
+                <div class="mb-3">
+                    <label for="interests" class="form-label">兴趣</label>
+                    <div class="btn-toggle-group">
+                        {% for category in profile_form.interests.field.queryset %}
+                            <input type="checkbox" class="btn-check" id="category{{ category.id }}" name="interests" value="{{ category.id }}" autocomplete="off" {% if category in user.interests.all %}checked{% endif %}>
+                            <label class="btn btn-outline-primary rounded-pill mb-2" for="category{{ category.id }}">{{ category.name }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="old_password" class="form-label">当前密码</label>
+                    {{ password_form.old_password }}
+                </div>
+                <div class="mb-3">
+                    <label for="new_password1" class="form-label">新密码</label>
+                    {{ password_form.new_password1 }}
+                </div>
+                <div class="mb-3">
+                    <label for="new_password2" class="form-label">确认新密码</label>
+                    {{ password_form.new_password2 }}
+                </div>
+                <button type="submit" class="btn btn-success">确定</button>
+                <button type="button" class="btn btn-secondary" onclick="toggleEdit()">取消</button>
+            </form>
+        </div>
+
+        <!-- User Diaries -->
+        <div class="col-md-8">
+            <h3>已发布的日记</h3>
+            <div class="row">
+                {% for diary in user_diaries %}
+                    <div class="col-md-6 mb-3">
+                        {% include "diary/diary_card.html" with diary=diary %}
+                    </div>
+                {% empty %}
+                    <p>还没有发布任何日记。</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block extra_js %}
+<script>
+    function toggleEdit() {
+        document.getElementById('display-mode').classList.toggle('d-none');
+        document.getElementById('edit-mode').classList.toggle('d-none');
+    }
+</script>
+{% endblock %}

@@ -43,7 +43,7 @@
             <span>{{ user.username }}</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">资料</a></li>
+            <li><a class="dropdown-item" href="{% url 'account:profile' %}">资料</a></li>
             <li><a class="dropdown-item" href="{% url 'account:logout' %}">登出</a></li>
           </ul>
         </li>

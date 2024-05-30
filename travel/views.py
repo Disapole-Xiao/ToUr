@@ -5,7 +5,7 @@ import json, bisect
 
 from .models import Destination, Category, AmenityType, RestaurantType
 from diary.models import Diary
-from .funcs import distance
+from .funcs import distance, comprehensive_tuple
 from src.routing import route_sgl, route_mul
 from src.recommend import attr_sort, str_filter, tag_filter, type_filter
 
@@ -13,7 +13,7 @@ def index(request):
     ''' 首页，根据搜索词、筛选、排序选择器返回展示的游学地'''
     dests = list(Destination.objects.all())
     search = request.GET.get('search', '')
-    sort = request.GET.get('sort', '热度最高')
+    sort = request.GET.get('sort', '综合排序')
     category = request.GET.get('category', '所有类别')
     # 搜索框不为空，按名字筛选
     if search != '':
@@ -24,12 +24,12 @@ def index(request):
         dests = tag_filter(dests, lambda x: x.tags.all(), Category.objects.get(name=category))
     # print('----- tag fliter:', *dests, sep='\n')
     # 排序
-    attr = 'popularity'
-    if sort == '热度最高':
-        attr = 'popularity'
+    if sort == '综合排序':
+        dests = attr_sort(dests, lambda x: comprehensive_tuple(x, request.user), l=8)
+    elif sort == '热度最高':
+        dests = attr_sort(dests, lambda x: x.popularity, l=8)
     elif sort == '评分最高':
-        attr = 'rating' 
-    dests = attr_sort(dests, lambda x: getattr(x, attr), l=8)
+        dests = attr_sort(dests, lambda x: x.rating, l=8)
     # print('----- sort:', *dests, sep='\n')
 
     tags = Category.objects.all()
