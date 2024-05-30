@@ -23,7 +23,7 @@ class Destination(models.Model):
     province = models.CharField(max_length=15)
     city = models.CharField(max_length=15)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to=dest_pic_path, blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True)
     popularity = models.IntegerField(default=0, blank=True)
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0, blank=True, validators=[
             # 限制0~5
