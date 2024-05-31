@@ -378,6 +378,7 @@ function searchAmenity() {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('设施搜索结果：', data.amenities)
             displayAmenities(data.amenities, data.distances);
         })
         .catch(error => {
@@ -406,14 +407,14 @@ function displayAmenities(amenities, distances) {
             autoPan: edit ? true : false,
         });
         marker.addTo(amenityLayer).bindPopup(
-            `<h6 class="m-0">${amenity.name} ${amenity.id}</h6>
+            `<h6 class="m-0">${amenity.name}</h6>
              <p>${amenity.description}</p>`
         );
         // 展示列表
         var listItem = document.createElement('li');
         listItem.setAttribute('data-id', amenity.id);
         listItem.className = 'list-group-item';
-        listItem.innerHTML = `<h5>${amenity.name} ${amenity.id}</h5>
+        listItem.innerHTML = `<h5>${amenity.name}</h5>
         <span>类型：${amenity.type}</span><span class="float-end">${distances[index]}m</span>`;
         listItem.onclick = function() {
             highlightListItem(listItem, marker);
@@ -469,6 +470,7 @@ function searchRestaurant() {
     })
     .then(response => response.json())
     .then(data => {
+        console.log('餐馆搜索结果：', data.restaurants)
         displayRestaurants(data.restaurants, data.distances);
     })
     .catch(error => {
@@ -500,7 +502,7 @@ function displayRestaurants(restaurants, distances) {
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
         listItem.setAttribute('data-id', restaurant.id);
-        listItem.innerHTML = `<h5>${restaurant.name } ${restaurant.id}</h5>
+        listItem.innerHTML = `<h5>${restaurant.name }</h5>
             <div>菜系：${restaurant.type}</div>
             <div>评分：${restaurant.rating}</div>
             <div>热度：${restaurant.popularity}</div>

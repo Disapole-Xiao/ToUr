@@ -151,5 +151,12 @@ LOGIN_URL = '/account/login/'
 LOGOUT_REDIRECT_URL = '/travel/'
 
 
+SESSION_COOKIE_AGE = 86400  # 会话过期时间（单位：秒） 24 小时
+SESSION_SAVE_EVERY_REQUEST = True # 设置为 True，每次请求都会延长会话的过期时间
+CACHE_MIDDLEWARE_SECONDS = 86400 # 缓存默认过期时间值
+
 # 以下是自定义的全局常量
 AMENITY_SEARCH_RADIUS = 300  # 在景点附近300m设施能够展示
+WALKING_SPEED = 1
+BICYCLE_SPEED = 3
+MOTORBIKE_SPEED = 5

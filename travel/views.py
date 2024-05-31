@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 import json, bisect
+from django.contrib.auth.decorators import login_required
 
 from .models import Destination, Category, AmenityType, RestaurantType
 from diary.models import Diary
@@ -9,6 +10,7 @@ from .funcs import distance, comprehensive_tuple
 from src.routing import route_sgl, route_mul
 from src.recommend import attr_sort, str_filter, tag_filter, type_filter
 
+@login_required
 def index(request):
     ''' 首页，根据搜索词、筛选、排序选择器返回展示的游学地'''
     dests = list(Destination.objects.all())
@@ -45,6 +47,7 @@ def index(request):
     
     return render(request, 'travel/index.html', context)
 
+@login_required
 def detail(request, dest_id):
     ''' 游学地详细界面 '''
     dest = get_object_or_404(Destination, pk=dest_id)
@@ -54,6 +57,8 @@ def detail(request, dest_id):
         'related_diaries': related_diaries,
     }
     return render(request, 'travel/detail.html', context)
+
+@login_required
 def map(request, dest_id, edit=False):
     dest = get_object_or_404(Destination, pk=dest_id)
 
@@ -67,20 +72,22 @@ def map(request, dest_id, edit=False):
         'edit': edit,
     }
     return render(request, 'travel/map.html', context)
+
+@login_required
 def plan_route(request, dest_id):
     dest = get_object_or_404(Destination, pk=dest_id)
     map = json.loads(dest.mapjson)
     # 从请求体中获取 JSON 数据
     data = json.loads(request.body)
     selected_attractions = data.get('selected_attractions')
-    selected_attractions = [int(attr_id) if attr_id != None else None for attr_id in selected_attractions]
+    selected_attractions = [int(attr_id) for attr_id in selected_attractions]
     mode = data.get('mode')
     
     node_ids = []
-    # 将 attractions 映射到 node
-    if selected_attractions[0] == None:
-        node_ids.append(map['entrance']) # 添加入口
-    node_ids += [map['attractions'][attr_id]['entr_point'][0] for attr_id in selected_attractions if attr_id != None]
+    # 将 attractions 映射到 node，入口特殊处理
+    node_ids = [map['entrance'] if attr_id == -1 
+                else map['attractions'][attr_id]['entr_point'][0] 
+                for attr_id in selected_attractions]
     print('----- node_ids = ', node_ids)
     # 调用路径规划算法
     if len(node_ids) == 2:
@@ -94,6 +101,7 @@ def plan_route(request, dest_id):
     
     return JsonResponse({'latLonSeq': lat_lon_seq})
     
+@login_required
 def search_amenity(request, dest_id):
     ''' 返回选中景点附近的设施 '''
     dest = get_object_or_404(Destination, pk=dest_id)
@@ -128,6 +136,7 @@ def search_amenity(request, dest_id):
 
     return JsonResponse({'amenities': amenities[:r], 'distances': distances[:r]})
 
+@login_required
 def search_restaurant(request, dest_id):
     ''' 返回选中景点附近的美食 '''
     dest = get_object_or_404(Destination, pk=dest_id)
@@ -139,7 +148,7 @@ def search_restaurant(request, dest_id):
     sort = request.GET.get('sort')
     filter = request.GET.get('filter')
     edit = request.GET.get('edit') == '1'
-    arr_len = 0 if edit else 10
+    arr_len = None if edit else 10
 
     # 在map找到对应景点
     selected_attraction = \
@@ -176,7 +185,7 @@ def search_restaurant(request, dest_id):
 
     return JsonResponse({'restaurants': restaurants, 'distances': distances})
 
-
+@login_required
 def update_coord(request, dest_id):
     dest = get_object_or_404(Destination, pk=dest_id)
     map = json.loads(dest.mapjson)

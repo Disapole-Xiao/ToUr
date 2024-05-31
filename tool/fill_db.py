@@ -36,3 +36,4 @@ def fill_restaurant_type():
 
 if __name__ == "__main__":
     fill_restaurant_type()
+    fill_amenity_type()
