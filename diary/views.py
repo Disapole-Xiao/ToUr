@@ -1,10 +1,10 @@
 import json
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 
 from travel.models import Destination
@@ -12,6 +12,8 @@ from .models import Diary, UserRating
 from src.recommend import attr_sort, str_filter, tag_filter, type_filter
 
 User = get_user_model
+
+@login_required
 def index(request):
     diaries = list(Diary.objects.all())
     search_type = request.GET.get('search_type', '日记名称')
@@ -60,8 +62,8 @@ def detail(request, diary_id):
     }
     return render(request, 'diary/detail.html', context)
 
-@require_http_methods(["POST"])
 @login_required
+@require_http_methods(["POST"])
 def add_diary(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -74,6 +76,7 @@ def add_diary(request):
         return redirect('/diary/')  # Redirect to a new URL after saving
 
 @login_required
+@require_http_methods(["GET"])
 def search_location(request):
     ''' 在日记添加表单中处理搜索游学地 '''
     query = request.GET.get('query', '')
@@ -84,6 +87,8 @@ def search_location(request):
         results = []
     return JsonResponse(results, safe=False)
 
+@login_required
+@require_http_methods(["POST"])
 def rate(request, diary_id):
     # 解析 JSON 数据
         data = json.loads(request.body)

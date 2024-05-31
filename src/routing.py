@@ -1,4 +1,5 @@
 from itertools import permutations
+from django.conf import settings
 import json
 import time
 import csv
