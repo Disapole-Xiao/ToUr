@@ -1,7 +1,7 @@
 import json
 import random
 
-map_id = 10
+map_id = 3
 json_file_path = f"static/maps/{map_id}.json"
 
 # 读取 JSON 文件

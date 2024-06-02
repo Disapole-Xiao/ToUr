@@ -14,10 +14,10 @@ def generate_amenities(min_lon, max_lon, min_lat, max_lat):
     - amenities: List of dictionaries representing generated amenities.
     """
     amenities = []
-    name=["眼镜店","打印店"]
-    num=[5,5]
-    n=45
-    for i in range(2):
+    name=["卫生间","喷泉","公共电话亭","外卖柜","商店","快递站","医务室","观景台","眼镜店","打印店"]
+    num=[12,3,4,3,8,3,4,3,5,5]
+    n=0
+    for i in range(10):
         for j in range(num[i]):
             lon = round(random.uniform(min_lon, max_lon), 6)
             lat = round(random.uniform(min_lat, max_lat), 6)
@@ -35,10 +35,10 @@ def generate_amenities(min_lon, max_lon, min_lat, max_lat):
     
 
 # Define the rectangular area boundaries
-min_lon = 116.29946011424994
-max_lon = 116.30894982236566
-min_lat = 39.985182373909055
-max_lat = 39.996297520391465
+min_lon = 116.31437957513486
+max_lon = 116.3288376754806
+min_lat = 39.99148981450614
+max_lat = 40.011708654019344
 
 # Generate amenities
 # You can specify the number of amenities you want to generate
