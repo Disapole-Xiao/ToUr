@@ -1,51 +1,77 @@
-import json
+import json, math
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
+from django.core.cache import cache
 
 from travel.models import Destination
 from .models import Diary, UserRating
 from src.recommend import attr_sort, str_filter, tag_filter, type_filter
+from travel.funcs import comprehensive_tuple
 
 User = get_user_model
 
 @login_required
 def index(request):
-    diaries = list(Diary.objects.all())
+    context = {
+    }
+    return render(request, 'diary/index.html', context)
+
+@login_required
+def load_diaries(request):
+    ''' 加载（更多）日记 '''
     search_type = request.GET.get('search_type', '日记名称')
     search = request.GET.get('search', '')
     sort = request.GET.get('sort', '时间最新')
-    # 搜索框不为空，按search_type筛选
-    if search != '':
-        if search_type == '日记名称':
-            diaries = str_filter(diaries, lambda x: x.title, search)
-        elif search_type == '游学地名称':
-            diaries = str_filter(diaries, lambda x: x.location.name, search)
-        elif search_type == '全文搜索':
-            diaries = str_filter(diaries, lambda x: x.content, search)
-    # print('----- search:', *diaries, sep='\n')
-    # 排序
-    attr = 'pub_time'
-    if sort == '时间最新':
-        attr = 'pub_time'
-    elif sort == '热度最高':
-        attr = 'popularity'
-    elif sort == '评分最高':
-        attr = 'rating' 
-    diaries = attr_sort(diaries, lambda x: getattr(x, attr), l = 9)
-    # print('----- sort:', *diaries, sep='\n')
+    page = int(request.GET.get('page', 1))
 
-    context = {
-        'diaries': diaries,
-        'search_type': search_type,
-        'search': search,
-        'sort': sort,
-    }
-    return render(request, 'diary/index.html', context)
+    load_more = page > 1
+
+     # 如果继续加载，不需要重新过滤，从缓存读取
+    if load_more:
+        diaries = cache.get('filtered_diaries')
+    # 否则重新筛选    
+    else:
+        diaries = list(Diary.objects.all())
+        # 搜索框不为空，按search_type筛选
+        if search != '':
+            if search_type == '日记名称':
+                diaries = str_filter(diaries, lambda x: x.title, search)
+            elif search_type == '游学地名称':
+                diaries = str_filter(diaries, lambda x: x.location.name, search)
+            elif search_type == '全文搜索':
+                diaries = str_filter(diaries, lambda x: x.content, search)
+        # print('----- search:', *diaries, sep='\n')
+        cache.set('filtered_diaries', diaries)  # 缓存过滤后的结果
+
+
+    PAGE_LEN = 9
+    TOTAL_PAGE_NUM = math.ceil(len(diaries) / PAGE_LEN) # 总页数
+    print('----- total diary num:', len(diaries))
+    print('----- total page num:', TOTAL_PAGE_NUM)
+    print('----- current page:', page)
+    
+     # 排序
+    if sort == '综合排序':
+        attr_sort(diaries, lambda x: comprehensive_tuple(x.location, request.user), 'diary', ascend=False, l = PAGE_LEN)
+    elif sort == '时间最新':
+        diaries = attr_sort(diaries, lambda x: x.pub_time, 'diary', l = PAGE_LEN)
+    elif sort == '热度最高':
+        diaries = attr_sort(diaries, lambda x: x.popularity, 'diary', l = PAGE_LEN)
+    elif sort == '评分最高':
+        diaries = attr_sort(diaries, lambda x: x.rating, 'diary', l = PAGE_LEN)
+    # print('----- sort:', *diaries, sep='\n')
+    print(diaries)
+    diary_list = render_to_string('diary/diary_list.html', {'diaries': diaries})
+    has_next = page < TOTAL_PAGE_NUM # 判断是否还有下一页
+    print(diary_list, has_next)
+    return JsonResponse({'diaryListHtml': diary_list, 'hasNext': has_next})
+
 
 @login_required
 def detail(request, diary_id):

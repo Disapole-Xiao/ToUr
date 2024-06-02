@@ -4,52 +4,77 @@
 {% block title %}Tour | 游学{% endblock %}
 
 {% block mainbody %}
-
 <div class="container mb-5">
   <div class="container m-auto w-50 my-5">
     <!--搜索框-->
     <div class="input-group input-group-lg mb-2">
-      <input type="text" id="dest-search" class="form-control" placeholder="搜索游学地" value={{ search }}>
-      <button class="btn btn-outline-secondary" type="button" onclick="searchDest()">搜索</button>
+      <input type="text" id="dest-search" class="form-control" placeholder="搜索游学地">
+      <button class="btn btn-outline-secondary" type="button" onclick="loadDests(false)">搜索</button>
     </div>
     <!-- 排序 按类别筛选-->
-<div class="input-group">
-  <select id="dest-sort" class="form-select bg-white border-0 no-outline" style="max-width: fit-content" onchange="searchDest()">
-    <option value="综合排序" {% if sort == '综合排序' %}selected{% endif %}>综合排序</option>
-    <option value="热度最高" {% if sort == '热度最高' %}selected{% endif %}>热度最高</option>
-    <option value="评分最高" {% if sort == '评分最高' %}selected{% endif %}>评分最高</option>
-  </select>
-  <select id="category-filter" class="form-select bg-white border-0 no-outline" style="max-width: fit-content" onchange="searchDest()">
-    <option value="所有类别" {% if category == '所有类别'%}selected{% endif %}>所有类别</option>
-    {% for tag in tags %}
-    <option value="{{ tag }}" {% if category == tag %}selected{% endif %}>{{ tag }}</option>
-    {% endfor %}
-  </select>
-</div>
+    <div class="input-group">
+      <select id="dest-sort" class="form-select bg-white border-0 no-outline" style="max-width: fit-content" onchange="loadDests(false)">
+        <option value="综合排序">综合排序</option>
+        <option value="热度最高">热度最高</option>
+        <option value="评分最高">评分最高</option>
+      </select>
+      <select id="dest-category-filter" class="form-select bg-white border-0 no-outline" style="max-width: fit-content" onchange="loadDests(false)">
+        <option value="所有类别">所有类别</option>
+        {% for tag in tags %}
+        <option value="{{ tag }}">{{ tag }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
 
-  </div>
   <!--游学地展示-->
-  {% if dests %}
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-    {% for dest in dests %}
-      {% include 'travel/dest_card.html' %}
-    {% endfor %}
-  </div>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4" id="dest-list">
   
-  {% else %}
-  <p>No dests.</p>
-  {% endif %}
+  </div>
+
+  <!-- 加载更多按钮 -->
+  <button id="load-more" class="btn btn-outline-secondary w-100 mt-3 " onclick="loadDests(true)" style="display:none;">加载更多</button>
+
 </div>   
 {% endblock %}
+
 {% block extra_js %}
 <script>
-  // 搜索游学地
-  function searchDest() {
-    let search = document.getElementById('dest-search').value;
-    let sort = document.getElementById('dest-sort').value;
-    let category = document.getElementById('category-filter').value;
-    window.location.href = `{% url 'travel:index' %}?search=${search}&sort=${sort}&category=${category}`;
-  }
-</script>
+var page;
+loadDests()
 
+// 加载（更多）
+function loadDests(more=false) {
+  if (more) page++;
+  else page = 1;
+
+  let search = document.getElementById('dest-search').value;
+  let sort = document.getElementById('dest-sort').value;
+  let category = document.getElementById('dest-category-filter').value;
+  var url = new URL(window.location.href);
+  url.pathname = '{% url 'travel:load_dests' %}';
+  url.searchParams.set('search', search);
+  url.searchParams.set('sort', sort);
+  url.searchParams.set('category', category);
+  url.searchParams.set('page', page);
+
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    var destList = document.getElementById('dest-list');
+    if (more)
+      destList.insertAdjacentHTML('beforeend', data.destListHtml);
+    else
+      destList.innerHTML = data.destListHtml;
+    // 如果已经加载到头，隐藏load-more按钮
+    if (data.hasNext) {
+      document.getElementById('load-more').style.display = 'block';
+    } else {
+      document.getElementById('load-more').style.display = 'none';
+    }
+    
+  })
+  .catch(error => console.error('Error loading more destinations:', error));
+}
+</script>
 {% endblock %}

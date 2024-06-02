@@ -24,9 +24,9 @@ def adjlist_distance(nodes):
 def adjlist_time(nodes):
     adj_list = [[] for _ in range(len(nodes))]
 
-    WALKING_SPEED = 1
-    BICYCLE_SPEED = 3
-    MOTORBIKE_SPEED = 5
+    WALKING_SPEED = settings.WALKING_SPEED
+    BICYCLE_SPEED = settings.BICYCLE_SPEED
+    MOTORBIKE_SPEED = settings.MOTORBIKE_SPEED
     for node in nodes:
         adjacencies = node["adj"]
         for adj in adjacencies:
