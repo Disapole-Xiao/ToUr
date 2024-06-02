@@ -66,12 +66,12 @@ if __name__ == "__main__":
     # Define search parameters
     keywords = "教学楼"
     city = "北京"
-    bbox = "116.305697,39.986457,116.315734,39.992083"  # Bounding box for Peking University
+    bbox = "116.320957,39.994377,116.332892,39.999103"  # Bounding box for Peking University
 
     # Fetch POI data
     poi_data = get_poi_data(keywords, city, bbox, key=api_key)
 
     # Save POI data to a JSON file
     if poi_data:
-        with open("map_tool/json/attractions.json", "w+", encoding="utf-8") as f:
+        with open("map_tool/json/attractions.json", "w", encoding="utf-8") as f:
             json.dump({"attractions": poi_data}, f, indent=4, ensure_ascii=False)

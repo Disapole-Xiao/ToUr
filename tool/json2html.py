@@ -2,7 +2,7 @@ import folium
 import json
 
 # 加载地图数据
-map_id = 2
+map_id = 3
 json_file_path = f'static/maps/{map_id}.json'  # 替换为你的JSON数据文件路径
 with open(json_file_path, 'r',encoding="utf-8") as file:
     map_data = json.load(file)
