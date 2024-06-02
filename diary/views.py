@@ -58,13 +58,13 @@ def load_diaries(request):
     
      # 排序
     if sort == '综合排序':
-        attr_sort(diaries, lambda x: comprehensive_tuple(x.location, request.user), 'diary', ascend=False, l = PAGE_LEN)
+        diaries = attr_sort(diaries, lambda x: comprehensive_tuple(x.location, request.user), 'diary', ascend=False, l = PAGE_LEN)
     elif sort == '时间最新':
-        diaries = attr_sort(diaries, lambda x: x.pub_time, 'diary', l = PAGE_LEN)
+        diaries = attr_sort(diaries, lambda x: x.pub_time, 'diary', l=PAGE_LEN)
     elif sort == '热度最高':
-        diaries = attr_sort(diaries, lambda x: x.popularity, 'diary', l = PAGE_LEN)
+        diaries = attr_sort(diaries, lambda x: x.popularity, 'diary', l=PAGE_LEN)
     elif sort == '评分最高':
-        diaries = attr_sort(diaries, lambda x: x.rating, 'diary', l = PAGE_LEN)
+        diaries = attr_sort(diaries, lambda x: x.rating, 'diary', l=PAGE_LEN)
     # print('----- sort:', *diaries, sep='\n')
     print(diaries)
     diary_list = render_to_string('diary/diary_list.html', {'diaries': diaries})

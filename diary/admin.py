@@ -5,7 +5,7 @@ from .models import Diary, UserRating
 class DiaryAdmin(admin.ModelAdmin):
     model = Diary
     list_display = ('title', 'location', 'author', 'rating', 'popularity', 'pub_time')
-    list_filter = ('author', 'location')  # 注意这里使用了元组格式
+    list_filter = ('author',)  # 注意这里使用了元组格式
     search_fields = ('title', 'author', 'location')  # 注意这里使用了元组格式
 
 class UserRatingAdmin(admin.ModelAdmin):

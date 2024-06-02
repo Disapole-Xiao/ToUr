@@ -23,7 +23,7 @@ from travel.models import *
 
 def fill_amenity_type():
     ''' 设施类型 '''
-    li = ["卫生间","喷泉","公共电话亭","外卖柜","快递站","商店","医务室","观景台"]
+    li = ["卫生间","喷泉","公共电话亭","外卖柜","快递站","商店","医务室","观景台","眼镜店","打印店"]
     for i in li:
         AmenityType.objects.create(name=i)
     print("amenity_type filled")
