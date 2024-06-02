@@ -9,7 +9,7 @@ import math
 import json
 
 # Load and parse the OSM file
-map_id = 3
+map_id = 4
 osm_file = f'tool/{map_id}.osm'
 tree = ET.parse(osm_file)
 root = tree.getroot()

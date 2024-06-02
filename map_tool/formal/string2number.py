@@ -1,6 +1,6 @@
 import json
 
-map_id = 3
+map_id = 4
 json_file_path = f'static/maps/{map_id}.json'
 
 # 读取JSON文件
