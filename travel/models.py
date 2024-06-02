@@ -51,3 +51,16 @@ class RestaurantType(models.Model):
         return self.name
     def __hash__(self) -> int:
         return hash(self.name)
+    
+class User:
+    def __init__(self, username):
+        self.username = username
+        # 可以添加更多的属性，如密码、年龄、性别等
+
+    def __str__(self):
+        return f"Username: {self.username}\n"
+
+    def save_to_database(self):
+        # 这里可以编写将 User 对象保存到数据库的逻辑
+        # 示例代码，实际应用中需要根据你的数据库模型进行调整
+        print(f"Saving user '{self.username}' to the database...")

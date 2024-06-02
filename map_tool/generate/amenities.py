@@ -14,10 +14,10 @@ def generate_amenities(min_lon, max_lon, min_lat, max_lat):
     - amenities: List of dictionaries representing generated amenities.
     """
     amenities = []
-    name=["卫生间","喷泉","公共电话亭","外卖柜","快递站","商店","医务室","观景台"]
-    num=[10,8,4,5,3,7,3,5]
-    n=0
-    for i in range(8):
+    name=["眼镜店","打印店"]
+    num=[5,5]
+    n=45
+    for i in range(2):
         for j in range(num[i]):
             lon = round(random.uniform(min_lon, max_lon), 6)
             lat = round(random.uniform(min_lat, max_lat), 6)
