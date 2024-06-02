@@ -14,18 +14,19 @@
           <!-- 标题 热度-->
           <div class="d-flex justify-content-between mb-2">
             <h5 class="card-title mb-0 text-truncate " title="{{ dest.name }}" >{{ dest.name }}</h5>
-            <span class="full-width">🔥{{ dest.popularity }}</span>
+            
           </div>
           <!-- 省市 -->
           <p class="card-text text-muted">{{ dest.province }}  {{ dest.city }}</p>
           <!-- 评分 标签 -->
           <div class="d-flex justify-content-between mt-auto ">
             <span class="">⭐{{ dest.rating }}</span>
-            <span class="">
-              {% for tag in dest.tags.all %}
-              <span class="badge bg-info rounded-pill">#{{tag}}</span>
-              {% endfor %}
-            </span>
+            <span class="f">🔥{{ dest.popularity }}</span>
+          </div>
+          <div class="ms-auto mt-2">
+            {% for tag in dest.tags.all %}
+            <span class="badge bg-info rounded-pill">#{{tag}}</span>
+            {% endfor %}
           </div>
         </div>
       </div>

@@ -1,8 +1,10 @@
+import json, bisect, math
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
 from django.conf import settings
-import json, bisect
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 
 from .models import Destination, Category, AmenityType, RestaurantType
 from diary.models import Diary
@@ -12,40 +14,55 @@ from src.recommend import attr_sort, str_filter, tag_filter, type_filter
 
 @login_required
 def index(request):
-    ''' 首页，根据搜索词、筛选、排序选择器返回展示的游学地'''
-    dests = list(Destination.objects.all())
+    context = {
+        'tags': [tag.name for tag in Category.objects.all()]
+    }
+    return render(request, 'travel/index.html', context)
+
+@login_required
+def load_dests(request):
+    ''' 加载（更多）游学地 '''
     search = request.GET.get('search', '')
     sort = request.GET.get('sort', '综合排序')
     category = request.GET.get('category', '所有类别')
-    # 搜索框不为空，按名字筛选
-    if search != '':
-        dests = str_filter(dests, lambda x: x.name, search)
-    # print('----- str filter:', *dests, sep='\n')
-    # 类别筛选
-    if category != '所有类别':
-        dests = tag_filter(dests, lambda x: x.tags.all(), Category.objects.get(name=category))
-    # print('----- tag fliter:', *dests, sep='\n')
+    page = int(request.GET.get('page')) # 当前请求的页
+    
+    load_more = page > 1 # 判断是否是继续加载的请求
+    
+
+    # 如果继续加载，不需要重新过滤，从缓存读取
+    if load_more:
+        dests = cache.get('filtered_dests')
+    # 否则重新筛选
+    else:
+        dests = list(Destination.objects.all())
+        # 搜索框不为空，按名字筛选
+        if search != '':
+            dests = str_filter(dests, lambda x: x.name, search)
+        # print('----- str filter:', *dests, sep='\n')
+        # 类别筛选
+        if category != '所有类别':
+            dests = tag_filter(dests, lambda x: x.tags.all(), Category.objects.get(name=category))
+        # print('----- tag fliter:', *dests, sep='\n')
+        cache.set('filtered_dests', dests)  # 缓存过滤后的结果
+
+    PAGE_LEN = 8
+    TOTAL_PAGE_NUM = math.ceil(len(dests) / PAGE_LEN) # 总页数
+    print('----- total dest num:', len(dests))
+    print('----- total page num:', TOTAL_PAGE_NUM)
+    print('----- current page:', page)
+
     # 排序
     if sort == '综合排序':
-        dests = attr_sort(dests, lambda x: comprehensive_tuple(x, request.user), l=8)
+        dests = attr_sort(dests, lambda x: comprehensive_tuple(x, request.user), 'dest', l=PAGE_LEN, conti=load_more)
     elif sort == '热度最高':
-        dests = attr_sort(dests, lambda x: x.popularity, l=8)
+        dests = attr_sort(dests, lambda x: x.popularity, 'dest', l=PAGE_LEN, conti=load_more)
     elif sort == '评分最高':
-        dests = attr_sort(dests, lambda x: x.rating, l=8)
-    # print('----- sort:', *dests, sep='\n')
-
-    tags = Category.objects.all()
-    tags = [tag.name for tag in tags]
-
-    context = {
-        'dests': dests,
-        'category': category,
-        'search': search,
-        'sort': sort,
-        'tags': tags,
-    }
+        dests = attr_sort(dests, lambda x: x.rating, 'dest', l=PAGE_LEN, conti=load_more)
     
-    return render(request, 'travel/index.html', context)
+    dest_list = render_to_string('travel/dest_list.html', {'dests': dests})
+    has_next = page < TOTAL_PAGE_NUM # 判断是否还有下一页
+    return JsonResponse({'destListHtml': dest_list, 'hasNext': has_next})
 
 @login_required
 def detail(request, dest_id):

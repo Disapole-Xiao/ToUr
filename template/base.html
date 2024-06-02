@@ -2,126 +2,134 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/my_style.css' %}">
-    {% block extra_css %} {% endblock %}
-    <title>{% block title %}ToUr{% endblock %}</title>
-</head>
-<body>
-<!-- 导航栏 -->
-  <nav class="navbar navbar-expand navbar-light bg-light shadow-sm sticky-top " style="z-index: 10;">
-    <div class="container-fluid">
-      <!-- 品牌文字 -->
-      <a class="navbar-brand fw-bold" href="{% url 'travel:index' %}">ToUr</a>
-      <!-- 中间导航链接 -->
-      <ul class="navbar-nav mx-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/travel/">游学</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/diary/">日记</a>
-        </li>
-      </ul>
-      <!-- 添加日记按钮 -->
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#addDiaryModal">
-            <i class="bi bi-journal-plus"></i> 写日记
-          </a>
-        </li>
-      </ul>
-      <!-- 用户头像下拉菜单 -->
-      <ul class="navbar-nav ms-3">
-        {% if user.is_authenticated %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {% include 'user_avatar.html' with size=30 user=user %}
-            <span>{{ user.username }}</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="{% url 'account:profile' %}">资料</a></li>
-            <li><a class="dropdown-item" href="{% url 'account:logout' %}">登出</a></li>
-          </ul>
-        </li>
-        {% else %}
-        <a href="{% url 'account:login' %}" class="text-primary text-decoration-none">登录</a>
-        {% endif %}
-      </ul>
-    </div>
-  </nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/my_style.css' %}" />
+    {% block extra_css %}
 
-  <!-- Modal -->
-  <div class="modal fade" id="addDiaryModal" tabindex="-1" aria-labelledby="addDiaryModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addDiaryModalLabel">写日记</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form method="post" action="{% url 'diary:add_diary' %}">
-            {% csrf_token %}
-            <div class="mb-3 position-relative">
-              <label for="location" class="form-label">相关地点</label>
-              <input type="text" class="form-control" id="location" name="location" autocomplete="off" onkeyup="searchLocation()">
-              <div class="list-group location-list" id="locationList"></div>
-            </div>
-            
-            <div class="mb-3">
-              <label for="title" class="form-label">标题</label>
-              <input type="text" class="form-control" id="title" name="title" required>
-            </div>
-            <div class="mb-3">
-              <label for="content" class="form-label">正文</label>
-              <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">发布</button>
-          </form>
+    {% endblock %}
+    <title>
+      {% block title %}
+        ToUr
+      {% endblock %}
+    </title>
+  </head>
+  <body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand navbar-light bg-light shadow-sm sticky-top" style="z-index: 10;">
+      <div class="container-fluid">
+        <!-- 品牌文字 -->
+        <a class="navbar-brand fw-bold" href="{% url 'travel:index' %}">ToUr</a>
+        <!-- 中间导航链接 -->
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/travel/">游学</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/diary/">日记</a>
+          </li>
+        </ul>
+        <!-- 添加日记按钮 -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#addDiaryModal"><i class="bi bi-journal-plus"></i> 写日记</a>
+          </li>
+        </ul>
+        <!-- 用户头像下拉菜单 -->
+        <ul class="navbar-nav ms-3">
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% include 'user_avatar.html' with size=30 user=user %}
+                <span>{{ user.username }}</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                <li>
+                  <a class="dropdown-item" href="{% url 'account:profile' %}">资料</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'account:logout' %}">登出</a>
+                </li>
+              </ul>
+            </li>
+          {% else %}
+            <a href="{% url 'account:login' %}" class="text-primary text-decoration-none">登录</a>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addDiaryModal" tabindex="-1" aria-labelledby="addDiaryModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addDiaryModalLabel">写日记</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="{% url 'diary:add_diary' %}">
+              {% csrf_token %}
+              <div class="mb-3 position-relative">
+                <label for="location" class="form-label">相关地点</label>
+                <input type="text" class="form-control" id="location" name="location" autocomplete="off" onkeyup="searchLocation()" />
+                <div class="list-group location-list" id="locationList"></div>
+              </div>
+
+              <div class="mb-3">
+                <label for="title" class="form-label">标题</label>
+                <input type="text" class="form-control" id="title" name="title" required />
+              </div>
+              <div class="mb-3">
+                <label for="content" class="form-label">正文</label>
+                <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">发布</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  
 
-  {% block mainbody %}
-    <p>预留给子模板的区域，可以设置设置默认内容</p>
-  {% endblock %}
+    {% block mainbody %}
+      <p>预留给子模板的区域，可以设置设置默认内容</p>
+    {% endblock %}
 
-  
-  <script src="https://kit.fontawesome.com/b3641ba4d6.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <!--Ajax 搜索游学地-->
+    <script src="https://kit.fontawesome.com/b3641ba4d6.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Ajax 搜索游学地 -->
     <script>
       function searchLocation() {
-        var input = document.getElementById('location').value;
+        var input = document.getElementById('location').value
         if (input.length > 0) {
           fetch(`{% url 'diary:search_location' %}?query=${input}`)
-            .then(response => response.json())
-            .then(data => {
-              let list = document.getElementById('locationList');
-              list.innerHTML = '';
-              data.forEach(item => {
-                let option = document.createElement('a');
-                option.classList.add('list-group-item', 'list-group-item-action');
-                option.href = '#';
-                option.textContent = item.name;
-                option.onclick = function() { 
-                  document.getElementById('location').value = item.name;
-                  list.innerHTML = '';
-                  return false;
-                };
-                list.appendChild(option);
-              });
-            });
+            .then((response) => response.json())
+            .then((data) => {
+              let list = document.getElementById('locationList')
+              list.innerHTML = ''
+              data.forEach((item) => {
+                let option = document.createElement('a')
+                option.classList.add('list-group-item', 'list-group-item-action')
+                option.href = '#'
+                option.textContent = item.name
+                option.onclick = function () {
+                  document.getElementById('location').value = item.name
+                  list.innerHTML = ''
+                  return false
+                }
+                list.appendChild(option)
+              })
+            })
         } else {
-          document.getElementById('locationList').innerHTML = '';
+          document.getElementById('locationList').innerHTML = ''
         }
       }
-      </script>
-      {% block extra_js %} {% endblock %}
+    </script>
+    {% block extra_js %}
+
+    {% endblock %}
   </body>
 </html>

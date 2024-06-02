@@ -16,6 +16,7 @@ django.setup()
 
 # 导入你的模型
 from travel.models import Category, Destination
+from django.core.cache import cache
 
 ## ------- 筛选接口定义---------
 # BM 匹配算法
@@ -118,96 +119,98 @@ def type_filter(li: list, f, type: str) -> list :
 
 
 # ------- 排序---------
-# 全局变量存堆
-h = []
-
-# f返回attr，根据li中每一项的属性attr排序，默认降序
-def attr_sort(li: list, f, reverse=False, l=None, conti=False) -> list :
-    if l == None:
+def attr_sort(li, f, arr_name, ascend=False, l=None, conti=False):
+    ''' 不完全堆排。f返回attr，根据li中每一项的属性attr排序，默认降序。conti=True时，继续上次排序，否则重新排序。 '''
+    cache_key = f'{arr_name}_heap'
+    if l is None:
         l = len(li)
-    # 重新建堆
-    if conti == False:
-        sorted1_data = Heapsort(li, f, reverse)
-        sorted2_data = sorted1_data[-l:]
-        sorted3_data = sorted2_data[::-1]
-        return sorted3_data
-
-# 根据attr构建一个最大堆
-def maxHeapify(h, start, end, f):
-    son = start * 2  # 左节点
-    while son <= end:  # 如果左子树存在
-        # 取左子树根和右子树根 两者中大者的下标
-        if son + 1 <= end and f(h[son + 1]) > f(h[son]):
-            son += 1
-        # 如果子节点的值大于根节点，则将根节点和子节点交换。即下沉操作
-        if f(h[son]) > f(h[start]):
-            h[start], h[son] = h[son], h[start]
-            # 对子节点迭代执行相同的操作
-            start, son = son, son * 2
-        else:  # 如果子节点的值小于等于根节点,说明堆已经构造好了，退出循环
-            break
-
-# 根据attr构建一个最小堆
-def minHeapify(h, start, end, f):
-    son = start * 2  # 左节点
-    while son <= end:  # 如果左子树存在
-        # 取左子树根和右子树根 两者中小者的下标
-        if son + 1 <= end and f(h[son + 1]) < f(h[son]):
-            son += 1
-        # 如果子节点的值小于根节点，则将根节点和子节点交换。即下沉操作
-        if f(h[son]) < f(h[start]):
-            h[start], h[son] = h[son], h[start]
-            # 对子节点迭代执行相同的操作
-            start, son = son, son * 2
-        else:  # 如果子节点的值大于等于根节点,说明堆已经构造好了，退出循环
-            break
-
-def Heapsort(arr, f, reverse):
-    h = [None] + arr  # 这里是因为列表从0开始计数，而我们找的子节点父节点的关系是2倍或2倍+1
-    result = []
-    root = 1  # 堆顶下标
-    count = len(h)  # 获取堆元素个数
-    for i in range(count // 2, root - 1, -1):  # 逆序枚举列表的元素
-        # 自底向上地构造堆
-        if reverse == False:
-            minHeapify(h, i, count - 1, f)
-        else:
-            maxHeapify(h, i, count - 1, f)
     
-    for i in range(count-1, 0, -1): 
-            result.append(h[root])
-            h[i], h[root] = [None], h[i]  # 保持除最后一个元素以外整个堆的合法性
-            # 保持除最后第二个元素以外整个堆的合法性
-            if reverse == False:
-                minHeapify(h, root, i - 1, f)
-            else:
-                maxHeapify(h, root, i - 1, f)
-    return result  # 返回排好序的元素
+    if not conti:
+        # 创建一个新的堆
+        heap = build_heap(li, f, ascend)
+        heap_end = len(heap)-1
+        # 在堆上执行局部排序
+        sorted_count = partial_heapsort(heap, f, l, ascend, heap_end)
+        # 缓存堆和实际排序的元素数量
+        cache.set(cache_key, (heap, sorted_count))
+        sorted_part = heap[:-sorted_count-1:-1]  # 获取排序部分
+    else:
+        # 从缓存获取之前的堆和已排序元素的数量
+        heap, prev_sorted_count = cache.get(cache_key)
+        heap_end = len(heap) -1 - prev_sorted_count
+        # 继续堆排序，从上次结束的位置开始
+        additional_sorted_count = partial_heapsort(heap, f, l, ascend, heap_end)
+        # 更新缓存的排序进度
+        cache.set(cache_key, (heap, prev_sorted_count + additional_sorted_count))
+        sorted_part = heap[-prev_sorted_count-1:-(prev_sorted_count + additional_sorted_count+1):-1]  # 获取排序部分
+    return sorted_part
+
+def build_heap(li, f, ascend):
+    ''' 建堆 ascend=False 大根堆 '''
+    heap = [None] + li  # 使用 1-based index
+    heap_end = len(heap) - 1
+
+    # 自底向上构造堆
+    for i in range(heap_end // 2, 0, -1):
+        heapify(heap, i, heap_end, f, ascend)
+
+    return heap
+
+def partial_heapsort(h, f, l, ascend, heap_end):
+    ''' pop出最多l个元素放于堆末尾（实际已不属于堆）返回实际排序元素数量 '''
+    limit = min(heap_end, l)  # 计算实际的操作上限
+
+    # 只进行实际可进行次数的选择堆顶元素的操作
+    for end in range(heap_end, heap_end - limit, -1):
+        h[1], h[end] = h[end], h[1]  # 交换堆顶和堆的最后一个元素
+        heapify(h, 1, end - 1, f, ascend)  # 重新调整堆
+
+    return limit  # 返回排序的结果和实际排序的元素数量
+
+def heapify(h, parent, heap_end, f, ascend):
+    ''' 堆调整 ascend=False 大根堆 '''
+    son = parent * 2 # 左子
+    while son <= heap_end:
+        # 小根堆选择孩子中的较小者，大跟堆选择孩子中较大者
+        if son + 1 <= heap_end and ((f(h[son + 1]) < f(h[son])) if ascend else (f(h[son + 1]) > f(h[son]))):
+            son += 1
+        # 交换父子
+        if (f(h[son]) < f(h[parent]) if ascend else f(h[son]) > f(h[parent])):
+            h[parent], h[son] = h[son], h[parent]
+            parent = son
+            son = parent * 2
+        else:
+            break
 
 
-
-# 测试代码，数据来源maplist
+# 测试代码，数据来源数据库
 if __name__ == "__main__":
     dests =list(Destination.objects.all()) 
     
-    filtered_data = str_filter(dests, lambda x:x.name, "北京")
-    print('---- name filter ----')
-    for i in filtered_data:
-        print(i)
+    # filtered_data = str_filter(dests, lambda x:x.name, "北京")
+    # print('---- name filter ----')
+    # for i in filtered_data:
+    #     print(i)
     
-    filtered_data = tag_filter(dests, lambda x:x.tags.all(), Category.objects.get(name="学院高校"))
-    print('---- tag filter ----')
-    for i in filtered_data:
-        print(i, i.tags.all())
+    # filtered_data = tag_filter(dests, lambda x:x.tags.all(), Category.objects.get(name="学院高校"))
+    # print('---- tag filter ----')
+    # for i in filtered_data:
+    #     print(i, i.tags.all())
 
-    sorted_data = attr_sort(dests, lambda x:x.popularity, l=8)
+    sorted_data = attr_sort(dests, lambda x:x.popularity, 'dests', l=8)
     print('----sort popularity-------')
     for i in sorted_data:
         print(i, i.popularity)
+    print('---标准答案:', *Destination.objects.order_by('-popularity')[:8], sep='\n')
     
-    sorted_data = attr_sort(dests, lambda x:x.rating, l=10, reverse=True)
+    sorted_data = attr_sort(dests, lambda x:x.rating, 'dests', l=10, ascend=True)
     print('----sort rating-------')
     for i in sorted_data:
         print(i, i.rating)
+    print('---标准答案:', *Destination.objects.order_by('rating')[:10], sep='\n')
 
-     
+    sorted_data = attr_sort(dests, lambda x:x.rating, 'dests', l=8, ascend=True, conti=True)
+    print('----sort rating conti-------')
+    for i in sorted_data:
+        print(i, i.rating)
+    print('---标准答案:', *Destination.objects.order_by('rating')[10:18], sep='\n')
