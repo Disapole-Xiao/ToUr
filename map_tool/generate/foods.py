@@ -22,7 +22,7 @@ def update_restaurants_from_excel(json_file, xls_file):
     sheet = workbook.sheet_by_index(0)
     j=0
     # Iterate over rows in Excel file
-    for i in range(100, sheet.nrows):  # Start from 1 to skip header row
+    for i in range(200, sheet.nrows):  # Start from 1 to skip header row
         name = sheet.cell_value(i, 3)  # Get name from Excel file
         cat = sheet.cell_value(i, 11)  
         cat=cat[3:] # Get cat from Excel file

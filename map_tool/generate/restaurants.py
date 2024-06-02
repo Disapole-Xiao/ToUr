@@ -37,10 +37,10 @@ def generate_restaurants(num_restaurants, min_lon, max_lon, min_lat, max_lat):
     return restaurants
 
 # Define the rectangular area boundaries
-min_lon = 116.31437957513486
-max_lon = 116.3288376754806
-min_lat = 39.99148981450614
-max_lat = 40.011708654019344
+min_lon = 116.38705887227394
+max_lon = 116.39473193782402
+min_lat = 39.91254618053418
+max_lat = 39.920735205008356
 
 # Generate restaurants
 num_restaurants = 30  # You can specify the number of restaurants you want to generate
