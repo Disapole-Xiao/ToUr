@@ -3,10 +3,11 @@ from django.conf import settings
 import json
 import time
 import csv
+import numpy as np
+import math
+import random
 
 inf = float("inf")
-
-
 def adjlist_distance(nodes):
     adj_list = [[] for _ in range(len(nodes))]
 
@@ -23,20 +24,27 @@ def adjlist_distance(nodes):
 def adjlist_time(nodes):
     adj_list = [[] for _ in range(len(nodes))]
 
+    WALKING_SPEED = 1
+    BICYCLE_SPEED = 3
+    MOTORBIKE_SPEED = 5
     for node in nodes:
         adjacencies = node["adj"]
         for adj in adjacencies:
             neighbor = adj["id"]
             distance = adj["distance"]
             congestion = adj["congestion"]
-            weight = distance / congestion
+            if(adj["motorbike"]==True):
+                speed=MOTORBIKE_SPEED
+            elif(adj["bicycle"]==True):
+                speed=BICYCLE_SPEED
+            else:
+                speed=WALKING_SPEED
+            weight = distance*speed / congestion
             adj_list[node["id"]].append((neighbor, weight))
 
     return adj_list
 
-
-# 返回值是id序列
-def route_sgl(cur_map: dict, start: int, end: int, mode: str) -> list:
+def dijkstra(cur_map: dict, start: int, end: int, mode: str):  
     # 从 Map 中获取边存储到邻接表 adj_list 中
     if mode == "distance":
         adj_list = adjlist_distance(cur_map["nodes"])
@@ -77,142 +85,98 @@ def route_sgl(cur_map: dict, start: int, end: int, mode: str) -> list:
         shortestPath.append(path[end])
         end = path[end]
     shortestPath.reverse()
-    return shortestPath
+    return shortestPath,Min
+# 返回值是id序列
+def route_sgl(cur_map: dict, start: int, end: int, mode: str):
+    result=dijkstra(cur_map, start, end, mode)
+    return result[0]
 
 
 # -------------------------
 
+initial_temp = 10
+cooling_rate = 0.9
+def calculate_distance(per,cur_map,start,mode,k):
+    anspath=[]
+    result=dijkstra(cur_map, start, per[0], mode)
+    anspath+=result[0]
+    distance=result[1]
+    for i in range(0, k - 1):
+        result=dijkstra(cur_map, per[i], per[i + 1], mode)
+        tem=result[1]
+        anspath+=result[0]
+        distance += tem
+    result=dijkstra(cur_map, per[k - 1], start, mode)
+    tem=result[1]
+    anspath+=result[0]
+    distance += tem
+    return distance,anspath
 
-def getpath(a, b, path, anspath, idx):
-    if path[a][b] == -1:
-        return
-    else:
-        k = path[a][b]
-        getpath(a, k, path, anspath, idx)
-        # anspath[idx] = k
-        anspath.append(k)
-        # print(a,b,anspath)
-        idx += 1
-        getpath(k, b, path, anspath, idx)
+def perturb_route(route):
+    """通过交换两点的位置来扰动当前路径"""
+    idx1, idx2 = random.sample(range(0, len(route)), 2)  # 选择两个不同的点（不包括起点）
+    route[idx1], route[idx2] = route[idx2], route[idx1]
+    return route
 
 
 def route_mul(cur_map: dict, nodes: list, start: int, mode: str) -> list:
-    # 获取所需数据：dist矩阵，存储任意两点间的距离
-    # n = len(cur_map["nodes"])
-    # dist = [[inf for _ in range(0, n)] for _ in range(0, n)]
-    # path = [[-1 for _ in range(0, n)] for _ in range(0, n)]
-    # compute_nodes = cur_map["nodes"]
-    # for node in compute_nodes:
-    #     adjacencies = node["adj"]
-    #     now = node["id"]
-    #     for adj in adjacencies:
-    #         neighbor = adj["id"]
-    #         if mode == "distance":
-    #             weight = adj["distance"]
-    #         elif mode == "time":
-    #             distance = adj["distance"]
-    #             congestion = adj["congestion"]
-    #             weight = distance / congestion
-    #         dist[now][neighbor] = weight
-    #         dist[neighbor][now] = weight
-
-    start_time = time.time()
-    
-    # floyd
-    # for k in range(0, n):
-    #     for i in range(0, n):
-    #         for j in range(0, n):
-    #             if dist[i][j] > dist[i][k] + dist[k][j]:
-    #                 dist[i][j] = dist[i][k] + dist[k][j]
-    #                 path[i][j] = k
-    # write_dist_to_file(dist, "src/dist1.csv")
-    # write_path_to_file(path, "src/path1.csv")
-    id=cur_map["id"]
-    dictfilename="src/map/dist"+str(id)+"_"+mode+".csv"
-    pathfilename="src/map/path"+str(id)+"_"+mode+".csv"
-    dist = read_dist_from_file(dictfilename)
-    path = read_path_from_file(pathfilename)
-    end_time = time.time()
-    execution_time = end_time - start_time
-    print(execution_time)
-    # 求中间必经点的全排列
     k = len(nodes)
-    nodes.sort()
-    mindis = inf
-    anspath = []
-    for per in permutations(nodes):
-        # 计算每一种排列对应的最短路径
-        distance = dist[start][per[0]]
-        if dist[start][per[0]] == inf:
-            continue
-        for i in range(0, k - 2):
-            if dist[per[i]][per[i + 1] == inf]:
-                continue
-            distance += dist[per[i]][per[i + 1]]
-        if dist[per[k - 1]][start] == inf:
-            continue
-        distance += dist[per[k - 1]][start]
-        
-        if mindis > distance:
-            mindis = distance
-            anspath = []
-            idx = 0
-            # 存储最短路径
-            anspath.append(start)
-            # anspath[idx] = start
-            idx += 1
-            getpath(start, per[0], path, anspath, idx)
+    if k>=5:
+    # 模拟退火算法主函数
+        nodes.sort()
+        mindis = inf
+        current_route = nodes
+        result=calculate_distance(current_route,cur_map,start,mode,k)
+        current_cost = result[0]
+        anspath=result[1]
+        temperature = initial_temp
+
+        while temperature > 1:
+            new_route = perturb_route(current_route.copy())
+            result=calculate_distance(new_route,cur_map,start,mode,k)
+            new_cost = result[0]
+            
+            if new_cost < current_cost or random.random() < math.exp((current_cost - new_cost) / temperature):
+                current_route = new_route
+                current_cost = new_cost
+                anspath=result[1]
+
+            temperature *= cooling_rate
+        return anspath
+    else:
+        nodes.sort()
+        mindis = inf
+        anspath = []
+        for per in permutations(nodes):
+            # 计算每一种排列对应的最短路径
+            anspath=[]
+            result=dijkstra(cur_map, start, per[0], mode)
+            anspath+=result[0]
+            distance=result[1]
             for i in range(0, k - 1):
-                anspath.append(per[i])
-                # anspath[idx] = nodes[i]
-                idx += 1
-                getpath(per[i], per[i + 1], path, anspath, idx)
-            anspath.append(per[k - 1])
-            # anspath[idx] = nodes[k - 1]
-            idx += 1
-            getpath(per[k - 1], start, path, anspath, idx)
-            anspath.append(start)
-            idx += 1
+                result=dijkstra(cur_map, per[i], per[i + 1], mode)
+                tem=result[1]
+                anspath+=result[0]
+                distance += tem
+            result=dijkstra(cur_map, per[k - 1], start, mode)
+            tem=result[1]
+            anspath+=result[0]
+            distance += tem
+            
+            if mindis > distance:
+                mindis = distance
+                finalanspath = anspath.copy()
 
-    return anspath
-
-def write_dist_to_file(dist, filename):
-    with open(filename, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        for row in dist:
-            writer.writerow(row)
-
-def write_path_to_file(path, filename):
-    with open(filename, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        for row in path:
-            writer.writerow(row)
-
-def read_dist_from_file(filename):
-    dist = []
-    with open(filename, 'r') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            dist.append([float(cell) for cell in row])
-    return dist
-
-def read_path_from_file(filename):
-    path = []
-    with open(filename, 'r') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            path.append([int(cell) for cell in row])
-    return path
+        return finalanspath
 
 # 测试代码
 if __name__ == "__main__":
     with open("static/maps/2.json", "r", encoding="utf-8") as f:
         jsonstr = f.read()
     map = json.loads(jsonstr)
-    # print(route_sgl(map, 538, 359, "distance"))
-    # print(route_sgl(map, 538, 359, "time"))
+    # print(dijkstra(map, 538, 359, "distance"))
     start_time = time.time()
-    print(route_mul(map, [326,334,376,62], 342, "distance"))
+    print(route_mul(map, [326,334,376,62,436,333], 342, "distance"))
     end_time = time.time()
     execution_time = end_time - start_time
     print(execution_time)
