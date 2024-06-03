@@ -23,7 +23,7 @@ def index(request):
 def load_dests(request):
     ''' 加载（更多）游学地 '''
     search = request.GET.get('search', '')
-    sort = request.GET.get('sort', '综合排序')
+    sort = request.GET.get('sort', '兴趣推荐')
     category = request.GET.get('category', '所有类别')
     page = int(request.GET.get('page')) # 当前请求的页
     
@@ -53,7 +53,7 @@ def load_dests(request):
     print('----- current page:', page)
 
     # 排序
-    if sort == '综合排序':
+    if sort == '兴趣推荐':
         dests = attr_sort(dests, lambda x: comprehensive_tuple(x, request.user), 'dest', l=PAGE_LEN, conti=load_more)
     elif sort == '热度最高':
         dests = attr_sort(dests, lambda x: x.popularity, 'dest', l=PAGE_LEN, conti=load_more)

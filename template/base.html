@@ -75,10 +75,9 @@
               {% csrf_token %}
               <div class="mb-3 position-relative">
                 <label for="location" class="form-label">相关地点</label>
-                <input type="text" class="form-control" id="location" name="location" autocomplete="off" onkeyup="searchLocation()" />
-                <div class="list-group location-list" id="locationList"></div>
+                <input type="text" class="form-control" id="location" name="location" autocomplete="off" onkeyup="searchLocation()" required />
+                <div class="list-group location-list overflow-auto" id="locationList" style="max-height: 200px"></div>
               </div>
-
               <div class="mb-3">
                 <label for="title" class="form-label">标题</label>
                 <input type="text" class="form-control" id="title" name="title" required />
@@ -93,6 +92,8 @@
         </div>
       </div>
     </div>
+
+    {% include 'toast.html' %}
 
     {% block mainbody %}
       <p>预留给子模板的区域，可以设置设置默认内容</p>
@@ -128,6 +129,47 @@
         }
       }
     </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('#addDiaryModal form');
+        const toastEl = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastEl, {
+          delay: 1000  // Toast 显示 1 秒后自动隐藏
+        });
+        const toastBody = toastEl.querySelector('.toast-body');
+      
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+      
+          const formData = new FormData(form);
+          const url = form.action;
+      
+          fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              toastBody.textContent = data.error; // 设置错误消息
+              toast.show();
+              console.error('Error:', data.error);
+            } else {
+              console.log('Success:', data.message)
+              location.reload()
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        });
+      });
+    </script>
+      
     {% block extra_js %}
 
     {% endblock %}

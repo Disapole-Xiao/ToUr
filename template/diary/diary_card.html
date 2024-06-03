@@ -1,7 +1,7 @@
 <!-- 一张日记卡片 -->
 <div class="col">
   <a href="{% url 'diary:detail' diary.pk %}" style="color: inherit; text-decoration: none;">
-    <div class="card h-100 mb-0 shadow-sm ">
+    <div class="card h-100 mb-0 hover-shadow">
       <!-- 图片-->
       {% comment %} {% if diary.image_url %}
       <div class="w-100 overflow-hidden " style="height:200px">

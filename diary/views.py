@@ -1,11 +1,12 @@
 import json, math
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
+from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 from django.db.models import Avg
 from django.core.cache import cache
 
@@ -57,7 +58,7 @@ def load_diaries(request):
     print('----- current page:', page)
     
      # 排序
-    if sort == '综合排序':
+    if sort == '兴趣推荐':
         diaries = attr_sort(diaries, lambda x: comprehensive_tuple(x.location, request.user), 'diary', ascend=False, l = PAGE_LEN)
     elif sort == '时间最新':
         diaries = attr_sort(diaries, lambda x: x.pub_time, 'diary', l=PAGE_LEN)
@@ -66,10 +67,8 @@ def load_diaries(request):
     elif sort == '评分最高':
         diaries = attr_sort(diaries, lambda x: x.rating, 'diary', l=PAGE_LEN)
     # print('----- sort:', *diaries, sep='\n')
-    print(diaries)
     diary_list = render_to_string('diary/diary_list.html', {'diaries': diaries})
     has_next = page < TOTAL_PAGE_NUM # 判断是否还有下一页
-    print(diary_list, has_next)
     return JsonResponse({'diaryListHtml': diary_list, 'hasNext': has_next})
 
 
@@ -91,15 +90,20 @@ def detail(request, diary_id):
 @login_required
 @require_http_methods(["POST"])
 def add_diary(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        location_name = request.POST.get('location')
-        location = get_object_or_404(Destination, name=location_name)
-        author = request.user
-        new_diary = Diary(author=author, title=title, content=content, location=location)
-        new_diary.save()
-        return redirect('/diary/')  # Redirect to a new URL after saving
+    title = request.POST.get('title')
+    content = request.POST.get('content')
+    location_name = request.POST.get('location')
+    author = request.user
+
+    try:
+        location = Destination.objects.get(name=location_name)
+    except Destination.DoesNotExist:
+        return JsonResponse({'error': f'游学地“{location_name}”不存在。'})
+
+    new_diary = Diary(author=author, title=title, content=content, location=location)
+    new_diary.save()
+
+    return JsonResponse({'message': '日记发布成功'})
 
 @login_required
 @require_http_methods(["GET"])
