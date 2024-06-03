@@ -1,0 +1,9 @@
+# 忽略所有 __pycache__ 目录和 *.pyc 文件
+**/__pycache__/
+*.pyc
+
+# 忽略 migrations 目录下的所有内容
+**/migrations/
+
+# 忽略 cache 目录下的所有内容
+cache/
