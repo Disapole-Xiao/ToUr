@@ -64,9 +64,9 @@ if __name__ == "__main__":
     api_key = "62a046691a8d6f62978020dfee45fbf8"
 
     # Define search parameters
-    keywords = "教学楼"
+    keywords = "景点"
     city = "北京"
-    bbox = "116.320957,39.994377,116.332892,39.999103"  # Bounding box for Peking University
+    bbox = "116.397882,39.914437,116.401223,39.918849"  # Bounding box for Peking University
 
     # Fetch POI data
     poi_data = get_poi_data(keywords, city, bbox, key=api_key)
