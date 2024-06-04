@@ -94,7 +94,7 @@ def map(request, dest_id, edit=False):
 @login_required
 def plan_route(request, dest_id):
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = dest.get_map()
+    map = json.loads(dest.get_map())
     # 从请求体中获取 JSON 数据
     data = json.loads(request.body)
     selected_attractions = data.get('selected_attractions')
@@ -123,7 +123,7 @@ def plan_route(request, dest_id):
 def search_amenity(request, dest_id):
     ''' 返回选中景点附近的设施 '''
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = dest.get_map()
+    map = json.loads(dest.get_map())
     
     attr_id = int(request.GET.get('id'))
     amenity_type = request.GET.get('type', '')
@@ -158,7 +158,7 @@ def search_amenity(request, dest_id):
 def search_restaurant(request, dest_id):
     ''' 返回选中景点附近的美食 '''
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = dest.get_map()
+    map = json.loads(dest.get_map())
     
     attr_id = int(request.GET.get('id'))
     search_type = request.GET.get('search_type')
@@ -206,7 +206,7 @@ def search_restaurant(request, dest_id):
 @login_required
 def update_coord(request, dest_id):
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = dest.get_map()
+    map = json.loads(dest.get_map())
     # 从请求体中获取 JSON 数据
     data = json.loads(request.body)
     arr_name = data.get('arr_name')
