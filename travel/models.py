@@ -45,7 +45,7 @@ class Destination(models.Model):
         map_bytes = map.encode('utf-8')
         self.map.save(self.map.name, ContentFile(map_bytes))
     def get_map(self) -> str:
-        map_json, map_id = cache.get('map_json')
+        map_json, map_id = cache.get('map_json', default=(None, None))
         if map_json == None or map_id != self.id:
             with self.map.open('rb') as f:
                 byte_stream = f.read()

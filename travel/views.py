@@ -206,7 +206,7 @@ def search_restaurant(request, dest_id):
 @login_required
 def update_coord(request, dest_id):
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = cache.get('map_json')
+    map = dest.get_map()
     # 从请求体中获取 JSON 数据
     data = json.loads(request.body)
     arr_name = data.get('arr_name')
