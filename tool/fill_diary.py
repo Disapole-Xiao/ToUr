@@ -36,8 +36,11 @@ def fill_diary_from_txt(filename):
                     # 获取数字序号作为 title
                     title = lines[i+1].strip()  # 获取下一行作为 title
                     # 获取内容，包括当前数字序号以后的段落
-                    content = lines[i+2].strip()
-
+                    j=i+2
+                    content = ''
+                    while j<len(lines) and lines[j].strip().isdigit()==0 :
+                        content += lines[j]
+                        j+=1
                     # 随机选择一个 author_id
                     author_id = random.choice([1, 4, 5, 6, 7, 10, 11, 12, 13, 14])
 
@@ -48,7 +51,9 @@ def fill_diary_from_txt(filename):
                         flag=1
                         break
                     # 替换 content 中的 {name} 和 location_id
-                    content = content.replace('{name}', travel_destination.name)
+                    title = title.replace('{dest.name}', travel_destination.name)
+                    title = title.replace('{location_id}', str(travel_destination.id))
+                    content = content.replace('{dest.name}', travel_destination.name)
                     content = content.replace('{location_id}', str(travel_destination.id))
 
                     print(content)
