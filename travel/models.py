@@ -1,14 +1,20 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.files.storage import default_storage
 from django.db import models
-import os
+from django.core.files.base import ContentFile
 
-def dest_pic_path(instance, filename):
+from src.compress import compress, decompress
+
+def dest_map_path(instance, filename):
     ''' 游学地图片存储路径 '''
-    # 生成一个新的文件名，保留原始文件的扩展名
-    ext = filename.split('.')[-1]
-    filename = f'{instance.name}.{ext}'
-    # 返回存储的相对路径
-    return os.path.join('destinations', filename)
+    # 生成文件名
+    filename = f'{instance.name}.cprs'
+    path = 'dest_maps/' + filename
+    # 检查文件是否存在并删除
+    if default_storage.exists(path):
+        default_storage.delete(path)
+    return path
+
 
 class Category(models.Model):
     name = models.CharField(max_length=10, unique=True)
@@ -31,12 +37,38 @@ class Destination(models.Model):
             MaxValueValidator(5, message="Rating cannot be greater than 5"),
         ])
     tags = models.ManyToManyField(Category)
-    mapjson = models.TextField(default='{}', help_text="请粘贴地图的json文字") # 存储地图的json文件
+    map = models.FileField(upload_to=dest_map_path, blank=True, null=True)
 
+    def set_map(self, map: str):
+        #确保文件以utf-8编码保存（否则会按照系统使用gb2312）
+        map_bytes = map.encode('utf-8')
+        self.map.save(self.map.name, ContentFile(map_bytes))
+    def get_map(self) -> str:
+        with self.map.open('rb') as f:
+            byte_stream = f.read()
+        return decompress(byte_stream)
     def __str__(self):
         return self.name
     def __hash__(self) -> int:
         return hash(self.name)
+    def save(self, *args, **kwargs):
+        # 是否上传了该字段
+        if self.map:
+            # 原map大小
+            old_map_size= self.map.size
+        
+            # 读取map文件内容为字符串，调用 compress 函数压缩上传的文件
+            with open(self.map.path, 'r', encoding='utf-8') as f:
+                string = f.read()
+            compressed_content = compress(string)
+        
+            # 保存压缩后的内容到 map 字段
+            self.map.save(self.map.name, ContentFile(compressed_content), save=False)
+            print('-----原文件大小', old_map_size, 'bytes')
+            print('-----压缩后大小', self.map.size, 'bytes')
+            print('-----压缩比', old_map_size / self.map.size)
+            
+        super(Destination, self).save(*args, **kwargs)
     
 class AmenityType(models.Model):
     name = models.CharField(max_length=10, unique=True)
@@ -51,16 +83,3 @@ class RestaurantType(models.Model):
         return self.name
     def __hash__(self) -> int:
         return hash(self.name)
-    
-class User:
-    def __init__(self, username):
-        self.username = username
-        # 可以添加更多的属性，如密码、年龄、性别等
-
-    def __str__(self):
-        return f"Username: {self.username}\n"
-
-    def save_to_database(self):
-        # 这里可以编写将 User 对象保存到数据库的逻辑
-        # 示例代码，实际应用中需要根据你的数据库模型进行调整
-        print(f"Saving user '{self.username}' to the database...")

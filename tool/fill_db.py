@@ -1,8 +1,7 @@
 '''
 自动存储对象到数据库
 '''
-import os
-import sys
+import json, os, random, sys
 
 # 设置 Django 项目根目录的路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -34,6 +33,28 @@ def fill_restaurant_type():
         RestaurantType.objects.create(name=i)
     print("restaurant_type filled")  
 
+def set_dest_map(dest: Destination, map_id: int):
+    with open(f"static/maps/{map_id}.json", "r", encoding='utf-8') as f:
+        map_dict = json.load(f)
+    map_dict['name'] = dest.name
+    s = json.dumps(map_dict, ensure_ascii=False)
+    dest.set_map(s)
+    print(f"dest_map of {dest.name} filled with {map_id}")
+def fill_dest_map():
+    for dest in Destination.objects.all():
+        # 如果是景区
+        if dest.type == "s":
+            map_id = random.choice([1,4])
+        # 如果是学校
+        elif dest.type == "u":
+            map_id = random.choice([2,3])
+        set_dest_map(dest, map_id)
+    print("dest_map filled")
+
 if __name__ == "__main__":
-    fill_restaurant_type()
-    fill_amenity_type()
+    # fill_dest_map()
+    set_dest_map(Destination.objects.get(name="北京动物园"), 1)
+    set_dest_map(Destination.objects.get(name="北京大学"), 2)
+    set_dest_map(Destination.objects.get(name="清华大学"), 3)
+    set_dest_map(Destination.objects.get(name="故宫博物院"), 4)
+    

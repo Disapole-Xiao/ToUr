@@ -81,19 +81,21 @@ def map(request, dest_id, edit=False):
 
     restaurant_types = [x.name for x in RestaurantType.objects.all()]
     amenity_types = [x.name for x in AmenityType.objects.all()]
-
+    map_json = dest.get_map()
+    cache.set('map_json', json.loads(map_json))
     context = {
         'dest': dest,
         'restaurant_types': restaurant_types,
         'amenity_types': amenity_types,
         'edit': edit,
+        'map_json': map_json,
     }
     return render(request, 'travel/map.html', context)
 
 @login_required
 def plan_route(request, dest_id):
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = json.loads(dest.mapjson)
+    map = cache.get('map_json')
     # 从请求体中获取 JSON 数据
     data = json.loads(request.body)
     selected_attractions = data.get('selected_attractions')
@@ -122,7 +124,7 @@ def plan_route(request, dest_id):
 def search_amenity(request, dest_id):
     ''' 返回选中景点附近的设施 '''
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = json.loads(dest.mapjson)
+    map = cache.get('map_json')
     
     attr_id = int(request.GET.get('id'))
     amenity_type = request.GET.get('type', '')
@@ -157,7 +159,7 @@ def search_amenity(request, dest_id):
 def search_restaurant(request, dest_id):
     ''' 返回选中景点附近的美食 '''
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = json.loads(dest.mapjson)
+    map = cache.get('map_json')
     
     attr_id = int(request.GET.get('id'))
     search_type = request.GET.get('search_type')
@@ -205,7 +207,7 @@ def search_restaurant(request, dest_id):
 @login_required
 def update_coord(request, dest_id):
     dest = get_object_or_404(Destination, pk=dest_id)
-    map = json.loads(dest.mapjson)
+    map = cache.get('map_json')
     # 从请求体中获取 JSON 数据
     data = json.loads(request.body)
     arr_name = data.get('arr_name')
@@ -216,9 +218,9 @@ def update_coord(request, dest_id):
     target = map[arr_name][id]
     target['lat'] = round(lat, 6)
     target['lon'] = round(lon, 6)
-    dest.mapjson = json.dumps(map, ensure_ascii=False, indent=4)
+    dest.set_map(json.dumps(map, ensure_ascii=False, indent=4))
     print('before: ', target)
-    dest.save()
+    dest.save() # save操作会自动压缩
     print('after: ', target)
 
     # 同步更新到文件

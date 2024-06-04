@@ -101,7 +101,7 @@
      crossorigin=""></script>
 <script>
     // 将 Django 变量转换为 JavaScript 对象
-    var mapData = JSON.parse('{{ dest.mapjson|escapejs }}');
+    var mapData = JSON.parse('{{ map_json|escapejs }}');
     var edit = JSON.parse('{{ edit|yesno:"true,false"|escapejs }}')
     const csrfToken = '{{ csrf_token }}';
 </script>
