@@ -35,10 +35,10 @@ def generate_amenities(min_lon, max_lon, min_lat, max_lat):
     
 
 # Define the rectangular area boundaries
-min_lon = 116.38705887227394
-max_lon = 116.39473193782402
-min_lat = 39.91254618053418
-max_lat = 39.920735205008356
+min_lon = 116.32306830418179
+max_lon = 116.33642270337396
+min_lat = 39.937915601638736
+max_lat = 39.94306012273515
 
 # Generate amenities
 # You can specify the number of amenities you want to generate

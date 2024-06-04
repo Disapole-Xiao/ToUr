@@ -52,7 +52,7 @@ def fill_dest_map():
     print("dest_map filled")
 
 if __name__ == "__main__":
-    # fill_dest_map()
+    fill_dest_map()
     set_dest_map(Destination.objects.get(name="北京动物园"), 1)
     set_dest_map(Destination.objects.get(name="北京大学"), 2)
     set_dest_map(Destination.objects.get(name="清华大学"), 3)
