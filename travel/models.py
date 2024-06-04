@@ -2,6 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.files.storage import default_storage
 from django.db import models
 from django.core.files.base import ContentFile
+from django.core.cache import cache
 
 from src.compress import compress, decompress
 
@@ -40,13 +41,17 @@ class Destination(models.Model):
     map = models.FileField(upload_to=dest_map_path, blank=True, null=True)
 
     def set_map(self, map: str):
-        #确保文件以utf-8编码保存（否则会按照系统使用gb2312）
+        # 确保文件以utf-8编码保存（否则会按照系统使用gb2312）
         map_bytes = map.encode('utf-8')
         self.map.save(self.map.name, ContentFile(map_bytes))
     def get_map(self) -> str:
-        with self.map.open('rb') as f:
-            byte_stream = f.read()
-        return decompress(byte_stream)
+        map_json, map_id = cache.get('map_json')
+        if map_json == None or map_id != self.id:
+            with self.map.open('rb') as f:
+                byte_stream = f.read()
+            map_json = decompress(byte_stream)
+            cache.set('map_json', (map_json, self.id))
+        return map_json
     def __str__(self):
         return self.name
     def __hash__(self) -> int:
@@ -54,20 +59,19 @@ class Destination(models.Model):
     def save(self, *args, **kwargs):
         # 是否上传了该字段
         if self.map:
-            # 原map大小
-            old_map_size= self.map.size
-        
-            # 读取map文件内容为字符串，调用 compress 函数压缩上传的文件
-            with open(self.map.path, 'r', encoding='utf-8') as f:
-                string = f.read()
-            compressed_content = compress(string)
-        
-            # 保存压缩后的内容到 map 字段
-            self.map.save(self.map.name, ContentFile(compressed_content), save=False)
-            print('-----原文件大小', old_map_size, 'bytes')
-            print('-----压缩后大小', self.map.size, 'bytes')
-            print('-----压缩比', old_map_size / self.map.size)
-            
+            try:
+                # 原map大小
+                old_map_size= self.map.size
+                # 读取map文件内容为字符串，调用 compress 函数压缩上传的文件
+                with open(self.map.path, 'r', encoding='utf-8') as f:
+                    string = f.read()
+                compressed_content, ratio = compress(string)
+                # 保存压缩后的内容到 map 字段
+                self.map.save(self.map.name, ContentFile(compressed_content), save=False)
+                print('-----压缩比', ratio)
+            except UnicodeDecodeError:
+                pass # 如果出错了说明已经是二进制文件，没有更改
+         
         super(Destination, self).save(*args, **kwargs)
     
 class AmenityType(models.Model):

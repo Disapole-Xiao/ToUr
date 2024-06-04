@@ -5,9 +5,10 @@ from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ('username', 'is_staff', 'get_interests')
+    list_display = ('id', 'username', 'is_staff', 'get_interests')
     list_filter = ('is_staff',)  # 注意这里使用了元组格式
     search_fields = ('username',)  # 注意这里使用了元组格式
+    list_display_links = ('id', 'username')
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         ('Personal info', {'fields': ('avatar', 'interests', 'email')}),

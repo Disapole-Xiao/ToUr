@@ -42,7 +42,7 @@ def user_logout(request):
     return redirect('/')  # 重定向到登录页面或其他合适的页面
 
 @login_required
-def profile_view(request):
+def profile(request):
     user = request.user
     if request.method == 'POST':
         profile_form = CustomUserChangeForm(request.POST, request.FILES, instance=user)

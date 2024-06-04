@@ -61,7 +61,7 @@ def compress(text: str) -> bytes:
     """
     text_bytes = text.encode('utf-8') # 按照utd-8拆开字符
     # print('-----拆解后的文本：', text_bytes)
-    print('-----原文本大小', len(text_bytes), 'bytes')
+    original_size = len(text_bytes)
     root = build(text_bytes)
     hfm_code = coding(root)
     # print('-----映射字典：', hfm_code)
@@ -76,14 +76,15 @@ def compress(text: str) -> bytes:
     file_encoded = f'{padding:08b}' + '0' * padding + file_encoded
     # 01 -> 字节
     file_encoded = bytes(int(file_encoded[i:i+8], 2) for i in range(0, len(file_encoded), 8))
-
+    compressed_size = len(file_encoded)
 
     # 将压缩头和压缩文本一起写入文件
-    print('-----文件头大小：', (8 + padding + len(header_encoded)) / 8, 'bytes')
+    print('-----原文本大小', original_size, 'bytes')
+    print('-----压缩头大小：', (8 + padding + len(header_encoded)) / 8, 'bytes')
     print('-----压缩后文本大小：', len(text_encoded) / 8, 'bytes')
-    print('-----压缩后总大小：', len(file_encoded), 'bytes')
+    print('-----压缩后总大小：', compressed_size, 'bytes')
     
-    return file_encoded # 返回字节流
+    return file_encoded, round(original_size/compressed_size, 2) # 返回字节流 和 压缩比
         
 def rebuild(bits, index=0):
     """
@@ -149,6 +150,6 @@ def decompress(byte_stream: bytes) -> str:
     return decoded_text
 
 if __name__ == "__main__":
-    byte_stream = compress('0你好1')
+    byte_stream, _ = compress('0你好1')
     decprs = decompress(byte_stream)
     print(decprs)

@@ -46,7 +46,7 @@ def load_diaries(request):
             elif search_type == '游学地名称':
                 diaries = str_filter(diaries, lambda x: x.location.name, search)
             elif search_type == '全文搜索':
-                diaries = str_filter(diaries, lambda x: x.content, search)
+                diaries = str_filter(diaries, lambda x: x.get_content(), search)
         # print('----- search:', *diaries, sep='\n')
         cache.set('filtered_diaries', diaries)  # 缓存过滤后的结果
 
@@ -83,7 +83,8 @@ def detail(request, diary_id):
         user_rating = 0
     context = {
         'diary': diary,
-        'user_rating': user_rating
+        'user_rating': user_rating,
+        'diary_content': diary.get_content(),
     }
     return render(request, 'diary/detail.html', context)
 
