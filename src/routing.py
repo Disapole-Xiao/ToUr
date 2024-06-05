@@ -109,11 +109,11 @@ def calculate_distance(per,cur_map,start,mode,k,vehicle):
     for i in range(0, k - 1):
         result=route_sgl(cur_map, per[i], per[i + 1], mode,vehicle)
         tem=result[1]
-        anspath+=result[0]
+        anspath+=result[0][1:]
         distance += tem
     result=route_sgl(cur_map, per[k - 1], start, mode,vehicle)
     tem=result[1]
-    anspath+=result[0]
+    anspath+=result[0][1:]
     distance += tem
     return distance,anspath
 
@@ -128,7 +128,6 @@ def isVisited(visited):
 
 def route_mul(cur_map: dict, nodes: list, start: int, mode: str,vehicle:str):
     N = len(nodes)
-    print(N)
     if N>=20:
     # 模拟退火算法主函数
         nodes.sort()
@@ -153,6 +152,7 @@ def route_mul(cur_map: dict, nodes: list, start: int, mode: str,vehicle:str):
         return anspath,current_cost,order
     else:
         nodes=[start]+nodes
+        N+=1
         M = 1 << (N - 1)
         dp = [[inf] * M for _ in range(N)]
         g = [[inf] * N for _ in range(N)]
@@ -209,27 +209,27 @@ def route_mul(cur_map: dict, nodes: list, start: int, mode: str,vehicle:str):
         anspath.append(0)
         final_anspath.append(nodes[0])
         pioneer = 0
-        final_path=[]
+        final_path=[nodes[0]]
         for per in anspath[1:]:
-            final_path+=path[pioneer][per]
+            final_path+=path[pioneer][per][1:]
             pioneer=per
         return final_path,dp[0][M-1],final_anspath
 
 # 测试代码
 if __name__ == "__main__":
-    with open("static/maps/3.json", "r", encoding="utf-8") as f:
+    with open("static/maps/4.json", "r", encoding="utf-8") as f:
         jsonstr = f.read()
     map = json.loads(jsonstr)
     start_time = time.time()
     mode = "distance"
     # 单目标
-    # planned_node_ids, cost = route_sgl(map, 538, 359, mode)
+    # planned_node_ids, cost = route_sgl(map, 538, 359, mode,"motorbike")
     # print('道路点序列', planned_node_ids)
     # print('cost', cost, 'm' if mode=="distance" else 's')
 
     # 多目标
     start_time = time.time()
-    planned_node_ids, cost, entr_point_order = route_mul(map, [326,376], 342, mode,"motorbike")
+    planned_node_ids, cost, entr_point_order = route_mul(map, [1316,137], 1310, mode,"bicycle")
     print('道路点序列', planned_node_ids)
     print('cost', cost, 'm' if mode=="distance" else 's')
     print('入口点顺序', entr_point_order)
