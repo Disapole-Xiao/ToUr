@@ -53,12 +53,12 @@ def adjlist_time(nodes,vehicle):
 
     return adj_list
 
-def route_sgl(cur_map: dict, start: int, end: int, mode: str):  
+def route_sgl(cur_map: dict, start: int, end: int, mode: str,vehicle:str):  
     # 从 Map 中获取边存储到邻接表 adj_list 中
     if mode == "distance":
         adj_list = adjlist_distance(cur_map["nodes"])
     elif mode == "time":
-        adj_list = adjlist_time(cur_map["nodes"])
+        adj_list = adjlist_time(cur_map["nodes"],vehicle)
 
     # route_sgl
     M = len(adj_list)
@@ -101,17 +101,17 @@ def route_sgl(cur_map: dict, start: int, end: int, mode: str):
 
 initial_temp = 10
 cooling_rate = 0.9
-def calculate_distance(per,cur_map,start,mode,k):
+def calculate_distance(per,cur_map,start,mode,k,vehicle):
     anspath=[]
-    result=route_sgl(cur_map, start, per[0], mode)
+    result=route_sgl(cur_map, start, per[0], mode,vehicle)
     anspath+=result[0]
     distance=result[1]
     for i in range(0, k - 1):
-        result=route_sgl(cur_map, per[i], per[i + 1], mode)
+        result=route_sgl(cur_map, per[i], per[i + 1], mode,vehicle)
         tem=result[1]
         anspath+=result[0]
         distance += tem
-    result=route_sgl(cur_map, per[k - 1], start, mode)
+    result=route_sgl(cur_map, per[k - 1], start, mode,vehicle)
     tem=result[1]
     anspath+=result[0]
     distance += tem
@@ -126,24 +126,22 @@ def perturb_route(route):
 def isVisited(visited):
     return all(visited[1:])
 
-def route_mul(cur_map: dict, nodes: list, start: int, mode: str):
+def route_mul(cur_map: dict, nodes: list, start: int, mode: str,vehicle:str):
     N = len(nodes)
     print(N)
     if N>=20:
     # 模拟退火算法主函数
         nodes.sort()
-        mindis = inf
         current_route = nodes
-        result=calculate_distance(current_route,cur_map,start,mode,N)
+        result=calculate_distance(current_route,cur_map,start,mode,N,vehicle)
         current_cost = result[0]
         anspath=result[1]
         temperature = initial_temp
-
+        order=current_route
         while temperature > 1:
             new_route = perturb_route(current_route.copy())
-            result=calculate_distance(new_route,cur_map,start,mode,N)
+            result=calculate_distance(new_route,cur_map,start,mode,N,vehicle)
             new_cost = result[0]
-            
             if new_cost < current_cost or random.random() < math.exp((current_cost - new_cost) / temperature):
                 current_route = new_route
                 current_cost = new_cost
@@ -151,7 +149,7 @@ def route_mul(cur_map: dict, nodes: list, start: int, mode: str):
                 order=new_route
 
             temperature *= cooling_rate
-        order=[start]+order+[start]
+        order=[start]+list(order)+[start]
         return anspath,current_cost,order
     else:
         nodes=[start]+nodes
@@ -164,7 +162,7 @@ def route_mul(cur_map: dict, nodes: list, start: int, mode: str):
                 if i==j:
                     g[i][j]=0
                 elif i<j:
-                    result=route_sgl(cur_map, nodes[i], nodes[j], mode)
+                    result=route_sgl(cur_map, nodes[i], nodes[j], mode,vehicle)
                     g[i][j]=result[1]
                     path[i][j]=result[0]
                     g[j][i]=g[i][j]
@@ -231,7 +229,7 @@ if __name__ == "__main__":
 
     # 多目标
     start_time = time.time()
-    planned_node_ids, cost, entr_point_order = route_mul(map, [326,376,132,342, 603, 341, 315, 1062, 380, 62, 379, 830, 63, 564, 1526, 1525, 1524, 1523, 267], 342, "distance")
+    planned_node_ids, cost, entr_point_order = route_mul(map, [326,376], 342, mode,"motorbike")
     print('道路点序列', planned_node_ids)
     print('cost', cost, 'm' if mode=="distance" else 's')
     print('入口点顺序', entr_point_order)
