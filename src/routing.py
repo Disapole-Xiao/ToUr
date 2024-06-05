@@ -30,7 +30,7 @@ def adjlist_distance(nodes):
     return adj_list
 
 
-def adjlist_time(nodes):
+def adjlist_time(nodes,vehicle):
     adj_list = [[] for _ in range(len(nodes))]
 
     WALKING_SPEED = settings.WALKING_SPEED
@@ -42,9 +42,9 @@ def adjlist_time(nodes):
             neighbor = adj["id"]
             distance = adj["distance"]
             congestion = adj["congestion"]
-            if(adj["motorbike"]==True):
+            if(adj["motorbike"]==True and vehicle=="motorbike"):
                 speed=MOTORBIKE_SPEED
-            elif(adj["bicycle"]==True):
+            elif(adj["bicycle"]==True and vehicle=="bicycle"):
                 speed=BICYCLE_SPEED
             else:
                 speed=WALKING_SPEED
@@ -68,7 +68,7 @@ def route_sgl(cur_map: dict, start: int, end: int, mode: str):
     dist[start] = 0
     visit[start] = 0
     temp = start
-
+    Min=0
     while start != end:
         Min = inf
         for neighbor, weight in adj_list[start]:
@@ -123,22 +123,25 @@ def perturb_route(route):
     route[idx1], route[idx2] = route[idx2], route[idx1]
     return route
 
+def isVisited(visited):
+    return all(visited[1:])
 
-def route_mul(cur_map: dict, nodes: list, start: int, mode: str) -> list:
-    k = len(nodes)
-    if k>=5:
+def route_mul(cur_map: dict, nodes: list, start: int, mode: str):
+    N = len(nodes)
+    print(N)
+    if N>=20:
     # 模拟退火算法主函数
         nodes.sort()
         mindis = inf
         current_route = nodes
-        result=calculate_distance(current_route,cur_map,start,mode,k)
+        result=calculate_distance(current_route,cur_map,start,mode,N)
         current_cost = result[0]
         anspath=result[1]
         temperature = initial_temp
 
         while temperature > 1:
             new_route = perturb_route(current_route.copy())
-            result=calculate_distance(new_route,cur_map,start,mode,k)
+            result=calculate_distance(new_route,cur_map,start,mode,N)
             new_cost = result[0]
             
             if new_cost < current_cost or random.random() < math.exp((current_cost - new_cost) / temperature):
@@ -151,31 +154,68 @@ def route_mul(cur_map: dict, nodes: list, start: int, mode: str) -> list:
         order=[start]+order+[start]
         return anspath,current_cost,order
     else:
-        nodes.sort()
-        mindis = inf
+        nodes=[start]+nodes
+        M = 1 << (N - 1)
+        dp = [[inf] * M for _ in range(N)]
+        g = [[inf] * N for _ in range(N)]
+        path = [[list] * N for _ in range(N)]
+        for i in range(N):
+            for j in range(N):
+                if i==j:
+                    g[i][j]=0
+                elif i<j:
+                    result=route_sgl(cur_map, nodes[i], nodes[j], mode)
+                    g[i][j]=result[1]
+                    path[i][j]=result[0]
+                    g[j][i]=g[i][j]
+                    path[j][i]=result[0][::-1]
+        
+        for i in range(N):
+            dp[i][0] = g[i][0]
+
+
+        # 求解dp[i][j],先跟新列在更新行
+        for j in range(1, M):
+            for i in range(N):
+                dp[i][j] = inf
+                # 如果集和j(或状态j)中包含结点i,则不符合条件退出
+                if i > 0 and ((j >> (i - 1)) & 1) == 1:
+                    continue
+                for k in range(1, N):
+                    if ((j >> (k - 1)) & 1) == 0:
+                        continue
+                    dp[i][j] = min(dp[i][j], g[i][k] + dp[k][j ^ (1 << (k - 1))])
+        # 标记访问数组
         anspath = []
-        for per in permutations(nodes):
-            # 计算每一种排列对应的最短路径
-            anspath=[]
-            result=route_sgl(cur_map, start, per[0], mode)
-            anspath+=result[0]
-            distance=result[1]
-            for i in range(0, k - 1):
-                result=route_sgl(cur_map, per[i], per[i + 1], mode)
-                tem=result[1]
-                anspath+=result[0]
-                distance += tem
-            result=route_sgl(cur_map, per[k - 1], start, mode)
-            tem=result[1]
-            anspath+=result[0]
-            distance += tem
-            
-            if mindis > distance:
-                order=per
-                mindis = distance
-                finalanspath = anspath.copy()
-        order=[start]+order+[start]
-        return finalanspath,mindis,order
+        final_anspath=[]
+        visited = [False] * N
+        # 前驱节点编号
+        pioneer = 0
+        min_dist = inf
+        S = M - 1
+        # 把起点结点编号加入容器
+        anspath.append(0)
+        final_anspath.append(nodes[0])
+        while not isVisited(visited):
+            for i in range(1, N):
+                if not visited[i] and (S & (1 << (i - 1))) != 0:
+                    if min_dist > g[i][pioneer] + dp[i][(S ^ (1 << (i - 1)))]:
+                        min_dist = g[i][pioneer] + dp[i][(S ^ (1 << (i - 1)))]
+                        temp = i
+            pioneer = temp
+            anspath.append(pioneer)
+            final_anspath.append(nodes[pioneer])
+            visited[pioneer] = True
+            S = S ^ (1 << (pioneer - 1))
+            min_dist = inf
+        anspath.append(0)
+        final_anspath.append(nodes[0])
+        pioneer = 0
+        final_path=[]
+        for per in anspath[1:]:
+            final_path+=path[pioneer][per]
+            pioneer=per
+        return final_path,dp[0][M-1],final_anspath
 
 # 测试代码
 if __name__ == "__main__":
@@ -190,10 +230,11 @@ if __name__ == "__main__":
     # print('cost', cost, 'm' if mode=="distance" else 's')
 
     # 多目标
-    # planned_node_ids, cost, entr_point_order = route_mul(map, [326,334,376,62,436,333], 342, "distance")
-    # print('道路点序列', planned_node_ids)
-    # print('cost', cost, 'm' if mode=="distance" else 's')
-    # print('入口点顺序', entr_point_order)
+    start_time = time.time()
+    planned_node_ids, cost, entr_point_order = route_mul(map, [326,376,132,342, 603, 341, 315, 1062, 380, 62, 379, 830, 63, 564, 1526, 1525, 1524, 1523, 267], 342, "distance")
+    print('道路点序列', planned_node_ids)
+    print('cost', cost, 'm' if mode=="distance" else 's')
+    print('入口点顺序', entr_point_order)
 
     # map_json, map_id = cache.get('map_json')
     end_time = time.time()
