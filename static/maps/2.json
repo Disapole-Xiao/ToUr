@@ -1,6 +1,6 @@
 {
     "name": "北京大学",
-    "entrance": 1407,
+    "entrance": 1397,
     "center": {
         "lat": 39.993389,
         "lon": 116.305228
@@ -18,7 +18,7 @@
         },
         {
             "id": 1,
-            "name": "北京大学博雅塔",
+            "name": "博雅塔",
             "description": "",
             "entr_point": [
                 45
@@ -28,7 +28,7 @@
         },
         {
             "id": 2,
-            "name": "北京大学勺园",
+            "name": "勺园",
             "description": "",
             "entr_point": [
                 528
@@ -48,7 +48,7 @@
         },
         {
             "id": 4,
-            "name": "北京大学蔡元培像",
+            "name": "蔡元培像",
             "description": "",
             "entr_point": [
                 195
@@ -78,7 +78,7 @@
         },
         {
             "id": 7,
-            "name": "北京大学李大钊像",
+            "name": "李大钊像",
             "description": "",
             "entr_point": [
                 560
@@ -88,7 +88,7 @@
         },
         {
             "id": 8,
-            "name": "北京大学葛利普教授之墓",
+            "name": "葛利普教授之墓",
             "description": "",
             "entr_point": [
                 1398
@@ -108,7 +108,7 @@
         },
         {
             "id": 10,
-            "name": "北京大学华表",
+            "name": "华表",
             "description": "",
             "entr_point": [
                 25
@@ -118,7 +118,7 @@
         },
         {
             "id": 11,
-            "name": "北京大学临湖轩",
+            "name": "临湖轩",
             "description": "",
             "entr_point": [
                 206
@@ -128,7 +128,7 @@
         },
         {
             "id": 12,
-            "name": "北京大学鸣鹤园",
+            "name": "鸣鹤园",
             "description": "",
             "entr_point": [
                 271
@@ -138,7 +138,7 @@
         },
         {
             "id": 13,
-            "name": "北京大学镜春园",
+            "name": "镜春园",
             "description": "",
             "entr_point": [
                 314
@@ -148,7 +148,7 @@
         },
         {
             "id": 14,
-            "name": "北京大学红湖",
+            "name": "红湖",
             "description": "",
             "entr_point": [
                 356
@@ -158,7 +158,7 @@
         },
         {
             "id": 15,
-            "name": "北京大学国立西南联合大学纪念牌",
+            "name": "西南联合大学纪念牌",
             "description": "",
             "entr_point": [
                 27
@@ -178,7 +178,7 @@
         },
         {
             "id": 17,
-            "name": "北京大学埃德加·斯诺之墓",
+            "name": "埃德加·斯诺之墓",
             "description": "",
             "entr_point": [
                 1429
@@ -198,7 +198,7 @@
         },
         {
             "id": 19,
-            "name": "北京大学翻尾石鱼",
+            "name": "翻尾石鱼",
             "description": "",
             "entr_point": [
                 1308
@@ -208,7 +208,7 @@
         },
         {
             "id": 20,
-            "name": "北京大学静园",
+            "name": "静园",
             "description": "",
             "entr_point": [
                 788
@@ -228,7 +228,7 @@
         },
         {
             "id": 22,
-            "name": "北京大学治贝子园",
+            "name": "治贝子园",
             "description": "",
             "entr_point": [
                 1289
@@ -238,17 +238,17 @@
         },
         {
             "id": 23,
-            "name": "北京大学第三教学楼",
+            "name": "邱德拔体育馆",
             "description": "",
             "entr_point": [
-                1232
+                1161
             ],
-            "lon": 116.307852,
-            "lat": 39.987747
+            "lon": 116.309048,
+            "lat": 39.987581
         },
         {
             "id": 24,
-            "name": "北京大学智华楼",
+            "name": "智华楼",
             "description": "",
             "entr_point": [
                 249
@@ -258,7 +258,7 @@
         },
         {
             "id": 25,
-            "name": "北京大学地学楼",
+            "name": "地学楼",
             "description": "",
             "entr_point": [
                 1170
@@ -268,7 +268,7 @@
         },
         {
             "id": 26,
-            "name": "北京大学逸夫贰楼",
+            "name": "逸夫贰楼",
             "description": "",
             "entr_point": [
                 66
@@ -278,7 +278,7 @@
         },
         {
             "id": 27,
-            "name": "北京大学李兆基楼",
+            "name": "李兆基楼",
             "description": "",
             "entr_point": [
                 1257
@@ -288,7 +288,7 @@
         },
         {
             "id": 28,
-            "name": "北京大学光华管理学院1号楼",
+            "name": "光华管理学院1号楼",
             "description": "",
             "entr_point": [
                 590
@@ -298,7 +298,7 @@
         },
         {
             "id": 29,
-            "name": "北京大学-方李邦琴楼",
+            "name": "方李邦琴楼",
             "description": "",
             "entr_point": [
                 1381
@@ -308,7 +308,7 @@
         },
         {
             "id": 30,
-            "name": "北京大学国际关系学院秋林报告厅",
+            "name": "国际关系学院秋林报告厅",
             "description": "",
             "entr_point": [
                 390
@@ -318,7 +318,7 @@
         },
         {
             "id": 31,
-            "name": "北京大学新鸿基楼",
+            "name": "新鸿基楼",
             "description": "",
             "entr_point": [
                 167
@@ -328,7 +328,7 @@
         },
         {
             "id": 32,
-            "name": "北京大学老化学楼",
+            "name": "老化学楼",
             "description": "",
             "entr_point": [
                 1347
@@ -338,7 +338,7 @@
         },
         {
             "id": 33,
-            "name": "北京大学-西楼",
+            "name": "西楼",
             "description": "",
             "entr_point": [
                 1103
@@ -348,7 +348,7 @@
         },
         {
             "id": 34,
-            "name": "北京大学工会办公用楼",
+            "name": "工会办公用楼",
             "description": "",
             "entr_point": [
                 18
@@ -358,7 +358,7 @@
         },
         {
             "id": 35,
-            "name": "北京大学电教楼",
+            "name": "电教楼",
             "description": "",
             "entr_point": [
                 1163
@@ -368,7 +368,7 @@
         },
         {
             "id": 36,
-            "name": "北京大学体育教研部教学区",
+            "name": "体育教研部教学区",
             "description": "",
             "entr_point": [
                 591
@@ -378,13 +378,13 @@
         },
         {
             "id": 37,
-            "name": "北京大学刘卿楼",
+            "name": "刘卿楼",
             "description": "",
             "entr_point": [
                 1232
             ],
-            "lon": 116.307852,
-            "lat": 39.987747
+            "lon": 116.307728,
+            "lat": 39.987762
         },
         {
             "id": 38,
@@ -398,7 +398,7 @@
         },
         {
             "id": 39,
-            "name": "北京大学逸夫苑理科二号楼",
+            "name": "逸夫苑理科二号楼",
             "description": "",
             "entr_point": [
                 1369
@@ -408,7 +408,7 @@
         },
         {
             "id": 40,
-            "name": "北京大学图书馆",
+            "name": "图书馆",
             "description": "",
             "entr_point": [
                 1364
@@ -418,7 +418,7 @@
         },
         {
             "id": 41,
-            "name": "北京大学水沙科学教育部重点实验室",
+            "name": "水沙科学教育部重点实验室",
             "description": "",
             "entr_point": [
                 1428
@@ -448,7 +448,7 @@
         },
         {
             "id": 44,
-            "name": "北京大学民主与科学",
+            "name": "民主与科学碑",
             "description": "",
             "entr_point": [
                 733

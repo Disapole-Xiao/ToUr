@@ -305,46 +305,67 @@ function removeFromRoute(id, listItem) {
 
 // 当点击“规划路径”按钮时触发的函数
 function planRoute(mode) {
-    // 1. 获取当前加入路线的景点列表
+    // 获取当前加入路线的景点列表
+    var allowRide = document.getElementById('allow-ride').checked;
     var routeList = document.getElementById('route-list');
-    var selected_attractions = [];
+    var selectedAttractions = [];
     routeList.querySelectorAll('li').forEach(li => {
-        selected_attractions.push(li.getAttribute('data-id'));
+        selectedAttractions.push(li.getAttribute('data-id'));
     });
-    console.log('已选中的景点id序列：', selected_attractions);
-    // 2. 调用后端函数发送请求，并处理返回的 JSON 数据
+    console.log('已选中的景点id序列：', selectedAttractions);
+    // 调用后端函数发送请求，并处理返回的 JSON 数据
     fetch('plan_route/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrfToken,  // 将 CSRF 令牌包含在请求头中
         },
-        body: JSON.stringify({ selected_attractions: selected_attractions, mode: mode }),
+        body: JSON.stringify({ selected_attractions: selectedAttractions, mode: mode, allow_ride: allowRide }),
     })
     .then(response => response.json())
     .then(data => {
-        // 3. 在地图上绘制路径
-        var latLonSeq = data.latLonSeq;
+        console.log('data: ', data);
+        // 在地图上绘制路径
+        let latLonSeq = data.latLonSeq;
         console.log('路径规划完成：', latLonSeq);
         displayRoute(latLonSeq);
+        displayRouteInfo(mode, data);
+        
     })
     .catch(error => {
         console.error('Error:', error);
     });
 }
 
-// 在页面上展示路径信息的函数
-// function displayRouteInfo(data) {
-//     var routeInfoDiv = document.getElementById('planned-routes');
-//     routeInfoDiv.innerHTML = ''; // 清空原有内容
-
-//     // 创建并添加新的路线信息
-//     data.routes.forEach(route => {
-//         var routeItem = document.createElement('div');
-//         routeItem.textContent = route;
-//         routeInfoDiv.appendChild(routeItem);
-//     });
-// }
+// 在侧边栏上展示路径信息的函数
+function displayRouteInfo(mode, data) {
+    // 侧边栏显示花费时间/路径长度
+    if (data.cost){
+        let pre = mode == 'time' ? '最短时间为' : '最短距离为';
+        let unit = mode == 'time' ? 's' : 'm';
+        document.getElementById('cost').innerText = pre + data.cost.toFixed(1) + unit;
+    } else {
+        document.getElementById('cost').innerText = '请至少选择两个景点';
+    }
+    // 多目标规划展示游览顺序
+    if (data.attractionOrder.length != 0) {
+        let attrList = document.getElementById('planned-routes-list');
+        attrList.innerHTML = '';
+        data.attractionOrder.forEach(attrId => {
+            let listItem = document.createElement('li');
+            listItem.className = 'list-group-item';
+            listItem.textContent = attrId == -1 ? '入口' : mapData.attractions[attrId].name;
+            listItem.setAttribute('data-id', attrId); // 设置自定义属性data_id，即景点的id
+            listItem.onclick = function() {
+                selectAttraction(attrId);
+            }
+            attrList.appendChild(listItem);
+        });
+        document.getElementById('planned-routes').classList.remove('d-none');
+    } else {
+        document.getElementById('planned-routes').classList.add('d-none');
+    }
+}
 
 
 // 在地图上绘制路径的函数
@@ -353,7 +374,8 @@ function displayRoute(latLonSeq) {
     routeLayer.addLayer(
         L.polyline(latLonSeq, {
         color: 'red',
-        weight: 5,
+        weight: 3,
+        dashArray: '5,10',
     }))
     console.log("路径绘制完成！");
     

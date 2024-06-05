@@ -97,11 +97,21 @@
         })
         .then(response => response.json())
         .then(data => {
+            const toastEl = document.getElementById('toast');
+            const toast = new bootstrap.Toast(toastEl, {
+              delay: 1000  // Toast 显示 1 秒后自动隐藏
+            });
+            const toastBody = toastEl.querySelector('.toast-body');
             if (data.success) {
-                alert('评分成功！');
-                window.location.reload();
+                toastBody.textContent = '评分成功！'; // 设置错误消息
+                toast.show();
+                // 停顿一会
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             } else {
-                alert('评分失败！');
+                toastBody.textContent = '评分失败！'; // 设置错误消息
+                toast.show();
             }
         },
         ).catch(error => {

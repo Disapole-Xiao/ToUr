@@ -23,6 +23,17 @@ def distance(lat1, lon1, lat2, lon2):
     s = round(s, 1)  # 保留1位小数
     return s
 
+def make_route_key(attr_ids, mode, allow_ride):
+    if len(attr_ids) <= 1:
+        return None
+    if len(attr_ids) == 2:
+        return f'{attr_ids[0]}_{attr_ids[1]}_{mode}_{allow_ride}'
+    start = attr_ids[0]
+    seq = [str(i) for i in sorted(attr_ids[1:])]
+    return f"{start}_{'_'.join(seq)}_{mode}_{allow_ride}"
+
+
 if __name__ == '__main__':
-    print(distance(39.937873, 116.33387, 39.937849, 116.333392))
+    print(make_route_key([-1,4,2,6,5], 'distance',True))
+    print(make_route_key([-1,4], 'time', False))
     

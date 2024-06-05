@@ -1,5 +1,4 @@
 import os, sys, json, time, math, random
-from itertools import permutations
 
 # 设置 Django 项目根目录的路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -12,7 +11,6 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'ToUr.settings'
 # 初始化 Django
 import django
 from django.conf import settings
-from django.core.cache import cache
 django.setup()
 
 
@@ -48,12 +46,12 @@ def adjlist_time(nodes,vehicle):
                 speed=BICYCLE_SPEED
             else:
                 speed=WALKING_SPEED
-            weight = distance*speed / congestion
+            weight = distance / (speed * congestion)
             adj_list[node["id"]].append((neighbor, weight))
 
     return adj_list
 
-def route_sgl(cur_map: dict, start: int, end: int, mode: str,vehicle:str):  
+def route_sgl(cur_map: dict, start: int, end: int, mode: str,vehicle=None):  
     # 从 Map 中获取边存储到邻接表 adj_list 中
     if mode == "distance":
         adj_list = adjlist_distance(cur_map["nodes"])
@@ -68,7 +66,7 @@ def route_sgl(cur_map: dict, start: int, end: int, mode: str,vehicle:str):
     dist[start] = 0
     visit[start] = 0
     temp = start
-    Min=0
+    Min = 0
     while start != end:
         Min = inf
         for neighbor, weight in adj_list[start]:
@@ -94,7 +92,7 @@ def route_sgl(cur_map: dict, start: int, end: int, mode: str,vehicle:str):
         shortestPath.append(path[end])
         end = path[end]
     shortestPath.reverse()
-    return shortestPath,Min
+    return shortestPath, Min
 
 
 # -------------------------
@@ -126,7 +124,7 @@ def perturb_route(route):
 def isVisited(visited):
     return all(visited[1:])
 
-def route_mul(cur_map: dict, nodes: list, start: int, mode: str,vehicle:str):
+def route_mul(cur_map: dict, nodes: list, start: int, mode: str,vehicle=None):
     N = len(nodes)
     if N>=20:
     # 模拟退火算法主函数
@@ -221,20 +219,20 @@ if __name__ == "__main__":
         jsonstr = f.read()
     map = json.loads(jsonstr)
     start_time = time.time()
-    mode = "distance"
+    mode = "time"
     # 单目标
-    # planned_node_ids, cost = route_sgl(map, 538, 359, mode,"motorbike")
-    # print('道路点序列', planned_node_ids)
-    # print('cost', cost, 'm' if mode=="distance" else 's')
-
-    # 多目标
-    start_time = time.time()
-    planned_node_ids, cost, entr_point_order = route_mul(map, [1316,137], 1310, mode,"bicycle")
+    planned_node_ids, cost = route_sgl(map, 138, 34, mode, 'motorbike')
     print('道路点序列', planned_node_ids)
     print('cost', cost, 'm' if mode=="distance" else 's')
-    print('入口点顺序', entr_point_order)
 
-    # map_json, map_id = cache.get('map_json')
+    # 多目标
+    # start_time = time.time()
+    # planned_node_ids, cost, entr_point_order = route_mul(map, [1316,137], 1310, mode,"bicycle")
+    # print('道路点序列', planned_node_ids)
+    # print('cost', cost, 'm' if mode=="distance" else 's')
+    # print('入口点顺序', entr_point_order)
+
+    # cache.set('test', map)
     end_time = time.time()
     execution_time = end_time - start_time
     print('执行时间', execution_time)

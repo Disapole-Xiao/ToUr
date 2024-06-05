@@ -8,7 +8,7 @@ from django.core.cache import cache
 
 from .models import Destination, Category, AmenityType, RestaurantType
 from diary.models import Diary
-from .funcs import distance, comprehensive_tuple
+from .funcs import distance, comprehensive_tuple, make_route_key
 from src.routing import route_sgl, route_mul
 from src.recommend import attr_sort, str_filter, tag_filter, type_filter
 
@@ -93,31 +93,62 @@ def map(request, dest_id, edit=False):
 
 @login_required
 def plan_route(request, dest_id):
-    dest = get_object_or_404(Destination, pk=dest_id)
-    map = json.loads(dest.get_map())
     # 从请求体中获取 JSON 数据
     data = json.loads(request.body)
     selected_attractions = data.get('selected_attractions')
     selected_attractions = [int(attr_id) for attr_id in selected_attractions]
     mode = data.get('mode')
+    allow_ride = data.get('allow_ride')
+    print('----- selected_attractions = ', selected_attractions)
+
+    key = make_route_key(selected_attractions, mode, allow_ride)
+    # 缓存
+    map_id, routes = cache.get('routing', (None,None))
+    if map_id and map_id == dest_id:
+        try:
+            print('----- routes: ', routes) 
+            return JsonResponse(routes[key])
+        except: pass
+    else:
+        routes = {}
     
-    node_ids = []
+    dest = get_object_or_404(Destination, pk=dest_id)
+    map = json.loads(dest.get_map())
+
     # 将 attractions 映射到 node，入口特殊处理
     node_ids = [map['entrance'] if attr_id == -1 
                 else map['attractions'][attr_id]['entr_point'][0] 
                 for attr_id in selected_attractions]
     print('----- node_ids = ', node_ids)
-    # 调用路径规划算法
-    if len(node_ids) == 2:
-        planned_node_ids = route_sgl(map, node_ids[0], node_ids[1], mode)
-    elif len(node_ids) > 2:
-        planned_node_ids = route_mul(map, node_ids[1:], node_ids[0], mode)
+
+    node_attr_dict = dict(zip(node_ids, selected_attractions)) # 一一对应
+
+    # 调用路径规划算法 单目标 多目标
+    planned_node_ids = []
+    cost = None
+    entr_point_order = []
+    if allow_ride:
+        vehicle = 'bicycle' if dest.type == 'u' else 'motorbike'
     else:
-        planned_node_ids = []
+        vehicle = None
+    if len(node_ids) == 2:
+        planned_node_ids, cost  = route_sgl(map, node_ids[0], node_ids[1], mode=mode, vehicle=vehicle)
+    elif len(node_ids) > 2:
+        planned_node_ids, cost, entr_point_order = route_mul(map, node_ids[1:], node_ids[0], mode=mode, vehicle=vehicle)
+
     # 由node_id获得经纬度序列 [[lat2,lon1], [lat2,lon2], ...]
     lat_lon_seq = [[map['nodes'][id]['lat'], map['nodes'][id]['lon']] for id in planned_node_ids]
-    
-    return JsonResponse({'latLonSeq': lat_lon_seq})
+    # 入口点顺序转换为景点游览顺序
+    attr_order = [node_attr_dict[node] for node in entr_point_order]
+    print('----- attr_order = ', attr_order)
+
+    routes[key] = {
+        'latLonSeq': lat_lon_seq,
+        'cost': cost,
+        'attractionOrder': attr_order
+    }
+    cache.set('routing', (dest_id, routes))
+    return JsonResponse(routes[key])
     
 @login_required
 def search_amenity(request, dest_id):

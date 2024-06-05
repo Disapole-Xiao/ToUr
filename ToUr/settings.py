@@ -165,7 +165,7 @@ LOGIN_URL = '/account/login/'
 LOGOUT_REDIRECT_URL = '/travel/'
 
 
-SESSION_COOKIE_AGE = 86400  # 会话过期时间（单位：秒） 24 小时
+SESSION_COOKIE_AGE = 720  # 会话过期时间（单位：秒） 2 小时
 SESSION_SAVE_EVERY_REQUEST = True # 设置为 True，每次请求都会延长会话的过期时间
 
 # 以下是自定义的全局常量

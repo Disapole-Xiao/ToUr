@@ -48,7 +48,7 @@
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="username" class="form-label">用户名</label>
-                    <input type="text" class="form-control form-control-lg" id="username" name="username" placeholder="请输入用户名" value="">
+                    <input type="text" class="form-control form-control-lg" id="username" name="username" placeholder="请输入用户名" value="" autocomplete="off">
                     {% if form.username.errors %}
                         <div class="form-error">
                             {{ form.username.errors }}
@@ -57,7 +57,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="password1" class="form-label">密码</label>
-                    <input type="password" class="form-control form-control-lg" id="password1" name="password1" placeholder="请输入密码">
+                    <input type="password" class="form-control form-control-lg" id="password1" name="password1" placeholder="请输入密码" autocomplete="off">
                     {% if form.password1.errors %}
                         <div class="form-error">
                             {{ form.password1.errors }}
