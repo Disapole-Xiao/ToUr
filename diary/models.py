@@ -42,8 +42,8 @@ class Diary(models.Model):
             return f'title: {self.title} author: None'  
     def save(self, *args, **kwargs):
         # 如果是创建对象
-        # if self.pk == None:
-        if self.content != None:
+        if self.pk == None:
+        # if self.content != None:
             # 压缩content，与压缩前比较大小决定是否要压缩
             compressed, ratio = compress(self.content)
             if ratio > 1.1:

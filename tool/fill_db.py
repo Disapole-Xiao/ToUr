@@ -58,6 +58,4 @@ if __name__ == "__main__":
     # set_dest_map(Destination.objects.get(name="北京动物园"), 1)
     # set_dest_map(Destination.objects.get(name="北京大学"), 2)
     # set_dest_map(Destination.objects.get(name="清华大学"), 3)
-    # set_dest_map(Destination.objects.get(name="故宫博物院"), 4)
-    for diary in Diary.objects.all():
-        diary.save()
+    set_dest_map(Destination.objects.get(name="故宫博物院"), 4)

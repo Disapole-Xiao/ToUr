@@ -59,13 +59,13 @@ def load_diaries(request):
     
      # 排序
     if sort == '兴趣推荐':
-        diaries = attr_sort(diaries, lambda x: comprehensive_tuple(x.location, request.user), 'diary', ascend=False, l = PAGE_LEN)
+        diaries = attr_sort(diaries, lambda x: comprehensive_tuple(x.location, request.user), 'diary', l = PAGE_LEN, conti=load_more)
     elif sort == '时间最新':
-        diaries = attr_sort(diaries, lambda x: x.pub_time, 'diary', l=PAGE_LEN)
+        diaries = attr_sort(diaries, lambda x: x.pub_time, 'diary', l=PAGE_LEN, conti=load_more)
     elif sort == '热度最高':
-        diaries = attr_sort(diaries, lambda x: x.popularity, 'diary', l=PAGE_LEN)
+        diaries = attr_sort(diaries, lambda x: x.popularity, 'diary', l=PAGE_LEN, conti=load_more)
     elif sort == '评分最高':
-        diaries = attr_sort(diaries, lambda x: x.rating, 'diary', l=PAGE_LEN)
+        diaries = attr_sort(diaries, lambda x: x.rating, 'diary', l=PAGE_LEN, conti=load_more)
     # print('----- sort:', *diaries, sep='\n')
     diary_list = render_to_string('diary/diary_list.html', {'diaries': diaries})
     has_next = page < TOTAL_PAGE_NUM # 判断是否还有下一页

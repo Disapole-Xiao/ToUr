@@ -11,14 +11,14 @@
             "name": "绿园",
             "description": "",
             "entr_point": [
-                1936
+                1830
             ],
             "lon": 116.312041,
             "lat": 39.999561
         },
         {
             "id": 1,
-            "name": "清华大学未来媒体实验室",
+            "name": "未来媒体实验室",
             "description": "",
             "entr_point": [
                 387
@@ -28,7 +28,7 @@
         },
         {
             "id": 2,
-            "name": "清华附中A座教学楼",
+            "name": "清华附中高中楼",
             "description": "",
             "entr_point": [
                 1565
@@ -38,13 +38,13 @@
         },
         {
             "id": 3,
-            "name": "清华大学附属中学行政楼",
+            "name": "清华附中初中楼",
             "description": "",
             "entr_point": [
-                1563
+                1562
             ],
-            "lon": 116.314683,
-            "lat": 40.007967
+            "lon": 116.314197,
+            "lat": 40.008508
         },
         {
             "id": 4,
@@ -58,7 +58,7 @@
         },
         {
             "id": 5,
-            "name": "清华大学低碳能源实验室",
+            "name": "低碳能源实验室",
             "description": "",
             "entr_point": [
                 1936
@@ -88,7 +88,7 @@
         },
         {
             "id": 8,
-            "name": "清华大学物理楼",
+            "name": "物理楼",
             "description": "",
             "entr_point": [
                 316
@@ -98,7 +98,7 @@
         },
         {
             "id": 9,
-            "name": "清华大学新水利馆",
+            "name": "新水利馆",
             "description": "",
             "entr_point": [
                 1551
@@ -118,7 +118,7 @@
         },
         {
             "id": 11,
-            "name": "清华大学生物技术馆",
+            "name": "留学生楼",
             "description": "",
             "entr_point": [
                 668
@@ -128,7 +128,7 @@
         },
         {
             "id": 12,
-            "name": "清华大学郑裕彤医学楼",
+            "name": "郑裕彤医学楼",
             "description": "",
             "entr_point": [
                 585
@@ -138,7 +138,7 @@
         },
         {
             "id": 13,
-            "name": "清华大学逸夫馆",
+            "name": "逸夫馆",
             "description": "",
             "entr_point": [
                 304
@@ -148,7 +148,7 @@
         },
         {
             "id": 14,
-            "name": "清华大学旧水利馆",
+            "name": "旧水利馆",
             "description": "",
             "entr_point": [
                 505
@@ -158,7 +158,7 @@
         },
         {
             "id": 15,
-            "name": "清华大学生物馆",
+            "name": "生物学馆",
             "description": "",
             "entr_point": [
                 756
@@ -168,7 +168,7 @@
         },
         {
             "id": 16,
-            "name": "清华大学蒙民伟楼",
+            "name": "蒙民伟楼",
             "description": "",
             "entr_point": [
                 209
@@ -178,7 +178,7 @@
         },
         {
             "id": 17,
-            "name": "清华大学第五教学楼",
+            "name": "第五教学楼",
             "description": "",
             "entr_point": [
                 491
@@ -188,7 +188,7 @@
         },
         {
             "id": 18,
-            "name": "清华大学化学馆",
+            "name": "化学馆",
             "description": "",
             "entr_point": [
                 436
@@ -198,7 +198,7 @@
         },
         {
             "id": 19,
-            "name": "清华大学生命科学楼",
+            "name": "生命科学楼",
             "description": "",
             "entr_point": [
                 2204
@@ -218,7 +218,7 @@
         },
         {
             "id": 21,
-            "name": "清华大学泥沙实验室",
+            "name": "泥沙实验室",
             "description": "",
             "entr_point": [
                 1522
@@ -228,7 +228,7 @@
         },
         {
             "id": 22,
-            "name": "清华大学机械工程馆",
+            "name": "机械工程楼",
             "description": "",
             "entr_point": [
                 1068
@@ -238,7 +238,7 @@
         },
         {
             "id": 23,
-            "name": "清华大学黄松益楼",
+            "name": "文南楼",
             "description": "",
             "entr_point": [
                 2253
@@ -268,7 +268,7 @@
         },
         {
             "id": 26,
-            "name": "清华大学低维量子物理国家重点实验室",
+            "name": "低维量子物理国家重点实验室",
             "description": "",
             "entr_point": [
                 435
@@ -278,7 +278,7 @@
         },
         {
             "id": 27,
-            "name": "清华大学研究生共青园",
+            "name": "研究生共青园",
             "description": "",
             "entr_point": [
                 1866
@@ -288,7 +288,7 @@
         },
         {
             "id": 28,
-            "name": "清华大学高田芳行馆",
+            "name": "科学馆",
             "description": "",
             "entr_point": [
                 2260
@@ -298,7 +298,7 @@
         },
         {
             "id": 29,
-            "name": "清华大学舜德楼",
+            "name": "舜德楼",
             "description": "",
             "entr_point": [
                 2034
@@ -308,7 +308,7 @@
         },
         {
             "id": 30,
-            "name": "清华大学建筑馆报告厅",
+            "name": "建筑馆报告厅",
             "description": "",
             "entr_point": [
                 1903
@@ -318,7 +318,7 @@
         },
         {
             "id": 31,
-            "name": "清华大学建华楼",
+            "name": "建华楼",
             "description": "",
             "entr_point": [
                 1425
@@ -328,7 +328,7 @@
         },
         {
             "id": 32,
-            "name": "清华大学伟伦楼",
+            "name": "经济管理学院",
             "description": "",
             "entr_point": [
                 1503
@@ -338,7 +338,7 @@
         },
         {
             "id": 33,
-            "name": "清华大学蒙民伟科技大楼南楼",
+            "name": "蒙民伟科技大楼",
             "description": "",
             "entr_point": [
                 558
@@ -358,7 +358,7 @@
         },
         {
             "id": 35,
-            "name": "清华大学何善衡楼",
+            "name": "土木馆",
             "description": "",
             "entr_point": [
                 1011
@@ -378,7 +378,7 @@
         },
         {
             "id": 37,
-            "name": "清华大学电子工程馆",
+            "name": "电子工程馆",
             "description": "",
             "entr_point": [
                 560
@@ -388,7 +388,7 @@
         },
         {
             "id": 38,
-            "name": "清华大学第六教学楼A区",
+            "name": "第六教学楼A区",
             "description": "",
             "entr_point": [
                 746
@@ -418,7 +418,7 @@
         },
         {
             "id": 41,
-            "name": "清华大学建筑馆",
+            "name": "建筑馆",
             "description": "",
             "entr_point": [
                 1906
@@ -428,7 +428,7 @@
         },
         {
             "id": 42,
-            "name": "清华大学东配楼",
+            "name": "东配楼",
             "description": "",
             "entr_point": [
                 1084
@@ -438,7 +438,7 @@
         },
         {
             "id": 43,
-            "name": "清华大学焊接馆",
+            "name": "焊接馆",
             "description": "",
             "entr_point": [
                 1177
@@ -448,7 +448,7 @@
         },
         {
             "id": 44,
-            "name": "清华大学自强科技楼",
+            "name": "自强科技楼",
             "description": "",
             "entr_point": [
                 860
@@ -498,7 +498,7 @@
         },
         {
             "id": 49,
-            "name": "清华大学东楼",
+            "name": "东楼",
             "description": "",
             "entr_point": [
                 600
@@ -508,7 +508,7 @@
         },
         {
             "id": 50,
-            "name": "清华大学能科楼",
+            "name": "能科楼",
             "description": "",
             "entr_point": [
                 1490
@@ -518,7 +518,7 @@
         },
         {
             "id": 51,
-            "name": "清华大学熊知行楼",
+            "name": "熊知行楼",
             "description": "",
             "entr_point": [
                 650
@@ -528,7 +528,7 @@
         },
         {
             "id": 52,
-            "name": "清华大学FIT楼",
+            "name": "FIT楼",
             "description": "",
             "entr_point": [
                 2235
@@ -538,7 +538,7 @@
         },
         {
             "id": 53,
-            "name": "清华大学陈赛蒙斯楼",
+            "name": "陈赛蒙斯楼",
             "description": "",
             "entr_point": [
                 53
@@ -548,7 +548,7 @@
         },
         {
             "id": 54,
-            "name": "清华大学曾宪梓楼",
+            "name": "曾宪梓楼",
             "description": "",
             "entr_point": [
                 1668
@@ -558,7 +558,7 @@
         },
         {
             "id": 55,
-            "name": "清华大学公共管理学院报告厅",
+            "name": "公共管理学院报告厅",
             "description": "",
             "entr_point": [
                 334
@@ -568,7 +568,7 @@
         },
         {
             "id": 56,
-            "name": "清华大学法学楼",
+            "name": "法学楼",
             "description": "",
             "entr_point": [
                 336
@@ -578,7 +578,7 @@
         },
         {
             "id": 57,
-            "name": "清华大学心理学系学习科学实验室",
+            "name": "清华科技园",
             "description": "",
             "entr_point": [
                 552
@@ -588,7 +588,7 @@
         },
         {
             "id": 58,
-            "name": "清华大学法学院国际法律教育中心",
+            "name": "法学院国际法律教育中心",
             "description": "",
             "entr_point": [
                 587
@@ -598,7 +598,7 @@
         },
         {
             "id": 59,
-            "name": "清华大学继续教育学院香港大学专业进修学院联合项目管理中心",
+            "name": "创新大厦",
             "description": "",
             "entr_point": [
                 843
@@ -649,8 +649,8 @@
             "name": "卫生间2",
             "description": "",
             "type": "卫生间",
-            "lon": 116.322582,
-            "lat": 39.999361
+            "lon": 116.323476,
+            "lat": 40.0
         },
         {
             "id": 3,
@@ -945,8 +945,8 @@
             "name": "观景台2",
             "description": "",
             "type": "观景台",
-            "lon": 116.317136,
-            "lat": 40.010078
+            "lon": 116.313843,
+            "lat": 40.009185
         },
         {
             "id": 40,
@@ -6513,13 +6513,6 @@
                     "motorbike": true
                 },
                 {
-                    "id": 2060,
-                    "distance": 9.4,
-                    "congestion": 0.7,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
                     "id": 1247,
                     "distance": 34.1,
                     "congestion": 0.4,
@@ -7386,13 +7379,6 @@
                     "congestion": 0.5,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 299,
-                    "distance": 11.4,
-                    "congestion": 0.8,
-                    "bicycle": true,
-                    "motorbike": true
                 }
             ]
         },
@@ -7419,13 +7405,6 @@
                     "id": 374,
                     "distance": 49.7,
                     "congestion": 0.7,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
-                    "id": 1062,
-                    "distance": 7.6,
-                    "congestion": 0.9,
                     "bicycle": true,
                     "motorbike": true
                 }
@@ -7484,20 +7463,6 @@
                     "congestion": 0.1,
                     "bicycle": false,
                     "motorbike": false
-                },
-                {
-                    "id": 828,
-                    "distance": 8.8,
-                    "congestion": 0.2,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": 829,
-                    "distance": 6.7,
-                    "congestion": 0.7,
-                    "bicycle": false,
-                    "motorbike": false
                 }
             ]
         },
@@ -7552,20 +7517,6 @@
                     "id": 369,
                     "distance": 3.4,
                     "congestion": 0.8,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": 828,
-                    "distance": 10.3,
-                    "congestion": 0.2,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": 830,
-                    "distance": 7.7,
-                    "congestion": 0.2,
                     "bicycle": false,
                     "motorbike": false
                 }
@@ -9374,13 +9325,6 @@
                     "congestion": 0.2,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 1063,
-                    "distance": 25.3,
-                    "congestion": 0.4,
-                    "bicycle": true,
-                    "motorbike": true
                 }
             ]
         },
@@ -9409,13 +9353,6 @@
                     "congestion": 0.5,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 2061,
-                    "distance": 9.2,
-                    "congestion": 0.4,
-                    "bicycle": true,
-                    "motorbike": true
                 }
             ]
         },
@@ -9435,13 +9372,6 @@
                     "id": 1549,
                     "distance": 3.6,
                     "congestion": 0.2,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
-                    "id": 2061,
-                    "distance": 9.9,
-                    "congestion": 0.6,
                     "bicycle": true,
                     "motorbike": true
                 },
@@ -9479,13 +9409,6 @@
                     "congestion": 0.7,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 2060,
-                    "distance": 9.3,
-                    "congestion": 0.9,
-                    "bicycle": true,
-                    "motorbike": true
                 }
             ]
         },
@@ -9514,13 +9437,6 @@
                     "congestion": 0.5,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 299,
-                    "distance": 30.2,
-                    "congestion": 0.6,
-                    "bicycle": true,
-                    "motorbike": true
                 }
             ]
         },
@@ -9535,13 +9451,6 @@
                     "congestion": 0.7,
                     "bicycle": false,
                     "motorbike": false
-                },
-                {
-                    "id": 1062,
-                    "distance": 3.8,
-                    "congestion": 0.1,
-                    "bicycle": true,
-                    "motorbike": true
                 },
                 {
                     "id": 1063,
@@ -9570,13 +9479,6 @@
                     "congestion": 0.8,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 1063,
-                    "distance": 5.2,
-                    "congestion": 0.3,
-                    "bicycle": true,
-                    "motorbike": true
                 }
             ]
         },
@@ -9598,20 +9500,6 @@
                     "congestion": 0.6,
                     "bicycle": false,
                     "motorbike": false
-                },
-                {
-                    "id": 297,
-                    "distance": 30.2,
-                    "congestion": 0.3,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
-                    "id": 219,
-                    "distance": 11.4,
-                    "congestion": 1.0,
-                    "bicycle": true,
-                    "motorbike": true
                 },
                 {
                     "id": 877,
@@ -10410,13 +10298,6 @@
                     "congestion": 1.0,
                     "bicycle": false,
                     "motorbike": false
-                },
-                {
-                    "id": 1896,
-                    "distance": 27.2,
-                    "congestion": 0.9,
-                    "bicycle": false,
-                    "motorbike": false
                 }
             ]
         },
@@ -10438,13 +10319,6 @@
                     "congestion": 0.7,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 1896,
-                    "distance": 23.5,
-                    "congestion": 0.7,
-                    "bicycle": false,
-                    "motorbike": false
                 },
                 {
                     "id": 1842,
@@ -11455,13 +11329,6 @@
                     "motorbike": true
                 },
                 {
-                    "id": 1864,
-                    "distance": 5.1,
-                    "congestion": 0.2,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
                     "id": 880,
                     "distance": 11.4,
                     "congestion": 0.7,
@@ -11488,13 +11355,6 @@
                     "congestion": 0.3,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 1863,
-                    "distance": 3.8,
-                    "congestion": 0.7,
-                    "bicycle": false,
-                    "motorbike": false
                 },
                 {
                     "id": 881,
@@ -22723,20 +22583,6 @@
                     "congestion": 0.3,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 222,
-                    "distance": 8.8,
-                    "congestion": 0.3,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": 224,
-                    "distance": 10.3,
-                    "congestion": 0.4,
-                    "bicycle": false,
-                    "motorbike": false
                 }
             ]
         },
@@ -22758,20 +22604,6 @@
                     "congestion": 0.8,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 222,
-                    "distance": 6.7,
-                    "congestion": 0.7,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": 1864,
-                    "distance": 4.6,
-                    "congestion": 0.6,
-                    "bicycle": false,
-                    "motorbike": false
                 }
             ]
         },
@@ -22793,20 +22625,6 @@
                     "congestion": 0.8,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 224,
-                    "distance": 7.7,
-                    "congestion": 0.3,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": 1863,
-                    "distance": 4.1,
-                    "congestion": 0.2,
-                    "bicycle": false,
-                    "motorbike": false
                 }
             ]
         },
@@ -28423,20 +28241,6 @@
                     "motorbike": false
                 },
                 {
-                    "id": 220,
-                    "distance": 7.6,
-                    "congestion": 0.4,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
-                    "id": 298,
-                    "distance": 3.8,
-                    "congestion": 0.7,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
                     "id": 1855,
                     "distance": 11.2,
                     "congestion": 1.0,
@@ -28470,20 +28274,6 @@
                     "congestion": 0.7,
                     "bicycle": false,
                     "motorbike": false
-                },
-                {
-                    "id": 293,
-                    "distance": 25.3,
-                    "congestion": 0.1,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
-                    "id": 298,
-                    "distance": 5.2,
-                    "congestion": 0.7,
-                    "bicycle": true,
-                    "motorbike": true
                 }
             ]
         },
@@ -47272,20 +47062,6 @@
                     "congestion": 0.4,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 830,
-                    "distance": 4.1,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": 374,
-                    "distance": 3.8,
-                    "congestion": 0.2,
-                    "bicycle": false,
-                    "motorbike": false
                 }
             ]
         },
@@ -47307,20 +47083,6 @@
                     "congestion": 0.5,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 829,
-                    "distance": 4.6,
-                    "congestion": 0.9,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": 373,
-                    "distance": 5.1,
-                    "congestion": 0.4,
-                    "bicycle": false,
-                    "motorbike": false
                 }
             ]
         },
@@ -48070,20 +47832,6 @@
                     "congestion": 0.4,
                     "bicycle": true,
                     "motorbike": true
-                },
-                {
-                    "id": 331,
-                    "distance": 27.2,
-                    "congestion": 1.0,
-                    "bicycle": false,
-                    "motorbike": false
-                },
-                {
-                    "id": 332,
-                    "distance": 23.5,
-                    "congestion": 0.6,
-                    "bicycle": false,
-                    "motorbike": false
                 },
                 {
                     "id": 1893,
@@ -51964,20 +51712,6 @@
                     "motorbike": true
                 },
                 {
-                    "id": 296,
-                    "distance": 9.3,
-                    "congestion": 0.3,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
-                    "id": 186,
-                    "distance": 9.4,
-                    "congestion": 0.1,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
                     "id": 2062,
                     "distance": 32.0,
                     "congestion": 0.4,
@@ -52002,20 +51736,6 @@
                     "id": 295,
                     "distance": 9.9,
                     "congestion": 0.8,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
-                    "id": 294,
-                    "distance": 9.2,
-                    "congestion": 0.1,
-                    "bicycle": true,
-                    "motorbike": true
-                },
-                {
-                    "id": 295,
-                    "distance": 9.9,
-                    "congestion": 0.7,
                     "bicycle": true,
                     "motorbike": true
                 },

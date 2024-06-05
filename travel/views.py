@@ -224,8 +224,15 @@ def update_coord(request, dest_id):
 
     # 同步更新到文件
     if map['name'] == '北京动物园':
-        map_id = 1
+        map_id = 1 
+    elif map['name'] == '北京大学':
+        map_id = 2
+    elif map['name'] == '清华大学':
+        map_id = 3
+    elif map['name'] == '故宫博物院':
+        map_id = 4
     with open(f'static/maps/{map_id}.json', 'w', encoding='utf-8') as f:
         json.dump(map, f, ensure_ascii=False, indent=4)
+    cache.delete('map_json')
 
     return JsonResponse({'success': True})
