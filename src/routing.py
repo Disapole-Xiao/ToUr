@@ -1,11 +1,20 @@
+import os, sys, json, time, math, random
 from itertools import permutations
+
+# 设置 Django 项目根目录的路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = os.path.dirname(current_dir)
+sys.path.append(project_dir)
+
+# 设置 Django 项目的设置模块
+os.environ['DJANGO_SETTINGS_MODULE'] = 'ToUr.settings'
+
+# 初始化 Django
+import django
 from django.conf import settings
-import json
-import time
-import csv
-import numpy as np
-import math
-import random
+from django.core.cache import cache
+django.setup()
+
 
 inf = float("inf")
 def adjlist_distance(nodes):
@@ -44,14 +53,14 @@ def adjlist_time(nodes):
 
     return adj_list
 
-def dijkstra(cur_map: dict, start: int, end: int, mode: str):  
+def route_sgl(cur_map: dict, start: int, end: int, mode: str):  
     # 从 Map 中获取边存储到邻接表 adj_list 中
     if mode == "distance":
         adj_list = adjlist_distance(cur_map["nodes"])
     elif mode == "time":
         adj_list = adjlist_time(cur_map["nodes"])
 
-    # dijkstra
+    # route_sgl
     M = len(adj_list)
     dist = [inf] * M
     visit = [1] * M
@@ -71,8 +80,8 @@ def dijkstra(cur_map: dict, start: int, end: int, mode: str):
                 Min = dist[i]
                 Next = i
         if Min == inf:
-            print("No")
-            break
+            print("路径不存在")
+            return None, None
         start = Next
         visit[start] = 0
 
@@ -86,10 +95,6 @@ def dijkstra(cur_map: dict, start: int, end: int, mode: str):
         end = path[end]
     shortestPath.reverse()
     return shortestPath,Min
-# 返回值是id序列
-def route_sgl(cur_map: dict, start: int, end: int, mode: str):
-    result=dijkstra(cur_map, start, end, mode)
-    return result[0]
 
 
 # -------------------------
@@ -98,15 +103,15 @@ initial_temp = 10
 cooling_rate = 0.9
 def calculate_distance(per,cur_map,start,mode,k):
     anspath=[]
-    result=dijkstra(cur_map, start, per[0], mode)
+    result=route_sgl(cur_map, start, per[0], mode)
     anspath+=result[0]
     distance=result[1]
     for i in range(0, k - 1):
-        result=dijkstra(cur_map, per[i], per[i + 1], mode)
+        result=route_sgl(cur_map, per[i], per[i + 1], mode)
         tem=result[1]
         anspath+=result[0]
         distance += tem
-    result=dijkstra(cur_map, per[k - 1], start, mode)
+    result=route_sgl(cur_map, per[k - 1], start, mode)
     tem=result[1]
     anspath+=result[0]
     distance += tem
@@ -140,9 +145,11 @@ def route_mul(cur_map: dict, nodes: list, start: int, mode: str) -> list:
                 current_route = new_route
                 current_cost = new_cost
                 anspath=result[1]
+                order=new_route
 
             temperature *= cooling_rate
-        return anspath
+        order=[start]+order+[start]
+        return anspath,current_cost,order
     else:
         nodes.sort()
         mindis = inf
@@ -150,36 +157,48 @@ def route_mul(cur_map: dict, nodes: list, start: int, mode: str) -> list:
         for per in permutations(nodes):
             # 计算每一种排列对应的最短路径
             anspath=[]
-            result=dijkstra(cur_map, start, per[0], mode)
+            result=route_sgl(cur_map, start, per[0], mode)
             anspath+=result[0]
             distance=result[1]
             for i in range(0, k - 1):
-                result=dijkstra(cur_map, per[i], per[i + 1], mode)
+                result=route_sgl(cur_map, per[i], per[i + 1], mode)
                 tem=result[1]
                 anspath+=result[0]
                 distance += tem
-            result=dijkstra(cur_map, per[k - 1], start, mode)
+            result=route_sgl(cur_map, per[k - 1], start, mode)
             tem=result[1]
             anspath+=result[0]
             distance += tem
             
             if mindis > distance:
+                order=per
                 mindis = distance
                 finalanspath = anspath.copy()
-
-        return finalanspath
+        order=[start]+order+[start]
+        return finalanspath,mindis,order
 
 # 测试代码
 if __name__ == "__main__":
-    with open("static/maps/2.json", "r", encoding="utf-8") as f:
+    with open("static/maps/3.json", "r", encoding="utf-8") as f:
         jsonstr = f.read()
     map = json.loads(jsonstr)
-    # print(dijkstra(map, 538, 359, "distance"))
     start_time = time.time()
-    print(route_mul(map, [326,334,376,62,436,333], 342, "distance"))
+    mode = "distance"
+    # 单目标
+    # planned_node_ids, cost = route_sgl(map, 538, 359, mode)
+    # print('道路点序列', planned_node_ids)
+    # print('cost', cost, 'm' if mode=="distance" else 's')
+
+    # 多目标
+    # planned_node_ids, cost, entr_point_order = route_mul(map, [326,334,376,62,436,333], 342, "distance")
+    # print('道路点序列', planned_node_ids)
+    # print('cost', cost, 'm' if mode=="distance" else 's')
+    # print('入口点顺序', entr_point_order)
+
+    # map_json, map_id = cache.get('map_json')
     end_time = time.time()
     execution_time = end_time - start_time
-    print(execution_time)
+    print('执行时间', execution_time)
 
     # start_time = time.time()
     # print(simulated_annealing(map, [326,334,376,62], 342, "time",1000,0.95,0.1,1000))
