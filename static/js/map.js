@@ -55,7 +55,14 @@ const restaurantIcon = new L.Icon({
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
 });
-
+const highlightIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
 // 当网页加载完成时启动
 document.addEventListener('DOMContentLoaded', function() {
     initializeMap();
@@ -71,6 +78,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // 增加事件监听器，点击设施标签时加载设施数据
     document.getElementById('amenities-tab').addEventListener('click', searchAmenity);
     document.getElementById('restaurants-tab').addEventListener('click', searchRestaurant);
+
+    map.on('click', function(e) {
+        // 此函数仅当点击地图空白处时调用
+        selectAttraction(null);
+    });
 });
 
 function initializeMap() {
@@ -158,7 +170,8 @@ function loadEntrance() {
     });
     entranceMarker.options.attractionId = -1; // 把入口当特殊景点处理
     entranceMarker.options.attractionName = "入口";
-    entranceMarker.on('click', function() {
+    entranceMarker.on('click', function(e) {
+        e.originalEvent.stopPropagation();
         selectAttraction(-1);
     });
 }
@@ -189,7 +202,8 @@ function loadAttractions() {
         attractionMarkers[attraction.id] = marker;
 
         // 添加点击事件监听
-        marker.on('click', function() {
+        marker.on('click', function(e) {
+            e.originalEvent.stopPropagation();
             selectAttraction(attraction.id);
         });
         marker.on('dragend', function() {
@@ -219,20 +233,26 @@ function selectAttraction(id) {
             currentSelected.listItem.classList.remove('active');
         }
     }
-    var marker, listItem;
-    // 选择了入口
-    if (id == -1) {
-        marker = entranceMarker;
-        listItem = null;
+    if (id != null){
+        var marker, listItem;
+        // 选择了入口
+        if (id == -1) {
+            marker = entranceMarker;
+            listItem = null;
+        } else {
+            marker = attractionMarkers[id];
+            listItem = document.querySelector(`li[data-id="${id}"]`);
+            listItem.classList.add('active'); // 高亮新的列表项
+            listItem.scrollIntoView({behavior: 'smooth', block: 'center'}); // 确保列表项在侧边栏可视区域内
+        }
+        marker.openPopup();
+        // 更新当前选中对象
+        currentSelected = { marker: marker, listItem: listItem };
+        console.log('当前选中的景点：', marker.options.attractionId, marker.options.attractionName);
     } else {
-        marker = attractionMarkers[id];
-        listItem = document.querySelector(`li[data-id="${id}"]`);
-        listItem.classList.add('active'); // 高亮新的列表项
-        listItem.scrollIntoView({behavior: 'smooth', block: 'center'}); // 确保列表项在侧边栏可视区域内
+        currentSelected = null;
+        console.log('未选择景点')
     }
-    marker.openPopup();
-    // 更新当前选中对象
-    currentSelected = { marker: marker, listItem: listItem };
 
     // 如果设施界面active
     if (document.getElementById('amenities-tab').classList.contains('active')) {
@@ -243,7 +263,6 @@ function selectAttraction(id) {
         searchRestaurant();
     }
 
-    console.log('当前选中的景点：', marker.options.attractionId, marker.options.attractionName);
 }
 
 
@@ -255,7 +274,7 @@ function drawRoads() {
             var adjNode = mapData.nodes[adjNode_id];
             if (adjNode) {
                 var color = congestionColors[Math.floor(adj.congestion * 10)];
-                var weight = adj.bicycle ? 5 : 3;
+                var weight = adj.bicycle ? 6 : 3;
                 var polyline = L.polyline(
                     [[node.lat, node.lon], [adjNode.lat, adjNode.lon]], 
                     {
@@ -273,7 +292,10 @@ function drawRoads() {
 function toggleRoute(id, name, btn) {
     var routeList = document.getElementById('route-list');
     var exists = routeList.querySelector(`li[data-id="${id}"]`);
+    var marker = attractionMarkers[id];
     if (!exists) {
+        // marker高亮
+        marker.setIcon(highlightIcon);
         // 检查是否已经存在于路线中，如果不在则添加
         var listItem = document.createElement('li');
         listItem.textContent = name;
@@ -289,6 +311,8 @@ function toggleRoute(id, name, btn) {
         btn.textContent = '移出路线';
         // setActiveTab('routing'); // 切换到路径规划标签
     } else {
+        // marker取消高亮
+        marker.setIcon(attractionIcon);
         // 如果已在路线中，则移除
         exists.remove();
         btn.textContent = '加入路线';
@@ -296,6 +320,8 @@ function toggleRoute(id, name, btn) {
 }
 function removeFromRoute(id, listItem) {
     listItem.remove();
+    var marker = attractionMarkers[id];
+    marker.setIcon(attractionIcon)
     // 更新按钮文本
     var button = document.querySelector(`button[onclick*="toggleRoute('${id}'"]`);
     if (button) {
@@ -308,6 +334,10 @@ function planRoute(mode) {
     // 获取当前加入路线的景点列表
     var allowRide = document.getElementById('allow-ride').checked;
     var routeList = document.getElementById('route-list');
+    document.getElementById('planned-routes').classList.add('d-none');
+    document.getElementById('cost').classList.add('d-none');
+    var loading = document.getElementById('loading');
+    loading.classList.remove('d-none');
     var selectedAttractions = [];
     routeList.querySelectorAll('li').forEach(li => {
         selectedAttractions.push(li.getAttribute('data-id'));
@@ -324,6 +354,7 @@ function planRoute(mode) {
     })
     .then(response => response.json())
     .then(data => {
+        loading.classList.add('d-none');
         console.log('data: ', data);
         // 在地图上绘制路径
         let latLonSeq = data.latLonSeq;
@@ -340,12 +371,15 @@ function planRoute(mode) {
 // 在侧边栏上展示路径信息的函数
 function displayRouteInfo(mode, data) {
     // 侧边栏显示花费时间/路径长度
+    var cost = document.getElementById('cost');
+    var plannedRoutes = document.getElementById('planned-routes');
+    cost.classList.remove('d-none');
     if (data.cost){
         let pre = mode == 'time' ? '最短时间为' : '最短距离为';
         let unit = mode == 'time' ? 's' : 'm';
-        document.getElementById('cost').innerText = pre + data.cost.toFixed(1) + unit;
+        cost.innerText = pre + data.cost.toFixed(1) + unit;
     } else {
-        document.getElementById('cost').innerText = '请至少选择两个景点';
+        cost.innerText = '请至少选择两个景点';
     }
     // 多目标规划展示游览顺序
     if (data.attractionOrder.length != 0) {
@@ -361,9 +395,9 @@ function displayRouteInfo(mode, data) {
             }
             attrList.appendChild(listItem);
         });
-        document.getElementById('planned-routes').classList.remove('d-none');
+        plannedRoutes.classList.remove('d-none');
     } else {
-        document.getElementById('planned-routes').classList.add('d-none');
+        planRoute.classList.add('d-none');
     }
 }
 
@@ -410,6 +444,7 @@ function searchAmenity() {
         // 如果没有景点被选中，则显示提示信息
         var amenityList = document.getElementById('amenity-list');
         amenityList.innerHTML = '<li class="list-group-item bg-light text-muted">请选择一个景点</li>';
+        amenityLayer.clearLayers();
     }
 }
 
@@ -436,13 +471,18 @@ function displayAmenities(amenities, distances) {
         var listItem = document.createElement('li');
         listItem.setAttribute('data-id', amenity.id);
         listItem.className = 'list-group-item';
-        listItem.innerHTML = `<h5>${amenity.name}</h5>
-        <span>类型：${amenity.type}</span><span class="float-end">${distances[index]}m</span>`;
+        listItem.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center">
+            <h5>${amenity.name}</h5>
+            <span class="text-muted">${distances[index]}m</span>
+        </div>
+        <span>类别：${amenity.type}</span>`;
         listItem.onclick = function() {
             highlightListItem(listItem, marker);
         }
         amenityList.appendChild(listItem);
-        marker.on('click', function () {
+        marker.on('click', function (e) {
+            e.originalEvent.stopPropagation();
             highlightListItem(listItem, marker);
         });
         marker.on('dragend', function() {
@@ -524,16 +564,23 @@ function displayRestaurants(restaurants, distances) {
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
         listItem.setAttribute('data-id', restaurant.id);
-        listItem.innerHTML = `<h5>${restaurant.name }</h5>
-            <div>菜系：${restaurant.type}</div>
-            <div>评分：${restaurant.rating}</div>
-            <div>热度：${restaurant.popularity}</div>
-            <span class="float-end">${distances[index]}m</span>`;
+        listItem.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>${restaurant.name}</h5>
+                <span class="text-muted">${distances[index]}m</span>
+            </div>
+            <div">
+                <span>⭐${restaurant.rating}</span>
+                <span>🔥${restaurant.popularity}</span>
+            </div>
+            <div>类型：${restaurant.type}</div>
+            <div>菜品：${restaurant.foods.join(", ")}</div>`;
         listItem.onclick = function() {
             highlightListItem(listItem, marker);
         }
         restaurantList.appendChild(listItem);
-        marker.on('click', function () {
+        marker.on('click', function (e) {
+            e.originalEvent.stopPropagation();
             highlightListItem(listItem, marker);
         });
         marker.on('dragend', function() {

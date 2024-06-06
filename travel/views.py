@@ -88,6 +88,7 @@ def map(request, dest_id, edit=False):
         'amenity_types': amenity_types,
         'edit': edit,
         'map_json': map_json,
+        'restaurant': RestaurantType.objects.all()[0]
     }
     return render(request, 'travel/map.html', context)
 
